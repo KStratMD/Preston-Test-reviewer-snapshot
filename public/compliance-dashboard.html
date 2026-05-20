@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC 2 Compliance Dashboard — SuiteCentral 2.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 py-10 px-6 text-center">
+    <div class="flex items-center justify-center gap-3 mb-2">
+      <i class="fas fa-shield-alt text-green-600 text-3xl"></i>
+      <h1 class="text-3xl font-bold text-gray-900">SOC 2 Compliance Dashboard</h1>
+    </div>
+    <p class="text-lg text-gray-600">SuiteCentral 2.0 &mdash; Built by Auditors, for Auditability</p>
+    <p class="text-sm text-gray-400 mt-1">Trust Services Criteria Alignment &bull; Live Evidence Collection</p>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto w-full px-6 py-10 space-y-10">
+
+    <!-- ============================================================ -->
+    <!-- SOC 2 Trust Services Criteria                                 -->
+    <!-- ============================================================ -->
+    <section id="soc2-criteria">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        <i class="fas fa-clipboard-check text-green-600 mr-2"></i>SOC 2 Trust Services Criteria
+      </h2>
+
+      <div class="space-y-3" x-data="{ open: null }">
+
+        <!-- CC6 — Security -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button @click="open = open === 'security' ? null : 'security'"
+                  class="w-full flex items-center justify-between px-5 py-4 bg-green-50 hover:bg-green-100 transition">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white text-sm font-bold">CC6</span>
+              <span class="font-semibold text-gray-900">Security &mdash; Logical &amp; Physical Access Controls</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-medium bg-green-600 text-white px-2.5 py-0.5 rounded-full">Implemented</span>
+              <i class="fas fa-chevron-down text-gray-400 transition-transform" :class="open === 'security' && 'rotate-180'"></i>
+            </div>
+          </button>
+          <div x-show="open === 'security'" x-cloak x-transition class="px-5 py-4 bg-white border-t border-gray-100">
+            <ul class="space-y-2 text-sm text-gray-700">
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>JWT Authentication</strong> &mdash; Token-based auth with production secret validation (<code class="text-xs bg-gray-100 px-1 rounded">src/middleware/auth.ts</code>)</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>RBAC Permissions</strong> &mdash; Role-based access control on all sensitive endpoints (<code class="text-xs bg-gray-100 px-1 rounded">src/middleware/rbac.ts</code>)</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Timing-Safe API Key Validation</strong> &mdash; <code class="text-xs bg-gray-100 px-1 rounded">crypto.timingSafeEqual</code> prevents timing attacks</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Rate Limiting</strong> &mdash; Enforced in production; fail-fast guard on misconfiguration</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Production Guards</strong> &mdash; JWT_SECRET validation, demo-mode blocking, rate-limit enforcement at startup</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- A1 — Availability -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button @click="open = open === 'availability' ? null : 'availability'"
+                  class="w-full flex items-center justify-between px-5 py-4 bg-green-50 hover:bg-green-100 transition">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white text-sm font-bold">A1</span>
+              <span class="font-semibold text-gray-900">Availability &mdash; Recovery &amp; Continuity</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-medium bg-green-600 text-white px-2.5 py-0.5 rounded-full">Implemented</span>
+              <i class="fas fa-chevron-down text-gray-400 transition-transform" :class="open === 'availability' && 'rotate-180'"></i>
+            </div>
+          </button>
+          <div x-show="open === 'availability'" x-cloak x-transition class="px-5 py-4 bg-white border-t border-gray-100">
+            <ul class="space-y-2 text-sm text-gray-700">
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Health Check Endpoints</strong> &mdash; <code class="text-xs bg-gray-100 px-1 rounded">/health</code> for load balancer and Kubernetes probes</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Circuit Breaker Pattern</strong> &mdash; Automatic failure isolation for external service calls</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Disaster Recovery</strong> &mdash; Documented recovery procedures with RTO/RPO targets</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Auto-Scaling</strong> &mdash; Kubernetes Helm chart with 2-10 replica scaling (Helm + Terraform IaC)</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- PI1 — Processing Integrity -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button @click="open = open === 'processing' ? null : 'processing'"
+                  class="w-full flex items-center justify-between px-5 py-4 bg-green-50 hover:bg-green-100 transition">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white text-sm font-bold">PI1</span>
+              <span class="font-semibold text-gray-900">Processing Integrity &mdash; Accuracy &amp; Completeness</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-medium bg-green-600 text-white px-2.5 py-0.5 rounded-full">Implemented</span>
+              <i class="fas fa-chevron-down text-gray-400 transition-transform" :class="open === 'processing' && 'rotate-180'"></i>
+            </div>
+          </button>
+          <div x-show="open === 'processing'" x-cloak x-transition class="px-5 py-4 bg-white border-t border-gray-100">
+            <ul class="space-y-2 text-sm text-gray-700">
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>AI Confidence Scoring</strong> &mdash; Every mapping includes a 0-100 confidence score with breakdown</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Hallucination Detection</strong> &mdash; GovernanceService validates AI output against known schemas</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Schema Drift Blocking</strong> &mdash; Syncs blocked on critical drift; structured <code class="text-xs bg-gray-100 px-1 rounded">SCHEMA_DRIFT_BLOCKED</code> result</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Reasoning Traces</strong> &mdash; DB-persisted step-by-step AI decision audit trail</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- C1 — Confidentiality -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button @click="open = open === 'confidentiality' ? null : 'confidentiality'"
+                  class="w-full flex items-center justify-between px-5 py-4 bg-green-50 hover:bg-green-100 transition">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white text-sm font-bold">C1</span>
+              <span class="font-semibold text-gray-900">Confidentiality &mdash; Information Protection</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-medium bg-green-600 text-white px-2.5 py-0.5 rounded-full">Implemented</span>
+              <i class="fas fa-chevron-down text-gray-400 transition-transform" :class="open === 'confidentiality' && 'rotate-180'"></i>
+            </div>
+          </button>
+          <div x-show="open === 'confidentiality'" x-cloak x-transition class="px-5 py-4 bg-white border-t border-gray-100">
+            <!--
+              Nested x-data on the <ul>: scopes the live DLP fetch state so it
+              does NOT shadow the parent's `open` variable. The DLP/PII <li>
+              fetches /api/compliance/dlp-patterns; on 401/403 or any failure
+              it falls back to a static snapshot list so the row never renders
+              blank. This is a sibling Alpine instance to complianceLiveData()
+              in the live-metrics section below — they do not share state.
+            -->
+            <ul class="space-y-2 text-sm text-gray-700"
+                x-data="dlpPatternsPanel()" x-init="fetchPatterns()">
+              <li class="flex items-start gap-2">
+                <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                <span>
+                  <strong>DLP/PII Detection</strong> &mdash;
+                  <span x-text="dlpPatterns.count + ' patterns (' + dlpPatterns.summary + ')'"></span>
+                  <span x-show="dlpPatterns.snapshot" x-cloak class="ml-1 text-xs text-slate-500">[snapshot]</span>
+                </span>
+              </li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Sensitive Data Masking</strong> &mdash; Shared <code class="text-xs bg-gray-100 px-1 rounded">maskSensitiveData()</code> utility redacts sensitive field names (password, token, secret, etc.) from all log output</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Encrypted Credential Storage</strong> &mdash; Connector credentials encrypted at rest via ConnectorCredentialService</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- P1 — Privacy -->
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button @click="open = open === 'privacy' ? null : 'privacy'"
+                  class="w-full flex items-center justify-between px-5 py-4 bg-green-50 hover:bg-green-100 transition">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white text-sm font-bold">P1</span>
+              <span class="font-semibold text-gray-900">Privacy &mdash; Notice, Consent &amp; Retention</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-medium bg-green-600 text-white px-2.5 py-0.5 rounded-full">Implemented</span>
+              <i class="fas fa-chevron-down text-gray-400 transition-transform" :class="open === 'privacy' && 'rotate-180'"></i>
+            </div>
+          </button>
+          <div x-show="open === 'privacy'" x-cloak x-transition class="px-5 py-4 bg-white border-t border-gray-100">
+            <ul class="space-y-2 text-sm text-gray-700">
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>GDPR/CCPA Compliance</strong> &mdash; DLP service designed for EU and California privacy regulations</span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Audit Trail Logging</strong> &mdash; Every AI action logged with user ID, timestamp, and action type. <em class="text-yellow-700">Scope note: log is currently session-scoped (in-memory, since process startup). Persistent audit log + Type II evidence chain are on the roadmap.</em></span></li>
+              <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i><span><strong>Data Retention Policies</strong> &mdash; Configurable retention with 90-day default purge cycle</span></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- Live Data Panel                                               -->
+    <!-- ============================================================ -->
+    <section id="live-metrics" x-data="complianceLiveData()" x-init="fetchData()">
+      <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h2 class="text-xl font-semibold text-gray-800">
+          <i class="fas fa-chart-bar text-blue-600 mr-2"></i>Compliance Metrics
+        </h2>
+        <span
+          class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+          :class="snapshotMode ? 'bg-slate-100 text-slate-700' : 'bg-emerald-100 text-emerald-700'"
+          x-text="snapshotMode ? 'Representative snapshot' : 'Live API data'"></span>
+      </div>
+
+      <!-- Loading spinner -->
+      <div x-show="loading" x-cloak class="flex items-center justify-center py-12">
+        <i class="fas fa-circle-notch fa-spin text-blue-500 text-2xl mr-3"></i>
+        <span class="text-gray-500">Loading compliance data...</span>
+      </div>
+
+      <!-- Error / demo mode banner -->
+      <div x-show="!loading && error" x-cloak class="mb-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 flex items-center gap-2">
+        <i class="fas fa-info-circle"></i>
+        <span x-text="errorMessage">Live API access requires authenticated demo mode. Showing representative metrics.</span>
+      </div>
+
+      <!-- Stat cards -->
+      <div x-show="!loading" x-cloak class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <!-- Reasoning Trace Sessions -->
+        <div class="bg-white border border-gray-200 rounded-lg p-5">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Reasoning Traces</span>
+            <span class="text-xs px-2 py-0.5 rounded-full"
+                  :class="snapshotMode ? 'bg-slate-100 text-slate-700' : 'bg-green-100 text-green-700'"
+                  x-text="snapshotMode ? 'Snapshot' : 'All time'"></span>
+          </div>
+          <p class="text-2xl font-bold text-gray-900" x-text="stats.reasoningTraces"></p>
+          <p class="text-xs text-gray-400 mt-1">DB-persisted sessions</p>
+        </div>
+
+        <!-- AI Cost Total -->
+        <div class="bg-white border border-gray-200 rounded-lg p-5">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">AI Cost Total</span>
+            <span class="text-xs px-2 py-0.5 rounded-full"
+                  :class="snapshotMode ? 'bg-slate-100 text-slate-700' : 'bg-blue-100 text-blue-700'"
+                  x-text="snapshotMode ? 'Snapshot' : 'Last 30 days'"></span>
+          </div>
+          <p class="text-2xl font-bold text-gray-900" x-text="'$' + stats.aiCost"></p>
+          <p class="text-xs text-gray-400 mt-1">Across all providers</p>
+        </div>
+
+        <!-- Audit Actions -->
+        <div class="bg-white border border-gray-200 rounded-lg p-5">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Audit Actions</span>
+            <span class="text-xs px-2 py-0.5 rounded-full cursor-help"
+                  :class="snapshotMode ? 'bg-slate-100 text-slate-700' : 'bg-yellow-100 text-yellow-700'"
+                  :title="snapshotMode ? 'Representative demo snapshot used when authenticated API access is unavailable.' : 'Audit logs are session-scoped (in-memory). Count resets on server restart.'"
+                  x-text="snapshotMode ? 'Snapshot' : 'Since startup'"></span>
+          </div>
+          <p class="text-2xl font-bold text-gray-900" x-text="stats.auditActions"></p>
+          <p class="text-xs text-gray-400 mt-1">Session-scoped event log</p>
+        </div>
+
+        <!-- Compliance Rate -->
+        <div class="bg-white border border-gray-200 rounded-lg p-5">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Compliance Rate</span>
+          </div>
+          <p class="text-2xl font-bold" :class="parseFloat(stats.complianceRate) >= 95 ? 'text-green-600' : parseFloat(stats.complianceRate) >= 80 ? 'text-yellow-600' : 'text-red-600'" x-text="stats.complianceRate + '%'"></p>
+          <p class="text-xs text-gray-400 mt-1">Actions passing governance</p>
+        </div>
+
+      </div>
+
+      <!-- Export Button -->
+      <div id="evidence-export" class="mt-6 flex items-center gap-4">
+        <button @click="exportEvidence()"
+                :disabled="exporting || snapshotMode"
+                class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition">
+          <i class="fas fa-file-export" :class="exporting && 'fa-spin fa-circle-notch'"></i>
+          <span x-text="snapshotMode ? 'Export Requires Authenticated Mode' : (exporting ? 'Exporting...' : 'Export Evidence Package')"></span>
+        </button>
+        <span x-show="snapshotMode && !exportMessage" x-cloak class="text-sm text-slate-500">Authenticated demo mode is required for live evidence export.</span>
+        <span x-show="exportMessage" x-cloak x-text="exportMessage" class="text-sm" :class="exportError ? 'text-red-600' : 'text-green-600'"></span>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- Regulatory Timeline                                           -->
+    <!-- ============================================================ -->
+    <section x-data="regulatoryTimeline()">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        <i class="fas fa-calendar-alt text-purple-600 mr-2"></i>Regulatory Timeline
+      </h2>
+      <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div class="divide-y divide-gray-100">
+
+          <div class="flex items-center px-5 py-4 gap-5">
+            <div class="flex-shrink-0 w-24 text-center">
+              <span class="block text-xs font-medium text-purple-600 uppercase">EU AI Act</span>
+              <span class="block text-sm font-bold text-gray-900 mt-0.5">Aug 2, 2026</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-gray-700">EU Artificial Intelligence Act &mdash; Full enforcement of high-risk AI system requirements including transparency obligations, conformity assessments, and post-market monitoring.</p>
+            </div>
+            <div class="flex-shrink-0">
+              <span class="inline-block text-xs font-bold px-3 py-1 rounded-full"
+                    :class="euDays <= 30 ? 'bg-red-100 text-red-700' : euDays <= 90 ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'"
+                    x-text="euDays + ' days'"></span>
+            </div>
+          </div>
+
+          <div class="flex items-center px-5 py-4 gap-5">
+            <div class="flex-shrink-0 w-24 text-center">
+              <span class="block text-xs font-medium text-indigo-600 uppercase">CO AI Act</span>
+              <span class="block text-sm font-bold text-gray-900 mt-0.5">Jun 30, 2026</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-gray-700">Colorado AI Act (SB 24-205) &mdash; Requires developers and deployers of high-risk AI systems to use reasonable care to prevent algorithmic discrimination.</p>
+            </div>
+            <div class="flex-shrink-0">
+              <span class="inline-block text-xs font-bold px-3 py-1 rounded-full"
+                    :class="coDays <= 30 ? 'bg-red-100 text-red-700' : coDays <= 90 ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'"
+                    x-text="coDays + ' days'"></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- Built by Auditors                                             -->
+    <!-- ============================================================ -->
+    <section>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        <i class="fas fa-user-tie text-gray-600 mr-2"></i>Built by Auditors
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+          <div class="w-12 h-12 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-3">
+            <i class="fas fa-receipt text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1">CPA-Grade Audit Trails</h3>
+          <p class="text-sm text-gray-600">Every AI decision is logged with user, timestamp, inputs, outputs, and confidence score &mdash; the same rigor Squire applies to client engagements.</p>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+          <div class="w-12 h-12 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
+            <i class="fas fa-shield-alt text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1">SOC 2 Alignment from Day 1</h3>
+          <p class="text-sm text-gray-600">All five Trust Services Criteria mapped to production code. Not a retrofit &mdash; compliance was a design requirement from the first commit.</p>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+          <div class="w-12 h-12 mx-auto rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
+            <i class="fas fa-file-export text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1">Evidence Export in One Click</h3>
+          <p class="text-sm text-gray-600">Download a structured JSON evidence package covering reasoning traces, AI costs, and audit actions &mdash; ready for your SOC 2 auditor.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 py-6 px-6 text-center text-sm text-gray-500">
+    <a id="demo-back-link" href="/squire-v2-media-demo/index.html" class="text-blue-600 hover:underline">
+      <i class="fas fa-arrow-left mr-1"></i>Back to Demo Hub
+    </a>
+    <p class="mt-2">&copy; 2026 SuiteCentral 2.0 &mdash; Squire demo environment. All rights reserved.</p>
+  </footer>
+
+  <!-- ============================================================ -->
+  <!-- Alpine.js Components                                          -->
+  <!-- ============================================================ -->
+  <script>
+    const API_BASE = (window.__API_BASE || '').replace(/\/$/, '');
+    const apiUrl = (path) => (API_BASE || '') + path;
+
+    // auth_token is set by an upstream login page (e.g. /login or SSO redirect).
+    // When no token is present, API calls return 401/403 and the dashboard
+    // gracefully degrades to demo data, so unauthenticated access still works.
+    function getAuthHeaders() {
+      const headers = {};
+      const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+      if (token) {
+        headers['Authorization'] = 'Bearer ' + token;
+      }
+      return headers;
+    }
+
+    // Static fallback list — shown when /api/compliance/dlp-patterns
+    // returns 401/403 (unauthenticated) so the C1 row never renders blank.
+    // Keep in sync with DLPService.buildPatternRegistry() — the unit guard
+    // test asserts the registry length and the integration test asserts the
+    // same metadata shape, so any drift here will be caught by CI.
+    const DLP_PATTERNS_SNAPSHOT = {
+      count: 14,
+      summary: "SSN, credit card, email, phone, intl phone, medical record, IP address, API key, JWT, bank account, DOB, passport, driver's license, name",
+    };
+
+    function dlpPatternsPanel() {
+      return {
+        dlpPatterns: { ...DLP_PATTERNS_SNAPSHOT, snapshot: true },
+
+        async fetchPatterns() {
+          try {
+            const res = await fetch(apiUrl('/api/compliance/dlp-patterns'), {
+              credentials: 'include',
+              headers: getAuthHeaders(),
+            });
+            if (res.status === 401 || res.status === 403) {
+              // Snapshot already set in initial state — nothing to do.
+              return;
+            }
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const json = await res.json();
+            if (!json.success) throw new Error(json.error || 'Unknown error');
+
+            const summary = json.data.patterns.map(p => p.displayName).join(', ');
+            this.dlpPatterns = {
+              count: json.data.count,
+              summary,
+              snapshot: false,
+            };
+          } catch (e) {
+            console.warn('DLP patterns API unavailable, using snapshot:', e.message);
+            // Keep the initial snapshot value.
+          }
+        },
+      };
+    }
+
+    function complianceLiveData() {
+      return {
+        loading: true,
+        error: false,
+        errorMessage: 'Live API access requires authenticated demo mode. Showing representative metrics.',
+        snapshotMode: false,
+        exporting: false,
+        exportMessage: '',
+        exportError: false,
+        stats: {
+          reasoningTraces: 0,
+          aiCost: '0.00',
+          auditActions: 0,
+          complianceRate: '0.0',
+        },
+
+        useDemoFallback(message) {
+          this.error = true;
+          this.snapshotMode = true;
+          this.errorMessage = message;
+          this.stats.reasoningTraces = 42;
+          this.stats.aiCost = '3.87';
+          this.stats.auditActions = 156;
+          this.stats.complianceRate = '97.4';
+        },
+
+        async fetchData() {
+          this.loading = true;
+          this.error = false;
+          this.snapshotMode = false;
+          this.errorMessage = 'Live API access requires authenticated demo mode. Showing representative metrics.';
+          try {
+            const res = await fetch(apiUrl('/api/compliance/summary'), {
+              credentials: 'include',
+              headers: getAuthHeaders(),
+            });
+            if (res.status === 401 || res.status === 403) {
+              this.useDemoFallback('Authentication required — run locally with a demo JWT for full compliance API access.');
+              return;
+            }
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const json = await res.json();
+            if (!json.success) throw new Error(json.error || 'Unknown error');
+
+            const d = json.data;
+            this.stats.reasoningTraces = d.reasoningTraces.totalSessions;
+            this.stats.aiCost = Number(d.aiCosts.totalCost).toFixed(2);
+            this.stats.auditActions = d.auditActions.totalLogs;
+            this.stats.complianceRate = Number(d.auditActions.complianceRate).toFixed(1);
+            this.snapshotMode = false;
+          } catch (e) {
+            console.warn('Compliance API unavailable, using demo data:', e.message);
+            this.useDemoFallback('Live API access requires authenticated demo mode. Showing representative metrics.');
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async exportEvidence() {
+          if (this.snapshotMode) {
+            this.exportError = false;
+            this.exportMessage = 'Authenticated demo mode is required for live evidence export.';
+            return;
+          }
+
+          this.exporting = true;
+          this.exportMessage = '';
+          this.exportError = false;
+
+          const now = new Date();
+          const thirtyDaysAgo = new Date(now);
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+          try {
+            const res = await fetch(apiUrl('/api/compliance/export'), {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+              body: JSON.stringify({
+                startDate: thirtyDaysAgo.toISOString(),
+                endDate: now.toISOString(),
+              }),
+            });
+
+            if (res.status === 401 || res.status === 403) {
+              this.exportError = true;
+              this.exportMessage = 'Authentication required — run locally with compliance permissions (or a demo JWT) to export evidence.';
+              return;
+            }
+
+            if (!res.ok) throw new Error('Export failed: HTTP ' + res.status);
+
+            const data = await res.json();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateStr = now.toISOString().slice(0, 10);
+            a.href = url;
+            a.download = 'compliance-evidence-' + dateStr + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            this.exportMessage = 'Evidence package downloaded successfully.';
+          } catch (e) {
+            console.error('Export failed:', e);
+            this.exportError = true;
+            this.exportMessage = 'Export failed. Ensure the server is running and you have compliance permissions.';
+          } finally {
+            this.exporting = false;
+          }
+        },
+      };
+    }
+
+    function regulatoryTimeline() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      function daysUntil(dateStr) {
+        const target = new Date(dateStr);
+        target.setHours(0, 0, 0, 0);
+        const diff = target - today;
+        return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+      }
+
+      return {
+        euDays: daysUntil('2026-08-02'),
+        coDays: daysUntil('2026-06-30'),
+      };
+    }
+  </script>
+
+  <script src="/js/demo-tab-nav.js"></script>
+  <script>
+    (function initComplianceTabNav() {
+      const params = new URLSearchParams(window.location.search);
+      const fallbackParam = params.get('fallback') || '';
+      const defaultFallbackUrl = '/squire-v2-media-demo/click/demo-guide.html#compliance-dashboard';
+      const fallbackUrl = window.DemoTabNav && typeof window.DemoTabNav.getSafeFallbackUrl === 'function'
+        ? window.DemoTabNav.getSafeFallbackUrl(fallbackParam, defaultFallbackUrl)
+        : (/^\/(?!\/)/.test(fallbackParam) ? fallbackParam : defaultFallbackUrl);
+      const backLink = document.getElementById('demo-back-link');
+      const defaultLabel = backLink ? backLink.textContent.trim() : 'Back to Demo Hub';
+      const label = window.DemoTabNav && typeof window.DemoTabNav.labelForFallback === 'function'
+        ? window.DemoTabNav.labelForFallback(fallbackUrl, defaultLabel)
+        : defaultLabel;
+
+      if (window.DemoTabNav && typeof window.DemoTabNav.init === 'function') {
+        window.DemoTabNav.init({ fallbackUrl, backLabel: label, preferFallback: true });
+      }
+
+      if (backLink && window.DemoTabNav && typeof window.DemoTabNav.closeOrBack === 'function') {
+        backLink.setAttribute('href', fallbackUrl);
+        backLink.innerHTML = `<i class="fas fa-arrow-left mr-1"></i>${label}`;
+        backLink.addEventListener('click', (event) => {
+          event.preventDefault();
+          window.DemoTabNav.closeOrBack({ fallbackUrl, preferFallback: true });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

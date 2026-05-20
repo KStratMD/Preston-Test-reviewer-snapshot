@@ -1,0 +1,221 @@
+{
+  "_comment_1": "Phase 5b core coverage ratchet — mirrors .strict-null-budget pattern. Keys are repo-root-relative POSIX paths matching jest.core.config.cjs collectCoverageFrom. Values are pct numbers from coverage-core/coverage-summary.json. PRs that change any number must restamp this file (`npm run check:core-coverage-budget -- --write`).",
+  "_comment_2": "Values measured by `npm run test:coverage:core` against the targeted testMatch enumerated in jest.core.config.cjs (19 test files, 547 tests, ~85s). Same testMatch runs locally and in CI, so numbers are deterministic across environments — no first-run restamp is required.",
+  "_comment_3_jest30_restamp": "Re-stamped on jest 29 → 30 bump (PR #730). Jest 30 ships an updated Istanbul instrumenter that detects more branches in some files. 9 of 15 files saw branch coverage RISE under the new instrumentation; one file (GovernanceService.ts) saw branch coverage DROP from 26.53% to 21.7% — same 16 tests in tests/unit/services/ai/orchestrator/GovernanceService.commit2.test.ts run and pass, the denominator just got larger (28 covered / 129 total). This is an instrumentation artifact, not a removed test or refactor regression — exercising the documented escape hatch in CLAUDE.md's core-coverage-budget policy.",
+  "src/connectors/BusinessCentralConnector.ts": {
+    "lines": 76.34,
+    "statements": 76.44,
+    "functions": 92.3,
+    "branches": 52.84
+  },
+  "src/connectors/HubSpotConnector.ts": {
+    "lines": 36.17,
+    "statements": 35.41,
+    "functions": 37.5,
+    "branches": 15.78
+  },
+  "src/connectors/NetSuiteConnector.ts": {
+    "lines": 86.7,
+    "statements": 86.58,
+    "functions": 100,
+    "branches": 63.15
+  },
+  "src/connectors/OracleConnector.ts": {
+    "lines": 88.49,
+    "statements": 87.76,
+    "functions": 98.14,
+    "branches": 71.7
+  },
+  "src/connectors/SalesforceConnector.ts": {
+    "lines": 46.59,
+    "statements": 45.98,
+    "functions": 44.44,
+    "branches": 22.9
+  },
+  "src/connectors/ShipStationConnector.ts": {
+    "lines": 44.79,
+    "statements": 44,
+    "functions": 43.75,
+    "branches": 12.76
+  },
+  "src/database/repositories/TenantConfigurationRepository.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/flows/templates/FlowExecutor.ts": {
+    "lines": 97.89,
+    "statements": 95.95,
+    "functions": 100,
+    "branches": 75.86
+  },
+  "src/middleware/syncErrorAssistWebhook.ts": {
+    "lines": 96.77,
+    "statements": 96.77,
+    "functions": 100,
+    "branches": 90
+  },
+  "src/middleware/workflowCentralReady.ts": {
+    "lines": 0,
+    "statements": 0,
+    "functions": 0,
+    "branches": 0
+  },
+  "src/routes/syncErrorAssistWebhookSchema.ts": {
+    "lines": 94.28,
+    "statements": 92.3,
+    "functions": 100,
+    "branches": 95.83
+  },
+  "src/services/ai/orchestrator/GovernanceService.ts": {
+    "lines": 95.54,
+    "statements": 94.73,
+    "functions": 96.42,
+    "branches": 84.49
+  },
+  "src/services/ai/providers/ClaudeProvider.ts": {
+    "lines": 26.16,
+    "statements": 25,
+    "functions": 21.21,
+    "branches": 16.54
+  },
+  "src/services/ai/providers/IntelligentProviderRouter.ts": {
+    "lines": 91.19,
+    "statements": 89.71,
+    "functions": 92.5,
+    "branches": 74.44
+  },
+  "src/services/ai/providers/LMStudioProvider.ts": {
+    "lines": 20,
+    "statements": 19.02,
+    "functions": 14.81,
+    "branches": 12.31
+  },
+  "src/services/ai/providers/OpenAIProvider.ts": {
+    "lines": 19.04,
+    "statements": 17.83,
+    "functions": 10.34,
+    "branches": 13.57
+  },
+  "src/services/ai/providers/OpenRouterProvider.ts": {
+    "lines": 32.43,
+    "statements": 30.57,
+    "functions": 30.3,
+    "branches": 19.58
+  },
+  "src/services/financeCentral/FinanceCentralOperatorService.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 85.45
+  },
+  "src/services/financeCentral/FinanceCentralRepository.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 82.5
+  },
+  "src/services/mcp/MCPAggregatorService.ts": {
+    "lines": 91.76,
+    "statements": 92.04,
+    "functions": 87.5,
+    "branches": 73.52
+  },
+  "src/services/security/DLPService.ts": {
+    "lines": 94.3,
+    "statements": 93.08,
+    "functions": 96.82,
+    "branches": 91.66
+  },
+  "src/services/syncErrorAssist/SyncErrorAssistDailyJob.ts": {
+    "lines": 91.3,
+    "statements": 92.59,
+    "functions": 85.71,
+    "branches": 72.72
+  },
+  "src/services/syncErrorAssist/SyncErrorAssistRepository.ts": {
+    "lines": 100,
+    "statements": 97.93,
+    "functions": 100,
+    "branches": 80.64
+  },
+  "src/services/syncErrorAssist/SyncErrorAssistService.ts": {
+    "lines": 95.45,
+    "statements": 93.58,
+    "functions": 91.66,
+    "branches": 80.39
+  },
+  "src/services/workflowCentral/WorkflowCentralOperatorService.ts": {
+    "lines": 99.12,
+    "statements": 99.15,
+    "functions": 100,
+    "branches": 86.66
+  },
+  "src/services/workflowCentral/WorkflowCentralRepository.ts": {
+    "lines": 92.01,
+    "statements": 90.97,
+    "functions": 96.42,
+    "branches": 81.06
+  },
+  "src/services/workflowCentral/WorkflowEngineService.ts": {
+    "lines": 95.51,
+    "statements": 92.06,
+    "functions": 91.89,
+    "branches": 83.33
+  },
+  "src/services/workflowCentral/config.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/workflowCentral/errors.ts": {
+    "lines": 88,
+    "statements": 89.28,
+    "functions": 90,
+    "branches": 0
+  },
+  "src/services/workflowCentral/metrics.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/workflowCentral/payload/WorkflowPayload.ts": {
+    "lines": 100,
+    "statements": 97.87,
+    "functions": 100,
+    "branches": 98.3
+  },
+  "src/services/workflowCentral/payload/WorkflowPayloadCache.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 93.1
+  },
+  "src/services/workflowCentral/payload/WorkflowPayloadResolver.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 89.36
+  },
+  "src/services/workflowCentral/payload/backfillDerivation.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 95
+  },
+  "src/services/workflowCentral/payload/errors.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/utils/oauth1Helper.ts": {
+    "lines": 97.67,
+    "statements": 97.72,
+    "functions": 100,
+    "branches": 95.65
+  }
+}
