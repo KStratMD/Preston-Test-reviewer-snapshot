@@ -1,0 +1,101 @@
+{
+  "schema_version": 3,
+  "_note": "Top-level headline fields mirror the canonical run (openai x sfdc-to-ns-customers in --matrix mode; the single run otherwise); runs[] carries every provider x pair cell of this invocation. v3 adds accuracy_top1_ci95 (Wilson 95% score interval) per run + headline mirror. accuracy_top1 (fraction 0..1) is mirrored into metrics.json:ai_accuracy.latest by scripts/generate-metrics.mjs; README templates substitute METRIC:ai_accuracy.latest_pct. See docs/review/ai-accuracy-benchmark.md for the runbook.",
+  "run_mode": "live",
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "fixture": "scripts/golden/fixtures/sfdc-to-ns-customers.yaml",
+  "target_system": "netsuite",
+  "fixture_cases": 22,
+  "fixture_mappings": 61,
+  "accuracy_top1": 0.9508,
+  "accuracy_top1_ci95": {
+    "low": 0.8651,
+    "high": 0.9831
+  },
+  "hallucination_count": 0,
+  "manual_edit_rate": 0.0492,
+  "estimated_cost_usd": 0.039914,
+  "max_cost_usd": 5,
+  "duration_ms": 25860,
+  "generated_at": "2026-06-12T05:24:57.355Z",
+  "total_estimated_cost_usd": 0.114174,
+  "runs": [
+    {
+      "pair": "sfdc-to-ns-customers",
+      "fixture": "scripts/golden/fixtures/sfdc-to-ns-customers.yaml",
+      "target_system": "netsuite",
+      "provider": "openai",
+      "model": "gpt-5.4-mini",
+      "run_mode": "live",
+      "fixture_cases": 22,
+      "fixture_mappings": 61,
+      "accuracy_top1": 0.9508,
+      "accuracy_top1_ci95": {
+        "low": 0.8651,
+        "high": 0.9831
+      },
+      "hallucination_count": 0,
+      "manual_edit_rate": 0.0492,
+      "estimated_cost_usd": 0.039914,
+      "duration_ms": 25860
+    },
+    {
+      "pair": "sfdc-to-bc-customers",
+      "fixture": "scripts/golden/fixtures/sfdc-to-bc-customers.yaml",
+      "target_system": "businesscentral",
+      "provider": "openai",
+      "model": "gpt-5.4-mini",
+      "run_mode": "live",
+      "fixture_cases": 5,
+      "fixture_mappings": 11,
+      "accuracy_top1": 1,
+      "accuracy_top1_ci95": {
+        "low": 0.7412,
+        "high": 1
+      },
+      "hallucination_count": 0,
+      "manual_edit_rate": 0,
+      "estimated_cost_usd": 0.002869,
+      "duration_ms": 3451
+    },
+    {
+      "pair": "sfdc-to-ns-customers",
+      "fixture": "scripts/golden/fixtures/sfdc-to-ns-customers.yaml",
+      "target_system": "netsuite",
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5",
+      "run_mode": "live",
+      "fixture_cases": 22,
+      "fixture_mappings": 61,
+      "accuracy_top1": 0.9672,
+      "accuracy_top1_ci95": {
+        "low": 0.8881,
+        "high": 0.991
+      },
+      "hallucination_count": 0,
+      "manual_edit_rate": 0.0328,
+      "estimated_cost_usd": 0.066225,
+      "duration_ms": 34012
+    },
+    {
+      "pair": "sfdc-to-bc-customers",
+      "fixture": "scripts/golden/fixtures/sfdc-to-bc-customers.yaml",
+      "target_system": "businesscentral",
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5",
+      "run_mode": "live",
+      "fixture_cases": 5,
+      "fixture_mappings": 11,
+      "accuracy_top1": 1,
+      "accuracy_top1_ci95": {
+        "low": 0.7412,
+        "high": 1
+      },
+      "hallucination_count": 0,
+      "manual_edit_rate": 0,
+      "estimated_cost_usd": 0.005166,
+      "duration_ms": 5209
+    }
+  ]
+}

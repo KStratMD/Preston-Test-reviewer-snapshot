@@ -1,0 +1,184 @@
+{
+  "generated_at": "2026-06-14T00:46:03.830Z",
+  "git_sha": "3820fdb8d1f57f0f1adc31adefec8939891fcb86",
+  "ai_accuracy": {
+    "latest": 0.9508,
+    "latest_pct": "95.1%",
+    "run_mode": "live",
+    "provider": "openai",
+    "model": "gpt-5.4-mini",
+    "fixture_mappings": 61,
+    "hallucination_count": 0,
+    "source": "docs/review/ai-accuracy-benchmark.json"
+  },
+  "dlp_patterns": {
+    "count": 14,
+    "source": "AST scan of DLPService.buildPatternRegistry() return-array object literals",
+    "runtime_endpoint": "/api/compliance/dlp-patterns (calls DLPService.getRegisteredPatterns())",
+    "implementation_file": "src/services/security/DLPService.ts:181"
+  },
+  "connectors": {
+    "production": 5,
+    "beta": 1,
+    "demo_only": 11,
+    "stub": 1,
+    "unknown": 0,
+    "source": "AST scan of static productionStatus fields in src/connectors/*Connector.ts (and the *ConnectorProd.ts naming exception, e.g. SuiteCentralConnectorProd.ts); unknown means Phase 3 tags have not landed yet",
+    "items": [
+      {
+        "file": "src/connectors/AdyenConnector.ts",
+        "name": "AdyenConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real Adyen API scaffolding (checkout-test.adyen.com); ships demo fallback when isDemoMode() or isTestEnvironment() — no production credential test on file",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/BusinessCentralConnector.ts",
+        "name": "BusinessCentralConnector",
+        "productionStatus": "production",
+        "statusEvidence": "OData v4 with metadata discovery via src/connectors/businessCentral/MetadataClient.ts; OAuth2 client-credentials",
+        "proofCard": "docs/review/proof-cards/business-central-connector.md"
+      },
+      {
+        "file": "src/connectors/DynamicsConnector.ts",
+        "name": "DynamicsConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real Dynamics 365 Web API v9.2 OAuth2 scaffolding; ships demo fallback when isDemoMode() or demoCredentials — no production credential test on file",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/HubSpotConnector.ts",
+        "name": "HubSpotConnector",
+        "productionStatus": "production",
+        "statusEvidence": "Real HubSpot CRM REST API v3 calls (contacts, companies, deals, tickets) with bearer-token auth",
+        "proofCard": "docs/review/proof-cards/hubspot-connector.md"
+      },
+      {
+        "file": "src/connectors/NetSuiteConnector.ts",
+        "name": "NetSuiteConnector",
+        "productionStatus": "production",
+        "statusEvidence": "OAuth1 HMAC-SHA256 signing via src/utils/oauth1Helper.ts; tested against sandbox TSTDRV2698307",
+        "proofCard": "docs/review/proof-cards/netsuite-connector.md"
+      },
+      {
+        "file": "src/connectors/OracleConnector.ts",
+        "name": "OracleConnector",
+        "productionStatus": "beta",
+        "statusEvidence": "IConnector interface satisfied; ORDS REST scaffolding present, API depth thin (basic CRUD only)",
+        "proofCard": "docs/review/proof-cards/oracle-connector.md"
+      },
+      {
+        "file": "src/connectors/PayPalConnector.ts",
+        "name": "PayPalConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real PayPal REST API OAuth2 client-credentials scaffolding; ships demo fallback when isDemoMode() or isTestEnvironment() — no production credential test on file",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/PayQuickerConnector.ts",
+        "name": "PayQuickerConnector",
+        "productionStatus": "stub",
+        "statusEvidence": "Explicit stub: authenticate() throws \"not yet implemented\" at PayQuickerConnector.ts:132; CRUD methods return demo stub responses",
+        "proofCard": "docs/review/proof-cards/payquicker-connector.md"
+      },
+      {
+        "file": "src/connectors/SalesforceConnector.ts",
+        "name": "SalesforceConnector",
+        "productionStatus": "production",
+        "statusEvidence": "OAuth2 Resource Owner Password Credentials grant (grant_type=password) against real Salesforce REST API at src/connectors/SalesforceConnector.ts:448-507",
+        "proofCard": "docs/review/proof-cards/salesforce-connector.md"
+      },
+      {
+        "file": "src/connectors/SampleTypedConnector.ts",
+        "name": "SampleTypedConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Template/scaffold demonstrating type-safe MockConnectorBase pattern; in-process mock CRUD against fictitious api.sample.com; not wired to any real system",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/SAPConnector.ts",
+        "name": "SAPConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real SAP OData v2 scaffolding (Basic + ApiKey + X-CSRF-Token); ships demo fallback when isDemoMode() or demoCredentials — no production credential test on file",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/ShipStationConnector.ts",
+        "name": "ShipStationConnector",
+        "productionStatus": "production",
+        "statusEvidence": "Real ShipStation v2 REST API calls (orders, shipments, warehouses) with API-key + secret auth",
+        "proofCard": "docs/review/proof-cards/shipstation-connector.md"
+      },
+      {
+        "file": "src/connectors/ShopifyConnector.ts",
+        "name": "ShopifyConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real Shopify Admin REST API scaffolding (X-Shopify-Access-Token, myshopify.com baseURL); shipped via DemoConnectorDecorator wrap — no production credential test on file",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/SquireConnector.ts",
+        "name": "SquireConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "In-process MockConnectorBase backed by JSON fixtures (customers/vendors/products/orders); no real HTTP path",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/StripeConnector.ts",
+        "name": "StripeConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real Stripe REST API scaffolding (Bearer token auth); ships demo fallback when isDemoMode() or isTestEnvironment() — no production credential test on file",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/SuiteCentralConnector.ts",
+        "name": "SuiteCentralConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "In-process MockConnectorBase backed by JSON fixtures (customers/vendors/products/orders); demo path only — production NetSuite-native variant lives in SuiteCentralProductionConnector.ts",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/SuiteCentralConnectorProd.ts",
+        "name": "SuiteCentralConnectorProd",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real OAuth2 + axios HTTP scaffolding (no demo fallback — throws on misconfig); bound at inversify.config.ts:514, used by src/routes/suiteCentralProd.ts; no production credential test on file",
+        "proofCard": null
+      },
+      {
+        "file": "src/connectors/SuiteCentralProductionConnector.ts",
+        "name": "SuiteCentralProductionConnector",
+        "productionStatus": "demo_only",
+        "statusEvidence": "Real SuiteCentral API scaffolding (Bearer token + X-SuiteCentral-Tenant) for 6 modules; falls back to squireMockData when isProductionMode is false — no production credential test on file",
+        "proofCard": null
+      }
+    ]
+  },
+  "modules": {
+    "count": null,
+    "source": "src/modules/registry.ts",
+    "status": "missing",
+    "note": "Phase 8 module registry has not landed yet."
+  },
+  "tests": {
+    "source": "test-summary.json",
+    "passing": 11722,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 548,
+    "total": 11722
+  },
+  "coverage": {
+    "source": "coverage/coverage-summary.json",
+    "lines": 69.12,
+    "branches": 57.73,
+    "functions": 71.53,
+    "statements": 68.87
+  },
+  "loc": {
+    "production_ts": 191503,
+    "total_ts": 361754,
+    "total_md": 233857,
+    "total_files": 4493,
+    "source": "cloc . --json --exclude-dir=node_modules,.git,coverage,dist,.worktrees"
+  }
+}

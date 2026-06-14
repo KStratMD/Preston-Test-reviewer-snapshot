@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SuiteCentral Portfolio Evidence View — v1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; background: #f7f8fa; color: #1c2434; }
+  header { max-width: 1100px; margin: 0 auto 1rem; }
+  h1 { font-size: 1.5rem; margin: 0 0 0.25rem; }
+  .subhead { color: #6b7888; font-size: 0.9rem; margin: 0 0 0.5rem; }
+  .v1-banner { padding: 10px 14px; background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 4px; margin: 1rem auto; max-width: 1100px; font-size: 0.85rem; color: #78350f; }
+  .v1-banner strong { color: #92400e; }
+  main { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; }
+  .card { background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); display: flex; flex-direction: column; }
+  .card h2 { font-size: 1.1rem; margin: 0 0 0.4rem; color: #111827; }
+  .card .owner { color: #4b5563; font-size: 0.8rem; margin: 0 0 0.5rem; }
+  .card .status-line { font-size: 0.85rem; color: #1f2937; margin: 0 0 0.75rem; }
+  .card .status-line strong { color: #374151; }
+  .card .what { font-size: 0.85rem; color: #374151; line-height: 1.45; margin: 0 0 0.85rem; }
+  .card .rec { font-size: 0.85rem; color: #1f2937; background: #eef2ff; padding: 8px 12px; border-radius: 4px; border-left: 3px solid #6366f1; margin: 0 0 0.75rem; line-height: 1.4; }
+  .card .rec strong { color: #312e81; }
+  .card .footer-row { margin-top: auto; padding-top: 8px; border-top: 1px solid #f3f4f6; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #6b7280; gap: 8px; flex-wrap: wrap; }
+  .card .footer-row a { color: #2563eb; text-decoration: none; }
+  .card .footer-row a:hover { text-decoration: underline; }
+  .meta { color: #6b7888; font-size: 0.85rem; margin: 0 auto; max-width: 1100px; padding: 0 4px 1rem; }
+  .error { padding: 12px 16px; background: #fee2e2; border-left: 4px solid #ef4444; border-radius: 4px; max-width: 1100px; margin: 1rem auto; }
+</style>
+<!--
+  Offline manifest payload — left empty in the source tree on purpose.
+  scripts/package-squire-exec-v2-mini.ts fills this with the contents of
+  public/portfolio-evidence.json at packaging time so the offline
+  mini-pack (browser-only, no local server) can render without fetch().
+  When the script tag contains a non-empty JSON object, the JS below
+  consumes it directly; otherwise the page falls through to the live
+  fetch() path used by the dev/hosted server. Mirrors the
+  `<script id="offline-md">` pattern in
+  public/squire-v2-media-demo/read/business-case.html.
+-->
+<script type="application/json" id="offline-manifest"></script>
+</head>
+<body>
+<header>
+  <h1>SuiteCentral Portfolio Evidence</h1>
+  <p class="subhead">Per-product evidence for Squire's six SuiteCentral products, surfaced from the repository's product cards.</p>
+</header>
+
+<div class="v1-banner">
+  <strong>v1 &mdash; static evidence.</strong>
+  This view renders frozen content from <code>docs/review/squire-product-cards/</code>. There is no live ERP data, no real-time integration status, and no per-product telemetry on this surface. A change to a product card requires re-running <code>npm&nbsp;run&nbsp;build:portfolio-evidence-manifest</code> &mdash; the CI drift gate <code>audit-portfolio-evidence</code> enforces that the rendered manifest matches the cards.
+</div>
+
+<div class="meta" id="meta">Loading manifest&hellip;</div>
+<main id="cards"></main>
+
+<script>
+  // Tiny, dependency-free renderer. Reads the JSON manifest produced by
+  // scripts/build-portfolio-evidence-manifest.mjs. Acceptance criteria for
+  // PR 22 (numbered to match the A-grade Squire adoption plan, Phase 4 —
+  // see the PR description for the canonical plan reference):
+  //   1. v1 surface renders all 6 products without runtime data deps
+  //      (offline-clean — this file is satisfied by the static JSON fetch)
+  //   2. Drift gate fails CI on add/remove/rename without manifest re-stamp
+  //      (satisfied by scripts/audit-portfolio-evidence.mjs, not this file)
+  //   3. Status field matches each card's canonical value verbatim
+  //   4. Recommended-path field matches each card's verbatim text
+  //   5. Visible "v1 — static evidence" disclosure (the banner above)
+  //   6. Each card deep-links to the markdown card in the reviewer mirror
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Convert a single line of markdown-bold (`**foo**`) into <strong> tags.
+  // No other inline markdown is interpreted. Used for the two card fields
+  // that the 6 current product cards write with inline bold:
+  //   - recommendedPath: SyncCentral leads with `**Enhance**`, PaymentCentral
+  //     with `**Integrate**`, etc.
+  //   - whatItDoesToday: SyncCentral and Payout Rec both call out entity
+  //     types in bold inline (e.g. `**customer**, **contact**, ...`).
+  // Status and owner are rendered with escapeHtml() alone — none of the 6
+  // current cards use inline bold in those fields. (Copilot R4 + R6
+  // spotted prior doc/code mismatches in this comment.)
+  function renderInlineBold(s) {
+    return escapeHtml(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  }
+
+  function renderCard(card) {
+    const date = escapeHtml(card.lastReviewed.date);
+    const sha = escapeHtml(card.lastReviewed.sha);
+    const link = escapeHtml(card.reviewerMirrorUrl);
+    return (
+      '<article class="card">' +
+        '<h2>' + escapeHtml(card.productName) + '</h2>' +
+        '<p class="owner">Owner: ' + escapeHtml(card.owner) + '</p>' +
+        '<p class="status-line"><strong>Squire-side status:</strong> ' + escapeHtml(card.status) + '</p>' +
+        '<p class="what">' + renderInlineBold(card.whatItDoesToday) + '</p>' +
+        '<p class="rec"><strong>Recommended path today:</strong> ' + renderInlineBold(card.recommendedPath) + '</p>' +
+        '<div class="footer-row">' +
+          '<span>Last reviewed ' + date + ' &middot; <code>' + sha + '</code></span>' +
+          '<a href="' + link + '" target="_blank" rel="noopener">Open card &rarr;</a>' +
+        '</div>' +
+      '</article>'
+    );
+  }
+
+  function renderError(message) {
+    const main = document.getElementById('cards');
+    main.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'error';
+    div.textContent = message;
+    main.parentNode.insertBefore(div, main);
+    document.getElementById('meta').textContent = '';
+  }
+
+  // Loading strategy (three tiers, in priority order):
+  //   1. Offline-embedded payload — if scripts/package-squire-exec-v2-mini.ts
+  //      injected the manifest into <script id="offline-manifest"> at
+  //      packaging time, use it directly. This is what makes the
+  //      browser-only mini-pack (no local server) work; matches the
+  //      embeddedNode pattern in
+  //      public/squire-v2-media-demo/read/business-case.html.
+  //   2. file:// without an embedded payload — browsers BLOCK fetch() from
+  //      file:// origins (CORS-equivalent), so show a friendly "use a
+  //      local server" message rather than triggering the doomed fetch.
+  //      This branch shouldn't fire for the mini-pack (tier 1 covers it);
+  //      it's the fallback for someone manually opening this file from
+  //      a non-packaged checkout.
+  //   3. Hosted / dev server — fetch the sibling JSON via relative path.
+  //      Page lives at /squire-portfolio-evidence.html, JSON at
+  //      /portfolio-evidence.json — relative resolves to the same dir.
+  function renderManifest(manifest) {
+    const cards = Array.isArray(manifest.cards) ? manifest.cards : [];
+    document.getElementById('meta').innerHTML =
+      escapeHtml(String(cards.length)) + ' product card' +
+      (cards.length === 1 ? '' : 's') +
+      ' &middot; manifest source: <code>' +
+      escapeHtml(String(manifest.generatedFrom)) + '</code>';
+    document.getElementById('cards').innerHTML = cards.map(renderCard).join('');
+  }
+
+  const offlineNode = document.getElementById('offline-manifest');
+  const offlineRaw = offlineNode && offlineNode.textContent ? offlineNode.textContent.trim() : '';
+  if (offlineRaw.length > 0) {
+    try {
+      renderManifest(JSON.parse(offlineRaw));
+    } catch (err) {
+      renderError(
+        'The embedded offline manifest could not be parsed: ' +
+        (err && err.message ? err.message : String(err)) +
+        '. Re-run the mini-pack build (scripts/package-squire-exec-v2-mini.ts).'
+      );
+    }
+  } else if (location.protocol === 'file:') {
+    renderError(
+      'This evidence view needs either an embedded manifest (mini-pack build) ' +
+      'or an HTTP server — browsers block fetch() from file:// origins. ' +
+      'If you opened a raw checkout, start a local server (e.g. `npx serve .`); ' +
+      'if you opened the mini-pack, re-run the mini-pack build so the manifest is injected.'
+    );
+  } else {
+    fetch('./portfolio-evidence.json', { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) throw new Error('manifest fetch failed: HTTP ' + res.status);
+        return res.json();
+      })
+      .then(renderManifest)
+      .catch((err) => {
+        renderError(
+          'Unable to load ./portfolio-evidence.json. ' +
+          'On a hosted/dev server, this usually means the build step did not run ' +
+          '(run `npm run build:portfolio-evidence-manifest`). ' +
+          '(' + (err && err.message ? err.message : String(err)) + ')'
+        );
+      });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "id": "f1eb4a8a-77af-4a87-b51f-000000000501",
+  "name": "SuiteCentral Embedded Host",
+  "publisher": "SuiteCentral",
+  "version": "1.0.0.0",
+  "brief": "Embed SuiteCentral inside Business Central",
+  "description": "Page extension that adds a SuiteCentral FactBox to the Customer Card and a Control Add-in that loads the SuiteCentral iframe after a server-to-server host-bootstrap handshake. Requires per-deployment configuration of SuiteCentralBaseUrl, SuiteCentralEmbeddedServiceToken, and SuiteCentralPlatformAccountId.",
+  "platform": "24.0.0.0",
+  "application": "24.0.0.0",
+  "runtime": "13.0",
+  "dependencies": [],
+  "idRanges": [
+    {
+      "from": 70050100,
+      "to": 70050199
+    }
+  ],
+  "features": [
+    "TranslationFile"
+  ]
+}

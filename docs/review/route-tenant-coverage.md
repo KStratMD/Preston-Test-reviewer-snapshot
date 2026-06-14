@@ -1,0 +1,158 @@
+# Route Tenant Coverage
+
+> **Source of truth:** `src/middleware/setup/routeManifest.ts` (`ROUTE_MANIFEST`).
+> This doc is a human-readable companion; the audit gate
+> `npm run audit-tenant-coverage` enforces source ↔ manifest consistency.
+
+## Classification semantics
+
+| Classification | Behavior | Use when |
+|---|---|---|
+| `public` | No identity required, no tenant filtering | Health/probes, redirect shims, swagger UI |
+| `system` | Elevated identity required (admin/ops); auth still enforced at handler level | Tenant lifecycle admin, ops metrics |
+| `tenant_required` | Central `tenantIsolation` middleware populates `req.tenantContext` from verified sources only (Bearer JWT against `JWT_SECRET`, configured `resolveTenant` callback, or `trustedTenants` fast-path). The `x-tenant-id` header alone does NOT populate it — `disableHeaderExtraction: true` is a permanent security invariant frozen by `npm run audit-tenant-isolation-invariant`. | Any route that operates on tenant-scoped data |
+| `demo` | Bypasses tenant isolation entirely | Demo-mode fallback routes |
+
+## PR 4B + PR 2C-Auth contract
+
+- **Permissive mode (today).** `tenantIsolation` is mounted with `strictMode: false, disableHeaderExtraction: true`. A `tenant_required` route called without verified tenant context falls through to the handler; handlers continue to read identity via `extractIdentityContext`, which falls back to `SYSTEM_IDENTITY`. Routes that want fail-closed behavior implement it themselves (e.g., the Codex-5.4 401 gate in `approvalsRouter.ts`).
+- **`disableHeaderExtraction: true`** is a permanent security invariant. It means the un-verified `x-tenant-id` header does NOT populate `req.tenantContext`, closing the header-impersonation surface against direct `req.tenantContext` consumers (`mcpPolicies.ts`) AND against the `extractIdentityContext` `req.tenantContext` bridge added in PR 2C-Auth. The flag is frozen by `npm run audit-tenant-isolation-invariant`: any `tenantIsolation(...)` callsite under `src/` that omits or sets it `false` fails CI. The flag should not flip unless an upstream gateway verifies the header — Preston-Test does not have one.
+- **PR 2C-Auth wired the JWT path.** `optionalAuthMiddleware` is mounted globally on `/api/*` ahead of the central gate, so a Bearer JWT against `JWT_SECRET` populates `req.user.tenantId`. Inside the gate, `tenantIsolation`'s built-in JWT extraction populates `req.tenantContext` from the same JWT. `extractIdentityContext` reads `req.auth → req.user → req.tenantContext` in that order; the bridge (third source) was added in PR 2C-Auth and inherits the verified-source-only invariant above.
+- **Strict-mode flip (future PR).** Once production callers ship JWTs reliably, `strictMode` can flip to `true` so missing tenant context returns 403 at the central gate, retiring the per-handler SYSTEM_IDENTITY fail-closed pattern (e.g. the explicit 401 in `approvalsRouter`). That migration is out of scope for PR 2C-Auth — it requires updating ~30 handlers that currently treat SYSTEM_IDENTITY as a valid fallback.
+- **Unknown-route safety default.** `classifyRoute()` returns `'system'` (NOT `'public'`) for unmatched paths and emits a one-time-per-path `logger.error`, capped at 1024 entries to bound memory/log volume under attacker-driven path enumeration. The CI audit gate is the primary safety net; the noisy runtime default is the backstop.
+
+## Identity & audit propagation matrix
+
+> **Scope of this section.** The classification table above answers *"is this route tenant-scoped?"* (isolation). This section answers a second, orthogonal SOC-2 question: *"does the handler attribute the acting identity, and does that actor reach the audit trail?"* (attribution). A route can be tenant-isolated at the middleware layer yet still fail to record *who* performed a write.
+>
+> **Baseline.** Every `/api/*` route passes through `optionalAuthMiddleware` (global) + the central `tenantIsolation` gate, so a verified Bearer JWT makes `req.user.tenantId` available everywhere. Attribution is therefore about whether the **handler/service** consumes that identity (via `extractIdentityContext(req)`) and threads it into audit rows — not about whether auth ran.
+>
+> **States.** ✅ propagates — handler calls `extractIdentityContext` and/or attributes the actor in audit. 🔶 tenant-scoped only — handler reads `req.user.tenantId` / `requireTenantId` for data scoping but does not attribute the actor per write. ⛔ gap — handler delegates to a service without passing tenant/actor; no `extractIdentityContext`, no audit actor (middleware still authenticates the caller, so this is an attribution gap, not an open door).
+>
+> **Methodology.** Per-route-file scan (point-in-time, 2026-05-29) for `extractIdentityContext`, `SYSTEM_IDENTITY`, audit emission (`auditService`/`AuditService`/`AuditLogRepository`/`safeAudit`), and tenant reads (`req.user?.tenantId`/`requireTenantId`/`tenantContext`). Regenerate with:
+> `for f in src/routes/**/*.ts; do grep -cE 'extractIdentityContext|SYSTEM_IDENTITY' "$f"; done` (see the grep block in the PR that introduced this section).
+
+| Route family | Actor source | Per-write audit actor | State |
+|---|---|---|---|
+| `/api/ai/proxy` (+ Agent/BI/MCP/Mapping/Quality sub-routers) | `extractIdentityContext` | partial (MCP yes) | ✅ |
+| `/api/mcp` | `extractIdentityContext` + `req.user.tenantId` | yes | ✅ |
+| `/api/finance-central` | `extractIdentityContext` (§21 Kerry C5) | yes (`AuditLogRepository`) | ✅ |
+| `/api/workflow-central` | `extractIdentityContext` (§21 Kerry C5) | yes (`safeAudit`) | ✅ |
+| `/api/hubspot` | `extractIdentityContext` | yes | ✅ |
+| `/api/governance/approvals` | `extractIdentityContext` + 401 gate | yes | ✅ |
+| `/api/cost-transparency` | `extractIdentityContext` | n/a (read surface) | ✅ |
+| `/api/nl-action-gate` | `extractIdentityContext` | via dispatch service | ✅ |
+| `/api/actions` | `extractIdentityContext` | n/a | ✅ |
+| `/api/sync-error-assist` | `extractIdentityContext` + tenant resolve | via service | ✅ |
+| `/api/help` | `extractIdentityContext` | n/a (read surface) | ✅ |
+| `/api/reconciliation-center` | `extractIdentityContext` (401 on `SYSTEM_IDENTITY`) | yes (resolve records actor) | ✅ |
+| `/api/lineage` | `extractIdentityContext` (401 on `SYSTEM_IDENTITY` / missing / synthetic userId) | n/a (read surface) | ✅ |
+| `/api/configurations`, `/api/integrations` | `requireTenantId` / `req.user.tenantId` | no | 🔶 |
+| `/api/settings`, `/api/dashboard`, `/api/mappings`, `/api/templates` | `req.user.tenantId` (Mapping sub-router uses `extractIdentityContext`) | no | 🔶 |
+| `/api/compliance` | `req.user.permissions` (authenticated) | audit emits, actor not threaded per write | 🔶 |
+| `/api/payment-central` (+ processors/invoices/gl/dunning/reconciliation) | none — `getPaymentService()` called without tenant/actor | no | ⛔ |
+| `/api/supplier-central`, `/api/customer-central`, `/api/quality-central`, `/api/payout-central`, `/api/installer-central`, `/api/service-central`, `/api/inventory-central`, `/api/contract-central`, `/api/portal-central` | none at handler | no | ⛔ |
+| `/api/sync-central`, `/api/sync-orchestrator`, `/api/suitecentral/*`, `/api/squire/suitecentral/*` | none at handler | no | ⛔ |
+
+### Genuine gaps (next increment)
+
+The ⛔ rows are the live attribution gaps. They are **tenant-authenticated** (the central gate runs) but their handlers delegate to operator/sync services without passing `extractIdentityContext(req)` or writing an actor-bearing audit row — so a write through these surfaces is not attributable to a user. `FinanceCentral` and `WorkflowCentral` already closed this (PR §21 / Kerry C5); the remaining central-operator families should **replicate that pattern** (thread `extractIdentityContext` → service → audit row). This is deliberately *not* bundled here: each family touches a distinct operator service and is the same magnitude as the FC/WC work, so wiring them belongs in scoped per-family PRs, tracked against this matrix. Closing them is what lets a SOC-2 reviewer answer "is multi-tenant audit complete?" with yes.
+
+## Public
+
+| Path | Notes |
+|---|---|
+| `/health` | liveness probe |
+| `/ready` | readiness probe |
+| `/api/metrics` | Prometheus scrape; no auth |
+| `/api/ai` | PR 1B 301 redirect shim → /api/ai/proxy |
+| `/api/download` | static downloads |
+| `/docs` | docs router |
+| `/api-docs` | swagger UI |
+| `/api/connector-metadata` | sub-route of bare `/api` mount (connectorCredentialRouter); global connector catalog, no auth |
+
+## System
+
+| Path | Notes |
+|---|---|
+| `/api/admin/tenants` | tenant lifecycle admin |
+| `/metrics` | gated by ENABLE_METRICS + authMiddleware |
+| `/api/disaster-recovery` | ops-only |
+| `/api/disaster-recovery/dashboard` | ops-only |
+| `/api/statistics` | single-endpoint diagnostic mounted in `src/index.ts`; reads global configService state, not tenant-scoped |
+
+## Demo
+
+| Path | Notes |
+|---|---|
+| `/api/ai-demo` | |
+| `/api/full-pipeline-demo` | |
+| `/api/data-migration` | demo migration playground |
+
+## Tenant-required
+
+| Path | Notes |
+|---|---|
+| `/api/ai/proxy` | AI provider proxy; governance + tenant scoping |
+| `/api/settings` | |
+| `/api/mcp` | |
+| `/api/mappings` | |
+| `/api/mappings/templates` | |
+| `/api/templates` | |
+| `/api/dashboard` | |
+| `/api/dashboard/api/mappings` | legacy double-/api/ prefix; mirrors RouteSetup.ts mount |
+| `/api/dashboard/mappings` | |
+| `/api/dashboard/mappings/templates` | |
+| `/api/dashboard/templates` | |
+| `/api/integrations` | |
+| `/api/upload` | |
+| `/api/testing` | |
+| `/api/fixtures` | |
+| `/api/baselines` | |
+| `/api/persistence` | |
+| `/api/predictive-analytics` | |
+| `/api/executive` | |
+| `/api/agents` | |
+| `/api/context` | |
+| `/api/embedded/host-bootstrap` | |
+| `/api/embedded/context` | |
+| `/api/embedded/sessions` | |
+| `/api/governance/approvals` | HITL queue; Codex-5.4 401 gate inside router |
+| `/api/actions` | |
+| `/api/documents` | |
+| `/api/feature-flags` | |
+| `/api/roi-dashboard` | |
+| `/api/suitecentral/sync` | |
+| `/api/suitecentral/netsuite/sync` | |
+| `/api/squire/suitecentral/netsuite/sync` | |
+| `/api/suitecentral/prod` | |
+| `/api/payment-central` | centralAuthMiddleware + tenantStatusGate already in place |
+| `/api/supplier-central` | |
+| `/api/customer-central` | |
+| `/api/quality-central` | |
+| `/api/payout-central` | |
+| `/api/installer-central` | |
+| `/api/service-central` | |
+| `/api/inventory-central` | |
+| `/api/finance-central` | |
+| `/api/contract-central` | |
+| `/api/portal-central` | |
+| `/api/workflow-central` | |
+| `/api/reconciliation-center` | PR 11 durable exception queue; 401 when `extractIdentityContext` resolves to `SYSTEM_IDENTITY` |
+| `/api/lineage` | PR 12 record-level lineage; 401 on `SYSTEM_IDENTITY` / missing / synthetic operator userId |
+| `/api/shipstation` | |
+| `/api/hubspot` | |
+| `/api/sync-central` | tenantStatusGate wired (kill switch; identity via global optionalAuthMiddleware) |
+| `/api/sync-orchestrator` | tenantStatusGate wired (kill switch; identity via global optionalAuthMiddleware) |
+| `/api/automation-libraries` | tenantStatusGate wired (kill switch; identity via global optionalAuthMiddleware) |
+| `/api/nl-action-gate` | |
+| `/api/mdm` | |
+| `/api/compliance` | |
+| `/api/sync-error-assist` | pathless mount via syncErrorAssistRoutes; routes defined as absolute /api/sync-error-assist/* inside the router |
+| `/api/cost-transparency` | cost dashboard + anomaly; `/api/cost-transparency/health` is a static unauthenticated probe |
+| `/api/ai-config` | pathless mount via aiConfigRouter; routes defined as absolute /api/ai-config/* inside the router |
+| `/api/help` | mounted in `src/index.ts`; help.ts reads identity via extractIdentityContext |
+| `/api/connector-credentials` | sub-route of bare `/api` mount (connectorCredentialRouter); per-tenant credentials, requireAuth |
+| `/api/test-connection` | sub-route of bare `/api` mount (connectorTestRouter); tests tenant connector credentials |
+| `/api/configurations` | sub-route of root `/` mount (configurationRouter); integration configuration CRUD |
+| `/api/enterprise` | sub-route of root `/` mount (enterpriseFeaturesRouter); /api/enterprise/* surface incl. activity, approvals, golden-set, governance |

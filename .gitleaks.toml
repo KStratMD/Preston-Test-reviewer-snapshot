@@ -1,0 +1,28 @@
+title = "Preston-Test gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known fake/demo/placeholder secrets intentionally kept in source"
+regexes = [
+  '''dev-demo-secret-123456789012345678901234567890''',
+  '''local-only''',
+  '''change[-_]?me''',
+  '''placeholder''',
+  '''your-(?:secret|api[-_]?key|token|password)''',
+  '''example-(?:key|token|secret)''',
+  '''sk-test[-_]''',
+  '''test-secret-123456789012345678901234567890''',
+  '''prod_secret_[0-9]+''',
+  '''prod_api_key_[0-9]+''',
+  '''testsecret1234567890123456789012345678901234567890''',
+  '''api-key-12345''',
+  '''Kx8vP2nQ9wE5rT7uY3iO1pA6sD4fG7hJ9kL2mN5bV8cX0zW3qE6tY9uI2oP5aS8''',
+  '''a-secret-that-is-at-least-32-characters-long''',
+  '''existing-key-123''',
+  '''eyJhbGciOiJIUzI1NiJ9\.eyJzdWIiOiIxMjM0NTY3ODkwIn0\.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U'''
+]
+paths = [
+  '''public/Squire-Executive-Package-v2/.*'''
+]

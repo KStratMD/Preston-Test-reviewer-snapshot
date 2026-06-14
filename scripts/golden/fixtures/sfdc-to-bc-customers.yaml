@@ -1,0 +1,112 @@
+# Golden Set Test Cases: Salesforce to Business Central Customers (Phase B)
+#
+# Data-leakage guard: NONE of the (sourceField, targetField) pairs below may
+# appear in src/services/ai/prompts/FieldMappingPrompts.ts COMMON_MAPPING_EXAMPLES.
+# Enforced by tests/unit/scripts/run-ai-accuracy-benchmark.dataLeakage.test.ts.
+#
+# Candidate-set posture (differs from the NS fixture): the runner's
+# BC_CUSTOMER_SCHEMA_FIELDS is the COMPLETE real production schema — every
+# scalar Property of src/connectors/fixtures/bc/metadata/customers.xml (the
+# OData v4 customers EntityType), uncurated relative to this answer set, and
+# parity-pinned to the XML by the data-leakage test. Because the real schema
+# is only ~19 fields, the NS ">=75 absolute distractors" floor is replaced by
+# a proportional rule: this fixture may label AT MOST floor(schema/2) = 9
+# DISTINCT targets, guaranteeing >=10 distractors (>=50% of the candidate
+# set). Targets are Business Central customers API field names.
+
+testSuite:
+  name: "SFDC Account to Business Central Customer Mapping"
+  sourceSystem: "salesforce"
+  targetSystem: "businesscentral"
+  entityType: "customers"
+
+testCases:
+  - name: "Core Identity Fields"
+    sourceFields:
+      - name: "Account.Name"
+        type: "string"
+        sample: "Acme Corporation"
+      - name: "Account.AccountNumber"
+        type: "string"
+        sample: "ACC-12345"
+      - name: "Account.Website"
+        type: "string"
+        sample: "www.acme.com"
+    expectedMappings:
+      - source: "Account.Name"
+        target: "displayName"
+        confidence: 0.95
+      - source: "Account.AccountNumber"
+        target: "number"
+        confidence: 0.85
+      - source: "Account.Website"
+        target: "website"
+        confidence: 0.90
+
+  - name: "Contact Channels"
+    sourceFields:
+      - name: "Account.Phone"
+        type: "phone"
+        sample: "+1-555-0100"
+      - name: "Account.Owner.Email"
+        type: "email"
+        sample: "sales@acme.com"
+    expectedMappings:
+      - source: "Account.Phone"
+        target: "phoneNumber"
+        confidence: 0.95
+      - source: "Account.Owner.Email"
+        target: "email"
+        confidence: 0.90
+
+  - name: "Tax and Currency"
+    sourceFields:
+      - name: "Account.VAT_Number__c"
+        type: "string"
+        sample: "GB123456789"
+      - name: "Account.CurrencyIsoCode"
+        type: "string"
+        sample: "USD"
+    expectedMappings:
+      - source: "Account.VAT_Number__c"
+        target: "taxRegistrationNumber"
+        confidence: 0.90
+      - source: "Account.CurrencyIsoCode"
+        target: "currencyCode"
+        confidence: 0.90
+
+  # Deliberately hard: SFDC IsActive__c is a positive-polarity boolean
+  # ("true" = active customer), but BC's `blocked` field is inverted —
+  # an active customer has blocked = "" and a deactivated one has
+  # blocked = "All". The model must map across the polarity flip.
+  - name: "Blocked Status (inverted semantics)"
+    sourceFields:
+      - name: "Account.IsActive__c"
+        type: "boolean"
+        sample: "true"
+      - name: "Account.Deactivated__c"
+        type: "boolean"
+        sample: "false"
+    expectedMappings:
+      - source: "Account.IsActive__c"
+        target: "blocked"
+        confidence: 0.70
+      - source: "Account.Deactivated__c"
+        target: "blocked"
+        confidence: 0.70
+
+  - name: "Audit Trail"
+    sourceFields:
+      - name: "Account.LastModifiedDate"
+        type: "datetime"
+        sample: "2024-06-20T14:45:00Z"
+      - name: "Account.SystemModstamp"
+        type: "datetime"
+        sample: "2024-06-21T09:00:00Z"
+    expectedMappings:
+      - source: "Account.LastModifiedDate"
+        target: "lastModifiedDateTime"
+        confidence: 0.95
+      - source: "Account.SystemModstamp"
+        target: "lastModifiedDateTime"
+        confidence: 0.80
