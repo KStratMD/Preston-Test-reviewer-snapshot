@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review &amp; Evidence — Integration Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/vendor/fontawesome-6.0.0.min.css">
+    <link rel="stylesheet" href="/css/integration-hub-shell.css">
+    <style>
+        /* Evidence-ledger signature: monospace status codes evoke an audit log. */
+        .ev-mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+        .ev-eyebrow { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.22em; text-transform: uppercase; font-size: 0.72rem; font-weight: 700; color: var(--ih-shell-blue); }
+        .ev-chip {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 0.62rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+            padding: 0.12rem 0.45rem; border-radius: 0.35rem; line-height: 1.4; white-space: nowrap;
+        }
+        .ev-prod { background: #dcfce7; color: #15803d; }
+        .ev-beta { background: #fef3c7; color: #b45309; }
+        .ev-stub { background: #e2e8f0; color: #475569; }
+        .ev-tile {
+            display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+            padding: 0.75rem 0.9rem; border: 1px solid var(--ih-shell-border); border-radius: 0.7rem;
+            background: #fff; transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+            text-decoration: none;
+        }
+        .ev-tile:hover { border-color: #b9d8ff; transform: translateY(-1px); box-shadow: 0 10px 24px rgba(15, 39, 64, 0.08); }
+        .ev-tile__name { font-weight: 600; color: var(--ih-shell-text); font-size: 0.9rem; }
+        .ev-tile__verify { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.7rem; color: var(--ih-shell-blue); opacity: 0; transition: opacity 0.15s ease; }
+        .ev-tile:hover .ev-tile__verify { opacity: 1; }
+        .ev-hero-stat { font-variant-numeric: tabular-nums; }
+        .ev-section-rule { height: 1px; background: linear-gradient(90deg, var(--ih-shell-border), transparent); }
+        .ev-card { background: #fff; border: 1px solid var(--ih-shell-border); border-radius: 0.9rem; padding: 1.1rem 1.2rem; text-decoration: none; display: block; transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease; }
+        .ev-card:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(15, 39, 64, 0.1); border-color: #b9d8ff; }
+    </style>
+</head>
+
+<body class="ih-shell min-h-screen text-gray-900" data-shell-section="review">
+
+    <!-- Integration Hub top module rail -->
+    <header class="ih-shell-top-rail sticky top-0 z-30">
+        <div class="flex items-center justify-between px-8">
+            <nav class="flex items-center gap-2" aria-label="Primary modules">
+                <a class="ih-shell-top-tab" href="/" data-shell-tab="build"><i class="fas fa-tools"></i>Build</a>
+                <a class="ih-shell-top-tab" href="/review-hub.html" data-shell-tab="review"><i class="fas fa-shield-alt"></i>Review</a>
+                <a class="ih-shell-top-tab" href="/squire-v2-media-demo/index.html" data-shell-tab="demo"><i class="fas fa-play"></i>Demo</a>
+                <a class="ih-shell-top-tab" href="/wiki/" data-shell-tab="wiki"><i class="fas fa-book"></i>Wiki</a>
+                <a class="ih-shell-top-tab" href="/docs/INDEX.md" data-shell-tab="docs"><i class="fas fa-file-alt"></i>Docs</a>
+            </nav>
+            <a href="/" data-ih-hub-link class="px-4 py-2 rounded-lg border border-blue-200 text-blue-700 font-semibold bg-white hover:bg-blue-50">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Hub
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-8 py-10">
+
+        <!-- Hero / thesis -->
+        <section class="mb-10">
+            <p class="ev-eyebrow mb-3">Review &amp; Evidence</p>
+            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 max-w-3xl">
+                Every production claim, with the code behind it.
+            </h1>
+            <p class="mt-3 text-lg text-gray-600 max-w-2xl">
+                25 component proof cards — each with its sources, tests, live-vs-fixture posture, and a
+                60-second verification. Plus the live dashboards, benchmarks, and external review surfaces.
+            </p>
+
+            <!-- status ledger -->
+            <div class="mt-6 flex flex-wrap items-stretch gap-3">
+                <div class="ih-shell-card px-5 py-3 flex items-center gap-3">
+                    <span class="ev-mono text-3xl font-extrabold ev-hero-stat text-gray-900">25</span>
+                    <span class="text-sm text-gray-500 leading-tight">Proof<br>cards</span>
+                </div>
+                <div class="ih-shell-card px-5 py-3 flex items-center gap-3">
+                    <span class="ev-mono text-3xl font-extrabold ev-hero-stat" style="color:#15803d">20</span>
+                    <span class="text-sm text-gray-500 leading-tight">Production<br>verified</span>
+                </div>
+                <div class="ih-shell-card px-5 py-3 flex items-center gap-3">
+                    <span class="ev-mono text-3xl font-extrabold ev-hero-stat" style="color:#b45309">4</span>
+                    <span class="text-sm text-gray-500 leading-tight">Beta<br>(thin depth)</span>
+                </div>
+                <div class="ih-shell-card px-5 py-3 flex items-center gap-3">
+                    <span class="ev-mono text-3xl font-extrabold ev-hero-stat" style="color:#475569">1</span>
+                    <span class="text-sm text-gray-500 leading-tight">Stub<br>(unimplemented)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proof cards -->
+        <section class="mb-12">
+            <div class="flex items-end justify-between mb-1">
+                <h2 class="text-xl font-bold text-gray-900"><span class="ev-mono text-blue-600">01</span> &nbsp;Proof Cards</h2>
+            </div>
+            <p class="text-sm text-gray-500 mb-4">Per-component evidence: Status / Source / Tests / Live-vs-Fixture / Known Gaps / 60-second verification. Click a card to open its rendered proof.</p>
+            <div class="ev-section-rule mb-5"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- PROOF_CARDS -->
+                <a class="ev-tile" href="/docs/review/proof-cards/netsuite-connector.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">NetSuite Connector</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/salesforce-connector.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Salesforce Connector</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/business-central-connector.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Business Central Connector</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/hubspot-connector.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">HubSpot Connector</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/shipstation-connector.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">ShipStation Connector</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/oracle-connector.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Oracle Connector</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-beta">beta</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/payquicker-connector.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">PayQuicker Connector</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-stub">stub</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/oauth1-helper.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">OAuth 1.0 Helper</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/ai-providers.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">AI Providers</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/governance-service.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Governance Service</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/dlp-service.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">DLP / PII Service</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/audit-service.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Audit Service</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/mcp-aggregator.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">MCP Aggregator</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/guarded-write-ownership-enforcement.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Guarded-Write Ownership</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/flow-templates.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Flow Templates</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/record-lineage.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Record Lineage</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/reconciliation-center.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Reconciliation Center</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/finance-central-operator.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Finance Central Operator</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-beta">beta</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/workflow-central-operator.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Workflow Central Operator</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-beta">beta</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/sync-error-assist.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Sync AI Error Assist</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-beta">beta</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/embedded-platform-adapters.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Embedded Platform Adapters</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/ephemeral-payload-retention.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Ephemeral Payload Retention</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/cost-transparency.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Cost Transparency</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/source-of-truth-manifest.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Source-of-Truth Manifest</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <a class="ev-tile" href="/docs/review/proof-cards/strategic-positioning.md" target="_blank" rel="noopener noreferrer"><span class="ev-tile__name">Strategic Positioning</span><span class="flex items-center gap-2"><span class="ev-tile__verify">verify&nbsp;&rarr;</span><span class="ev-chip ev-prod">prod</span></span></a>
+                <!-- /PROOF_CARDS -->
+            </div>
+        </section>
+
+        <!-- Live dashboards — local-only: these are operational surfaces that need the
+             running backend (live metrics/health/cost APIs), so they are hidden on the
+             static hosted demo where they'd be dead or fetch from the reviewer's machine. -->
+        <section class="mb-12" data-local-only>
+            <h2 class="text-xl font-bold text-gray-900 mb-1"><span class="ev-mono text-blue-600">02</span> &nbsp;Live Dashboards</h2>
+            <p class="text-sm text-gray-500 mb-4">Running surfaces a reviewer can open and exercise directly.</p>
+            <div class="ev-section-rule mb-5"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a class="ev-card" href="/compliance-dashboard.html">
+                    <i class="fas fa-scale-balanced text-2xl text-blue-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Compliance</h3>
+                    <p class="text-sm text-gray-500 mt-1">DLP/PII patterns, governance posture, audit trail.</p>
+                </a>
+                <a class="ev-card" href="/system-status.html">
+                    <i class="fas fa-heart-pulse text-2xl text-emerald-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">System Status</h3>
+                    <p class="text-sm text-gray-500 mt-1">Real-time health across services and connectors.</p>
+                </a>
+                <a class="ev-card" href="/metrics-viewer.html">
+                    <i class="fas fa-chart-line text-2xl text-violet-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Metrics</h3>
+                    <p class="text-sm text-gray-500 mt-1">Tests, coverage, LOC, and connector counts.</p>
+                </a>
+                <a class="ev-card" href="/cost-transparency-dashboard.html">
+                    <i class="fas fa-coins text-2xl text-amber-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Cost Transparency</h3>
+                    <p class="text-sm text-gray-500 mt-1">Per-provider pricing, measured per-mapping cost.</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Benchmarks & coverage -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold text-gray-900 mb-1"><span class="ev-mono text-blue-600">03</span> &nbsp;Benchmarks &amp; Coverage</h2>
+            <p class="text-sm text-gray-500 mb-4">Reproducible measurements and the claim-to-evidence map.</p>
+            <div class="ev-section-rule mb-5"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a class="ev-card" href="/docs/review/ai-accuracy-benchmark.md" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-bullseye text-2xl text-blue-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">AI Accuracy Benchmark</h3>
+                    <p class="text-sm text-gray-500 mt-1">Wilson 95% CIs across providers and ERP pairs.</p>
+                </a>
+                <a class="ev-card" href="/docs/review/A_GRADE_EVIDENCE_CROSSWALK.md" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-diagram-project text-2xl text-violet-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Evidence Crosswalk</h3>
+                    <p class="text-sm text-gray-500 mt-1">Each claim mapped to the file and test proving it.</p>
+                </a>
+                <a class="ev-card" href="/docs/review/route-tenant-coverage.md" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-shield-halved text-2xl text-emerald-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Route–Tenant Coverage</h3>
+                    <p class="text-sm text-gray-500 mt-1">Tenant-isolation coverage across API routes.</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Portfolio -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold text-gray-900 mb-1"><span class="ev-mono text-blue-600">04</span> &nbsp;Portfolio</h2>
+            <p class="text-sm text-gray-500 mb-4">The Squire-facing product story and per-module cards.</p>
+            <div class="ev-section-rule mb-5"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a class="ev-card" href="/squire-portfolio-evidence.html">
+                    <i class="fas fa-folder-open text-2xl text-blue-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Squire Portfolio Evidence</h3>
+                    <p class="text-sm text-gray-500 mt-1">The executive evidence package, card by card.</p>
+                </a>
+                <a class="ev-card" href="/docs/review/squire-product-cards/README.md" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-layer-group text-2xl text-violet-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Product Cards</h3>
+                    <p class="text-sm text-gray-500 mt-1">PaymentCentral, SyncCentral, PayoutRec, and more.</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- External review -->
+        <section class="mb-12">
+            <h2 class="text-xl font-bold text-gray-900 mb-1"><span class="ev-mono text-blue-600">05</span> &nbsp;External Review</h2>
+            <p class="text-sm text-gray-500 mb-4">Verify the same claims without private-repo access.</p>
+            <div class="ev-section-rule mb-5"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a class="ev-card" href="https://notebooklm.google.com/notebook/ca3bd54b-c240-4432-93c3-545099bf719b" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-comments text-2xl text-blue-600 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Ask NotebookLM <i class="fas fa-external-link-alt text-xs ml-1"></i></h3>
+                    <p class="text-sm text-gray-500 mt-1">Question the canonical source pack in the live notebook.</p>
+                </a>
+                <a class="ev-card" href="https://github.com/KStratMD/Preston-Test-reviewer-snapshot" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github text-2xl text-gray-800 mb-3"></i>
+                    <h3 class="font-bold text-gray-900">Reviewer Mirror <i class="fas fa-external-link-alt text-xs ml-1"></i></h3>
+                    <p class="text-sm text-gray-500 mt-1">Public snapshot that reproduces this evidence in a cold terminal.</p>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/js/integration-hub-shell.js"></script>
+    <script>
+      // Evidence-only on the hosted artifact ONLY (not every non-local deployment).
+      // The build sets window.__IH_HOSTED__ in the hosted copy of integration-hub-shell.js
+      // (loaded just above), so a real deployed Express app keeps its live dashboards and
+      // its "/" home target. On the hosted demo: hide the operational "Live Dashboards"
+      // tiles (they need the running backend) and repoint the Build tab + Back-to-Hub link,
+      // since "/" there is the exec-deck redirect, not an Integration Hub surface.
+      (function () {
+        if (window.__IH_HOSTED__ !== true) return;
+        document.querySelectorAll('[data-local-only]').forEach(function (el) {
+          el.hidden = true;
+          el.style.display = 'none';
+        });
+        document.querySelectorAll('a[data-shell-tab="build"], a[data-ih-hub-link]').forEach(function (a) {
+          a.setAttribute('href', '/Integration-Command-Center.html');
+        });
+      })();
+    </script>
+</body>
+
+</html>

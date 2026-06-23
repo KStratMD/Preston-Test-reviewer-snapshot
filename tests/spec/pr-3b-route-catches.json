@@ -1,0 +1,28 @@
+{
+  "_description": "PR 3B route-coverage manifest. Every route file calling a BaseProvider or BaseConnector write MUST import handleApprovalQueueError and call it in at least N catch blocks (N = expectedCatchCount). The companion spec test in tests/unit/spec/pr-3b-route-catches.test.ts enforces this. Source: [[project-pr-3b-route-audit-inventory]] (subagent research run 2026-05-19).",
+  "_invariants": [
+    "Adding a new route that calls BaseProvider.sendRequest or BaseConnector write verbs requires either (a) adding a handleApprovalQueueError call in its catch and bumping the expectedCatchCount, OR (b) adding the new file to the manifest. The test fails on either drift direction.",
+    "expectedCatchCount counts ONLY catch-block calls — the import line is NOT counted. Grep pattern: 'if (await handleApprovalQueueError'.",
+    "Files not in this manifest are not asserted by the test. To add coverage for a new file, append it with the inventory-justified expectedCatchCount."
+  ],
+  "files": [
+    { "path": "src/routes/hubSpot.ts", "expectedCatchCount": 12, "reach": "connector_write", "notes": "POST/PATCH/DELETE for contacts/companies/deals/tickets (4 verbs * 3 entities = 12)" },
+    { "path": "src/routes/shipStation.ts", "expectedCatchCount": 2, "reach": "connector_write", "notes": "markOrderShipped + voidLabel — custom methods, connector-side bypass closed in this PR (ShipStationConnector.markOrderShipped/voidLabel now call validateOutboundWrite)" },
+    { "path": "src/routes/fullPipelineDemo.ts", "expectedCatchCount": 1, "reach": "connector_write", "notes": "Top-level catch around /execute calls handleApprovalQueueError. PendingApprovalError rethrows at ALL three nested catch levels inside syncToNetSuite() (per-record, batch, sync) so it escapes to the top-level — single-level rethrow gets re-swallowed by the surrounding batch/sync catches (Copilot R9)." },
+    { "path": "src/routes/financeCentral.ts", "expectedCatchCount": 1, "reach": "connector_write", "notes": "approve endpoint — operator service → connector.update" },
+    { "path": "src/routes/syncErrorAssistRoutes.ts", "expectedCatchCount": 1, "reach": "connector_write", "notes": "accept endpoint — operator service → connector.create/update" },
+    { "path": "src/routes/NLActionGateRouter.ts", "expectedCatchCount": 1, "reach": "connector_write", "notes": "execute endpoint — NLActionGateService → dispatchAction → operator services → connectors" },
+    { "path": "src/routes/integration.ts", "expectedCatchCount": 2, "reach": "connector_write", "notes": "runHandler + syncRecordHandler closures cover 4 mount points each (${base}/:id/run + /:id/run; ${base}/:id/sync-record + /:id/sync-record)" },
+    { "path": "src/routes/syncOrchestrator.ts", "expectedCatchCount": 2, "reach": "mixed", "notes": "operations/:id/execute (connector_write) + conflicts/:conflictId/ai-suggest (ai_call)" },
+    { "path": "src/routes/SyncCentralRouter.ts", "expectedCatchCount": 2, "reach": "mixed", "notes": "Parallel mount of the same two routes as syncOrchestrator" },
+    { "path": "src/routes/secureAI.ts", "expectedCatchCount": 2, "reach": "ai_call", "notes": "mapping/suggestions + quality/analyze handlers" },
+    { "path": "src/routes/ai-proxy/MappingRouter.ts", "expectedCatchCount": 5, "reach": "ai_call", "notes": "mapping/suggestions + transformation/suggest + validation/suggest + defaultvalue/suggest + transformation/validate" },
+    { "path": "src/routes/ai-proxy/QualityRouter.ts", "expectedCatchCount": 1, "reach": "ai_call", "notes": "data-quality/analyze — direct provider call at L115" },
+    { "path": "src/routes/ai-proxy/AgentRouter.ts", "expectedCatchCount": 2, "reach": "ai_call", "notes": "orchestrate + agents/:agentType handlers" },
+    { "path": "src/routes/ai-proxy/LegacyCompatibilityRouter.ts", "expectedCatchCount": 3, "reach": "ai_call", "notes": "createLegacyDataQualityRouter: analyze + generate-rules + auto-fix (the 5 createLegacyFieldMappingRouter POSTs are mock handlers that don't reach BaseProvider — intentionally skipped)" },
+    { "path": "src/routes/ai-proxy/NaturalLanguageRouter.ts", "expectedCatchCount": 2, "reach": "ai_call", "notes": "configure + troubleshoot POSTs reach AINaturalLanguageService → provider" },
+    { "path": "src/routes/help.ts", "expectedCatchCount": 1, "reach": "ai_call", "notes": "chat endpoint — HelpChatService.processMessage → chatProvider.chat" },
+    { "path": "src/routes/aiMapping.ts", "expectedCatchCount": 8, "reach": "ai_call", "notes": "suggestions + validate + transformation/suggest + validation/suggest + transformation/validate + defaultvalue/suggest + detect-unmappable-fields + generate-custom-field-proposal" },
+    { "path": "src/routes/aiDemo.ts", "expectedCatchCount": 1, "reach": "ai_call", "notes": "field-mapping demo endpoint — AIFieldMappingService → provider" }
+  ]
+}
