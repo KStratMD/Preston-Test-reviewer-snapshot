@@ -1,0 +1,351 @@
+openapi: 3.1.0
+info:
+  title: Preston Integration Hub AI & Orchestrator API
+  version: 0.1.0
+  description: |
+    Unified API specification for AI model catalog, dynamic capability introspection,
+    multi-agent orchestrator, mapping suggestions, data quality analysis, compliance,
+    ROI, and business intelligence endpoints.
+servers:
+  - url: http://localhost:3000
+components:
+  schemas:
+    CapabilitySupports:
+      type: object
+      properties:
+        vision: { type: boolean }
+        jsonMode: { type: boolean }
+        toolUse: { type: boolean }
+        streaming: { type: boolean }
+        reasoning: { type: boolean }
+    ModelCapability:
+      type: object
+      properties:
+        contextWindow:
+          oneOf:
+            - { type: integer }
+            - { type: 'null' }
+        supports:
+          $ref: '#/components/schemas/CapabilitySupports'
+    ProviderModel:
+      type: object
+      properties:
+        id: { type: string }
+        supports:
+          type: array
+          items: { type: string }
+        contextWindow:
+          oneOf:
+            - { type: integer }
+            - { type: 'null' }
+    ProviderEntry:
+      type: object
+      properties:
+        models:
+          type: array
+          items: { $ref: '#/components/schemas/ProviderModel' }
+        activeModel:
+          oneOf:
+            - { type: string }
+            - { type: 'null' }
+        lastSwitch:
+          oneOf:
+            - { type: string, format: date-time }
+            - { type: 'null' }
+        fallbackUsed: { type: boolean }
+        cacheAgeMs:
+          oneOf:
+            - { type: integer }
+            - { type: 'null' }
+        capabilities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ModelCapability'
+    AggregateCatalog:
+      type: object
+      properties:
+        success: { type: boolean }
+        generatedAt: { type: string, format: date-time }
+        active:
+          type: object
+          properties:
+            provider: { type: string }
+            model:
+              oneOf:
+                - { type: string }
+                - { type: 'null' }
+            lastSwitch:
+              oneOf:
+                - { type: string, format: date-time }
+                - { type: 'null' }
+        activeModels:
+          type: object
+          additionalProperties:
+            oneOf:
+              - { type: string }
+              - { type: 'null' }
+        providers:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ProviderEntry'
+    WorkflowRequest:
+      type: object
+      required: [agents]
+      properties:
+        agents:
+          type: array
+          items:
+            type: string
+            enum: [field-mapping, data-quality, process-optimization, integration-strategy, business-intelligence]
+        parallel: { type: boolean }
+        failureMode:
+          type: string
+          enum: [stop, continue]
+        timeout: { type: integer }
+        context: { type: object }
+    AgentResult:
+      type: object
+      properties:
+        agent: { type: string }
+        status: { type: string }
+        output: { type: object }
+        error:
+          oneOf:
+            - { type: string }
+            - { type: 'null' }
+    WorkflowResult:
+      type: object
+      properties:
+        success: { type: boolean }
+        startedAt: { type: string, format: date-time }
+        completedAt: { type: string, format: date-time }
+        durationMs: { type: integer }
+        results:
+          type: object
+          additionalProperties: { $ref: '#/components/schemas/AgentResult' }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              agent: { type: string }
+              message: { type: string }
+    AgentExecutionRequest:
+      type: object
+      properties:
+        context: { type: object }
+        options: { type: object }
+    AgentExecutionResult:
+      type: object
+      properties:
+        agent: { type: string }
+        success: { type: boolean }
+        startedAt: { type: string, format: date-time }
+        completedAt: { type: string, format: date-time }
+        durationMs: { type: integer }
+        output: { type: object }
+        error:
+          oneOf:
+            - { type: string }
+            - { type: 'null' }
+    CostMetrics:
+      type: object
+      properties:
+        generatedAt: { type: string, format: date-time }
+        providers:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              totalCostUsd: { type: number }
+              modelBreakdown:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    invocations: { type: integer }
+                    estCostUsd: { type: number }
+                    lastInvocation: { type: string, format: date-time }
+        session:
+          type: object
+          properties:
+            totalCostUsd: { type: number }
+            maxSessionCost: { type: number }
+            alertThreshold: { type: number }
+            hardLimit: { type: number }
+    TelemetryEvent:
+      type: object
+      properties:
+        type: { type: string }
+        timestamp: { type: string, format: date-time }
+        provider: { type: string }
+        modelId:
+          oneOf:
+            - { type: string }
+            - { type: 'null' }
+        metadata: { type: object }
+paths:
+  /api/ai/proxy/models:
+    get:
+      summary: Aggregate model catalog across AI providers
+      description: |
+        Returns unified model list, active model per provider, capability metadata.
+        Pass `refresh=true` to bypass cached model lists, and `dynamic=true` to enable
+        dynamic capability introspection (runtime heuristic/provider probing) instead of static matrix.
+      parameters:
+        - in: query
+          name: refresh
+          schema: { type: boolean }
+          description: Force re-fetch of provider model lists bypassing 10m cache TTL.
+        - in: query
+          name: dynamic
+          schema: { type: boolean }
+          description: Enable dynamic capability introspection (may add latency, cached 5m).
+      responses:
+        '200':
+          description: Aggregate catalog
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AggregateCatalog'
+  /api/ai/proxy/models/active:
+    get:
+      summary: Active model snapshot
+      responses:
+        '200':
+          description: Active models across providers
+  /api/ai/proxy/models/{provider}:
+    get:
+      summary: List models for a specific provider
+      parameters:
+        - in: path
+          name: provider
+          schema:
+            type: string
+            enum: [openai, anthropic, gemini, grok, lmstudio]
+        - in: query
+          name: refresh
+          schema: { type: boolean }
+        - in: query
+          name: search
+          schema: { type: string }
+      responses:
+        '200': { description: Provider model list }
+        '400': { description: Invalid provider }
+  /api/ai/proxy/models/{provider}/capabilities:
+    get:
+      summary: Capability metadata for provider models (static or dynamic depending on aggregate call mode)
+      parameters:
+        - in: path
+          name: provider
+          schema:
+            type: string
+            enum: [openai, anthropic, gemini, grok, lmstudio]
+      responses:
+        '200': { description: Capability metadata }
+  /api/ai/proxy/models/{provider}/select:
+    post:
+      summary: Switch active model for a provider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [modelId]
+              properties:
+                modelId: { type: string }
+                test: { type: boolean, description: Optional connectivity test after switch }
+      responses:
+        '200': { description: Model switched }
+        '400': { description: Invalid input }
+  /api/ai/proxy/mapping/suggestions:
+    post:
+      summary: Generate AI field mapping suggestions
+      responses:
+        '200': { description: Suggestions generated }
+  /api/ai/proxy/data-quality/analyze:
+    post:
+      summary: Analyze data quality
+      responses:
+        '200': { description: Data quality assessment }
+  /api/ai/proxy/orchestrate:
+    post:
+      summary: Execute multi-agent workflow
+      description: Submit a workflow definition specifying multiple agents (parallel or sequential) with shared context.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowRequest'
+      responses:
+        '200':
+          description: Workflow execution result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResult'
+        '400': { description: Invalid workflow definition }
+  /api/ai/proxy/agents/{agentType}:
+    post:
+      summary: Execute a single agent
+      parameters:
+        - in: path
+          name: agentType
+          schema:
+            type: string
+            enum: [field-mapping, data-quality, process-optimization, integration-strategy]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentExecutionRequest'
+      responses:
+        '200':
+          description: Agent execution result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentExecutionResult'
+        '400': { description: Invalid agent type or request }
+  /api/ai/proxy/telemetry/costs:
+    get:
+      summary: Retrieve aggregated cost metrics per provider/model
+      description: Returns running session cost estimates and budget thresholds (heuristic for experimental providers).
+      responses:
+        '200':
+          description: Cost metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostMetrics'
+  /api/ai/proxy/telemetry/events:
+    get:
+      summary: Recent AI telemetry events
+      description: Returns a sliding window of recent model switch and capability introspection events.
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer }
+          description: Maximum events to return (default 50, max 500)
+      responses:
+        '200':
+          description: Telemetry events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TelemetryEvent'
+  /api/ai/proxy/telemetry/statistics:
+    get:
+      summary: Retrieve telemetry statistics
+      responses:
+        '200': { description: Telemetry statistics }
+  # securitySchemes intentionally omitted due to linter constraints
+security: []

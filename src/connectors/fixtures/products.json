@@ -1,0 +1,78 @@
+{
+  "squire": [
+    {
+      "id": "SQ_PROD_001",
+      "itemCode": "LAP-DEL-001",
+      "itemName": "Dell Latitude 5520 Business Laptop",
+      "itemDescription": "Business laptop with Intel i7 processor, 16GB RAM, 512GB SSD",
+      "productCategory": "Electronics",
+      "listPrice": 1299.99,
+      "costPrice": 899.99,
+      "currency": "USD",
+      "quantityOnHand": 45,
+      "reorderLevel": 10,
+      "preferredVendor": "SQ_VEND_002",
+      "productWeight": 3.5,
+      "productDimensions": "14.0 x 9.3 x 0.8 inches",
+      "isActive": true,
+      "createdDate": "2023-02-01T00:00:00Z",
+      "lastUpdated": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "SQ_PROD_002",
+      "itemCode": "OFF-CHR-001",
+      "itemName": "Executive Ergonomic Office Chair",
+      "itemDescription": "Adjustable height office chair with lumbar support",
+      "productCategory": "Furniture",
+      "listPrice": 299.99,
+      "costPrice": 179.99,
+      "currency": "USD",
+      "quantityOnHand": 23,
+      "reorderLevel": 5,
+      "preferredVendor": "SQ_VEND_001",
+      "productWeight": 35,
+      "productDimensions": "26 x 26 x 40-44 inches",
+      "isActive": true,
+      "createdDate": "2023-04-15T00:00:00Z",
+      "lastUpdated": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "suiteCentral": [
+    {
+      "id": "PROD_001",
+      "sku": "LAP-DEL-001",
+      "name": "Dell Latitude 5520 Laptop",
+      "description": "Business laptop with Intel i7 processor, 16GB RAM, 512GB SSD",
+      "category": "Electronics",
+      "price": 1299.99,
+      "cost": 899.99,
+      "currency": "USD",
+      "inStock": 45,
+      "reorderPoint": 10,
+      "supplier": "VEND_002",
+      "weight": 3.5,
+      "dimensions": "14.0 x 9.3 x 0.8 inches",
+      "status": "Active",
+      "createdDate": "2023-02-01T00:00:00Z",
+      "lastModified": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "PROD_002",
+      "sku": "OFF-CHR-001",
+      "name": "Ergonomic Office Chair",
+      "description": "Adjustable height office chair with lumbar support",
+      "category": "Furniture",
+      "price": 299.99,
+      "cost": 179.99,
+      "currency": "USD",
+      "inStock": 23,
+      "reorderPoint": 5,
+      "supplier": "VEND_001",
+      "weight": 35,
+      "dimensions": "26 x 26 x 40-44 inches",
+      "status": "Active",
+      "createdDate": "2023-04-15T00:00:00Z",
+      "lastModified": "2024-01-01T00:00:00Z"
+    }
+  ]
+}

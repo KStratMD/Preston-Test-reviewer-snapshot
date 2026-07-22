@@ -1,0 +1,30 @@
+{
+  "id": "squire_to_suitecentral_customers",
+  "name": "Squire to SuiteCentral Customers",
+  "sourceSystem": "Squire",
+  "targetSystem": "SuiteCentral",
+  "sourceEntity": "customer",
+  "targetEntity": "customer",
+  "syncDirection": "source_to_target",
+  "syncMode": "batch",
+  "isActive": true,
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2024-01-01T00:00:00Z",
+  "fieldMappings": [
+    {
+      "sourceField": "name",
+      "targetField": "name",
+      "transformationType": "direct",
+      "isRequired": true
+    }
+  ],
+  "transformationRules": [],
+  "sourceAuthentication": {
+    "type": "api_key",
+    "credentials": { "apiKey": "squire-key" }
+  },
+  "targetAuthentication": {
+    "type": "api_key",
+    "credentials": { "apiKey": "suitecentral-key" }
+  }
+}

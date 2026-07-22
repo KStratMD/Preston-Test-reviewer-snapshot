@@ -1,0 +1,515 @@
+{
+  "_comment_1": "Phase 5b core coverage ratchet — mirrors .strict-null-budget pattern. Keys are repo-root-relative POSIX paths matching jest.core.config.cjs collectCoverageFrom. Values are pct numbers from coverage-core/coverage-summary.json. PRs that change any number must restamp this file (`npm run check:core-coverage-budget -- --write`).",
+  "_comment_2": "Values measured by `npm run test:coverage:core` against the targeted testMatch enumerated in jest.core.config.cjs (19 test files, 547 tests, ~85s). Same testMatch runs locally and in CI, so numbers are deterministic across environments — no first-run restamp is required.",
+  "_comment_3_jest30_restamp": "Re-stamped on jest 29 → 30 bump (PR #730). Jest 30 ships an updated Istanbul instrumenter that detects more branches in some files. 9 of 15 files saw branch coverage RISE under the new instrumentation; one file (GovernanceService.ts) saw branch coverage DROP from 26.53% to 21.7% — same 16 tests in tests/unit/services/ai/orchestrator/GovernanceService.commit2.test.ts run and pass, the denominator just got larger (28 covered / 129 total). This is an instrumentation artifact, not a removed test or refactor regression — exercising the documented escape hatch in CLAUDE.md's core-coverage-budget policy.",
+  "src/connectors/BusinessCentralConnector.ts": {
+    "lines": 76.34,
+    "statements": 76.44,
+    "functions": 92.3,
+    "branches": 52.84
+  },
+  "src/connectors/HubSpotConnector.ts": {
+    "lines": 36.17,
+    "statements": 35.41,
+    "functions": 37.5,
+    "branches": 15.78
+  },
+  "src/connectors/NetSuiteConnector.ts": {
+    "lines": 87.03,
+    "statements": 86.9,
+    "functions": 100,
+    "branches": 64.1
+  },
+  "src/connectors/OracleConnector.ts": {
+    "lines": 88.67,
+    "statements": 87.95,
+    "functions": 98.14,
+    "branches": 71.92
+  },
+  "src/connectors/SalesforceConnector.ts": {
+    "lines": 46.59,
+    "statements": 45.98,
+    "functions": 44.44,
+    "branches": 22.9
+  },
+  "src/connectors/ShipStationConnector.ts": {
+    "lines": 44.79,
+    "statements": 44,
+    "functions": 43.75,
+    "branches": 12.76
+  },
+  "src/database/migrations/049-create-lineage-events-table.ts": {
+    "lines": 85.71,
+    "statements": 85.71,
+    "functions": 100,
+    "branches": 50
+  },
+  "src/database/repositories/TenantConfigurationRepository.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/flows/templates/FlowExecutor.ts": {
+    "lines": 92.64,
+    "statements": 92.25,
+    "functions": 100,
+    "branches": 76.8
+  },
+  "src/governance/sourceOfTruth/ConflictResolutionPolicy.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/governance/sourceOfTruth/connectorRecordType.ts": {
+    "lines": 100,
+    "statements": 85.71,
+    "functions": 100,
+    "branches": 50
+  },
+  "src/governance/sourceOfTruth/guardedWrite.ts": {
+    "lines": 97.89,
+    "statements": 97.89,
+    "functions": 100,
+    "branches": 97.1
+  },
+  "src/middleware/authentication.ts": {
+    "lines": 98.05,
+    "statements": 98.27,
+    "functions": 100,
+    "branches": 87.5
+  },
+  "src/middleware/embeddedAuthMiddleware.ts": {
+    "lines": 37.07,
+    "statements": 35.86,
+    "functions": 50,
+    "branches": 33.33
+  },
+  "src/middleware/governanceMiddleware.ts": {
+    "lines": 47.82,
+    "statements": 47.82,
+    "functions": 66.66,
+    "branches": 33.33
+  },
+  "src/middleware/rbac.ts": {
+    "lines": 96.32,
+    "statements": 96.42,
+    "functions": 88.88,
+    "branches": 89.47
+  },
+  "src/middleware/syncErrorAssistWebhook.ts": {
+    "lines": 96.77,
+    "statements": 96.77,
+    "functions": 100,
+    "branches": 90
+  },
+  "src/middleware/tenantIsolation.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 97.77
+  },
+  "src/middleware/tenantStatusGate.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/middleware/workflowCentralReady.ts": {
+    "lines": 0,
+    "statements": 0,
+    "functions": 0,
+    "branches": 0
+  },
+  "src/routes/costTransparencyRoutes.ts": {
+    "lines": 90.9,
+    "statements": 90.9,
+    "functions": 75,
+    "branches": 87.5
+  },
+  "src/routes/embedded/embeddedLineageRouter.ts": {
+    "lines": 93.75,
+    "statements": 93.75,
+    "functions": 100,
+    "branches": 90
+  },
+  "src/routes/embedded/embeddedReconciliationRouter.ts": {
+    "lines": 93.33,
+    "statements": 93.33,
+    "functions": 100,
+    "branches": 91.66
+  },
+  "src/routes/governance/_governanceAuth.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/routes/governance/operationsRouter.ts": {
+    "lines": 80.95,
+    "statements": 80.95,
+    "functions": 100,
+    "branches": 58.33
+  },
+  "src/routes/lineageRoutes.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/routes/reconciliationCenterRoutes.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/routes/syncErrorAssistWebhookSchema.ts": {
+    "lines": 94.28,
+    "statements": 92.3,
+    "functions": 100,
+    "branches": 95.83
+  },
+  "src/services/ai/orchestrator/GovernanceService.ts": {
+    "lines": 100,
+    "statements": 99.66,
+    "functions": 97.22,
+    "branches": 94.31
+  },
+  "src/services/ai/providers/ClaudeProvider.ts": {
+    "lines": 24,
+    "statements": 23.23,
+    "functions": 20.58,
+    "branches": 15.17
+  },
+  "src/services/ai/providers/IntelligentProviderRouter.ts": {
+    "lines": 91.19,
+    "statements": 89.71,
+    "functions": 92.5,
+    "branches": 74.44
+  },
+  "src/services/ai/providers/LMStudioProvider.ts": {
+    "lines": 20.93,
+    "statements": 19.89,
+    "functions": 14.81,
+    "branches": 16.43
+  },
+  "src/services/ai/providers/OpenAIProvider.ts": {
+    "lines": 21.14,
+    "statements": 19.38,
+    "functions": 16.12,
+    "branches": 14.47
+  },
+  "src/services/ai/providers/OpenRouterProvider.ts": {
+    "lines": 32.43,
+    "statements": 30.57,
+    "functions": 30.3,
+    "branches": 19.58
+  },
+  "src/services/cost/CostTransparencyDailyJob.ts": {
+    "lines": 80.64,
+    "statements": 82.85,
+    "functions": 60,
+    "branches": 30.43
+  },
+  "src/services/cost/CostTransparencyRepository.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 50
+  },
+  "src/services/cost/CostTransparencyService.ts": {
+    "lines": 100,
+    "statements": 98.46,
+    "functions": 100,
+    "branches": 77.27
+  },
+  "src/services/cost/modelPricing.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/financeCentral/FinanceCentralOperatorService.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 85.45
+  },
+  "src/services/financeCentral/FinanceCentralRepository.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 82.5
+  },
+  "src/services/governance/ApprovalQueueRepository.ts": {
+    "lines": 87.06,
+    "statements": 87.39,
+    "functions": 95.65,
+    "branches": 75.86
+  },
+  "src/services/governance/ApprovalQueueService.ts": {
+    "lines": 97.33,
+    "statements": 96.15,
+    "functions": 92.85,
+    "branches": 84.61
+  },
+  "src/services/governance/ApprovalResumeWorker.ts": {
+    "lines": 87.03,
+    "statements": 88.13,
+    "functions": 88.88,
+    "branches": 55.88
+  },
+  "src/services/governance/OutboundGovernanceService.ts": {
+    "lines": 95.23,
+    "statements": 95.52,
+    "functions": 90,
+    "branches": 86
+  },
+  "src/services/governance/approvalModeStartupGuard.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 75
+  },
+  "src/services/governance/handlers/OwnershipResumeHandler.ts": {
+    "lines": 91.07,
+    "statements": 91.37,
+    "functions": 100,
+    "branches": 80.64
+  },
+  "src/services/governance/identityContext.ts": {
+    "lines": 81.25,
+    "statements": 81.25,
+    "functions": 50,
+    "branches": 77.77
+  },
+  "src/services/governance/operatorOverride.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/governance/resolveActor.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/governance/writeDescriptorEncryption.ts": {
+    "lines": 93.05,
+    "statements": 93.24,
+    "functions": 100,
+    "branches": 95.23
+  },
+  "src/services/lineage/LineageQueryService.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/lineage/LineageRecorder.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 73.33
+  },
+  "src/services/lineage/LineageRepository.ts": {
+    "lines": 100,
+    "statements": 97.05,
+    "functions": 100,
+    "branches": 90.9
+  },
+  "src/services/mcp/MCPAggregatorService.ts": {
+    "lines": 95.49,
+    "statements": 95.61,
+    "functions": 88.23,
+    "branches": 82.6
+  },
+  "src/services/reconciliationCenter/ReconciliationCenterService.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 92.85
+  },
+  "src/services/reconciliationCenter/ReconciliationExceptionRepository.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 95.83
+  },
+  "src/services/reconciliationCenter/ReconciliationScheduleJob.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 76.47
+  },
+  "src/services/reconciliationCenter/ReconciliationScheduleRepository.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/reconciliationCenter/cadence.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/reconciliationCenter/invoiceComparison.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 96.87
+  },
+  "src/services/reconciliationCenter/money.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/reconciliationCenter/reconcilers/NetSuiteBusinessCentralInvoiceReconciler.ts": {
+    "lines": 97.7,
+    "statements": 96.87,
+    "functions": 100,
+    "branches": 81.81
+  },
+  "src/services/reconciliationCenter/reconcilers/Reconciler.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/security/DLPService.ts": {
+    "lines": 94.3,
+    "statements": 93.08,
+    "functions": 96.82,
+    "branches": 91.66
+  },
+  "src/services/security/EncryptionService.ts": {
+    "lines": 97.46,
+    "statements": 97.46,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/security/NERService.ts": {
+    "lines": 97.64,
+    "statements": 97.75,
+    "functions": 100,
+    "branches": 91.66
+  },
+  "src/services/security/findingsRiskClassifier.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/syncErrorAssist/SyncErrorAssistDailyJob.ts": {
+    "lines": 91.3,
+    "statements": 92.59,
+    "functions": 85.71,
+    "branches": 72.72
+  },
+  "src/services/syncErrorAssist/SyncErrorAssistRepository.ts": {
+    "lines": 100,
+    "statements": 97.97,
+    "functions": 100,
+    "branches": 81.25
+  },
+  "src/services/syncErrorAssist/SyncErrorAssistService.ts": {
+    "lines": 95.85,
+    "statements": 94.11,
+    "functions": 92.59,
+    "branches": 81.81
+  },
+  "src/services/tenants/TenantLifecycleRepository.ts": {
+    "lines": 87.5,
+    "statements": 88.46,
+    "functions": 87.5,
+    "branches": 73.33
+  },
+  "src/services/tenants/TenantLifecycleService.ts": {
+    "lines": 98.64,
+    "statements": 98.75,
+    "functions": 92.3,
+    "branches": 86.79
+  },
+  "src/services/workflowCentral/WorkflowCentralOperatorService.ts": {
+    "lines": 99.12,
+    "statements": 99.15,
+    "functions": 100,
+    "branches": 86.66
+  },
+  "src/services/workflowCentral/WorkflowCentralRepository.ts": {
+    "lines": 92.49,
+    "statements": 91.31,
+    "functions": 96.72,
+    "branches": 81.25
+  },
+  "src/services/workflowCentral/WorkflowEngineService.ts": {
+    "lines": 95.51,
+    "statements": 92.06,
+    "functions": 91.89,
+    "branches": 83.33
+  },
+  "src/services/workflowCentral/WorkflowPayloadRetentionJob.ts": {
+    "lines": 97.22,
+    "statements": 97.36,
+    "functions": 88.88,
+    "branches": 75
+  },
+  "src/services/workflowCentral/config.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/workflowCentral/errors.ts": {
+    "lines": 88,
+    "statements": 89.28,
+    "functions": 90,
+    "branches": 0
+  },
+  "src/services/workflowCentral/metrics.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/services/workflowCentral/payload/WorkflowPayload.ts": {
+    "lines": 100,
+    "statements": 97.87,
+    "functions": 100,
+    "branches": 98.3
+  },
+  "src/services/workflowCentral/payload/WorkflowPayloadCache.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 93.93
+  },
+  "src/services/workflowCentral/payload/WorkflowPayloadResolver.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 92.3
+  },
+  "src/services/workflowCentral/payload/backfillDerivation.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 95
+  },
+  "src/services/workflowCentral/payload/errors.ts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "src/utils/oauth1Helper.ts": {
+    "lines": 97.67,
+    "statements": 97.72,
+    "functions": 100,
+    "branches": 95.65
+  }
+}
