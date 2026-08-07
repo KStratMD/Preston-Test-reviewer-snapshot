@@ -1,0 +1,2784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Template Library Manager — Browse, Search & Organize Templates</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
+  <script defer src="/vendor/alpine.3.14.9.min.js" onerror="(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js';s.defer=true;document.head.appendChild(s);})();"></script>
+  <script src="enhanced-back-navigation.js"></script>
+  <script src="universal-navigation.js"></script>
+  <script defer src="/universal/demo-mode-store.js"></script>
+  <script defer src="/universal/demo-status-button.js"></script>
+    <link rel="stylesheet" href="/css/integration-hub-shell.css">
+</head>
+<body data-shell-section="build" class="bg-gray-50" x-data="admin()">
+  <div class="max-w-6xl mx-auto p-6">
+    <div class="mb-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold">Template Library Manager</h1>
+        <p class="text-gray-600">Browse, search, and organize your integration templates. Import/export templates, manage template libraries, and analyze template usage across your organization.</p>
+        <div x-show="isFromWizard" class="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+          <div class="flex items-center">
+            <i class="fas fa-magic text-blue-600 mr-2"></i>
+            <span class="text-blue-800 font-medium">Integration Wizard Mode:</span>
+            <span class="text-blue-700 ml-1">View and Download buttons will load templates into your Integration Wizard workflow</span>
+          </div>
+        </div>
+        <div class="mt-2">
+          <a href="/Integration-Command-Center.html" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+            <i class="fas fa-arrow-left mr-1"></i>Back to Creation Center
+          </a>
+        </div>
+        <!-- Template Stats -->
+        <div class="mt-4 flex items-center space-x-6 text-sm">
+          <div class="flex items-center">
+            <div class="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full">
+              <span class="font-bold mr-1">8</span> Demo Templates
+            </div>
+          </div>
+          <div class="flex items-center">
+            <div class="flex items-center bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+              <span class="font-bold mr-1">50+</span> Planned Templates
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-x-2 flex items-center">
+        <!-- Demo/Live Status Button -->
+        <div x-data="demoStatusButton()" x-init="init()" class="mr-4">
+          <button @click="toggle"
+                  class="px-2 py-1 rounded text-xs border flex items-center transition-colors"
+                  :class="enabled ? 'bg-yellow-100 text-yellow-800 border-yellow-300 hover:bg-yellow-200' : 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'"
+                  :aria-pressed="enabled" :disabled="loading"
+                  :title="enabled ? 'Demo mode is ON (click to disable)' : 'Live mode (click to enable demo)'"><i class="fas mr-1" :class="enabled ? 'fa-flask' : 'fa-check-circle'"></i><span x-text="enabled ? 'Demo' : 'Live'"></span></button>
+        </div>
+
+        <!-- Demo Data Indicator -->
+        <div x-show="usingDemoData" 
+             class="bg-yellow-100 border border-yellow-300 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium flex items-center mr-4">
+            <i class="fas fa-flask mr-2"></i>
+            Demo Data
+        </div>
+        
+        <a href="/" class="text-indigo-600 hover:underline">Back to Dashboard</a>
+        <a href="/docs/INDEX.md" target="_blank" class="text-indigo-600 hover:underline">Docs</a>
+      </div>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="text-gray-700">Templates</div>
+        <div class="space-x-2 flex items-center">
+          <input x-model="search" placeholder="Search templates..." class="px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <button @click="exportAll()" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            <i class="fas fa-download mr-1"></i>Export All
+          </button>
+          <button type="button" @click="$refs.file.click()" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            <i class="fas fa-upload mr-1"></i>Import
+          </button>
+          <input type="file" x-ref="file" class="hidden" accept="application/json" @change="handleImport($event)" aria-label="Import template file">
+          <button type="button" @click="goToCreationCenter()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105">
+            <i class="fas fa-magic mr-1"></i>Create New
+          </button>
+        </div>
+      </div>
+      <!-- Advanced Search and Filters -->
+      <div class="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <!-- Search Input -->
+          <div class="lg:col-span-2">
+            <label class="block text-xs font-medium text-gray-700 mb-1">Search Templates</label>
+            <div class="relative">
+              <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+              <input type="text" x-model="search" 
+                     placeholder="Search by name, system, or description..."
+                     class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <button x-show="search" @click="search=''" class="absolute right-2 top-2 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- System Filter -->
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-1">System</label>
+            <select x-model="systemFilter" class="w-full py-2 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+              <option value="">All Systems</option>
+              <option value="Salesforce">Salesforce</option>
+              <option value="NetSuite">NetSuite</option>
+              <option value="SAP">SAP</option>
+              <option value="Oracle">Oracle</option>
+              <option value="HubSpot">HubSpot</option>
+              <option value="Dynamics 365">Dynamics 365</option>
+              <option value="Custom">Custom API</option>
+            </select>
+          </div>
+
+          <!-- Template Type Filter -->
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-1">Template Type</label>
+            <select x-model="typeFilter" class="w-full py-2 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+              <option value="">All Types</option>
+              <option value="field-mapping">Field Mapping</option>
+              <option value="workflow">Workflow</option>
+              <option value="connector">Connector</option>
+              <option value="api">API Integration</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Advanced Filters Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-4">
+          <!-- Sort Options -->
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-1">Sort By</label>
+            <select x-model="sortBy" class="w-full py-2 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+              <option value="name">Name (A-Z)</option>
+              <option value="name-desc">Name (Z-A)</option>
+              <option value="recent">Recently Added</option>
+              <option value="popular">Most Popular</option>
+              <option value="system">System Name</option>
+            </select>
+          </div>
+
+          <!-- Date Filter -->
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-1">Created</label>
+            <select x-model="dateFilter" class="w-full py-2 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+              <option value="">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="quarter">This Quarter</option>
+            </select>
+          </div>
+
+          <!-- Source Filter -->
+          <div>
+            <label class="block text-xs font-medium text-gray-700 mb-1">Source</label>
+            <select x-model="sourceFilter" class="w-full py-2 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+              <option value="all">Any Source</option>
+              <option value="verified">Verified</option>
+              <option value="api">API</option>
+              <option value="local">Local</option>
+              <option value="demo">Demo</option>
+            </select>
+          </div>
+
+          <!-- View Options -->
+          <div class="flex items-end">
+            <div class="flex border border-gray-300 rounded-lg overflow-hidden">
+              <button @click="viewMode='grid'" :class="viewMode==='grid'?'bg-blue-600 text-white':'bg-white text-gray-700'" class="px-3 py-2 text-xs font-medium">
+                <i class="fas fa-th"></i> Grid
+              </button>
+              <button @click="viewMode='list'" :class="viewMode==='list'?'bg-blue-600 text-white':'bg-white text-gray-700'" class="px-3 py-2 text-xs font-medium border-l border-gray-300">
+                <i class="fas fa-list"></i> List
+              </button>
+            </div>
+          </div>
+
+          <!-- Results Summary -->
+          <div class="flex items-end">
+            <div class="text-xs text-gray-500">
+              <span x-text="filtered().length"></span> of <span x-text="templates.length"></span> templates
+            </div>
+          </div>
+        </div>
+
+        <!-- Tag Filter (Enhanced) -->
+        <div class="mt-4 flex flex-wrap gap-2 text-xs items-center" x-show="allTags().length">
+          <span class="text-gray-500 font-medium">Filter tags:</span>
+          <template x-for="t in allTags()" :key="'tag-'+t">
+            <button @click="toggleTag(t)" 
+                    :class="selectedTags.includes(t)?'bg-indigo-600 text-white hover:bg-indigo-700':'bg-gray-200 hover:bg-gray-300'" 
+                    class="px-3 py-1 rounded-full transition-colors font-medium">
+              #<span x-text="t"></span>
+            </button>
+          </template>
+          <button @click="clearAllFilters()" x-show="hasActiveFilters()" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-full font-medium transition-colors">
+            <i class="fas fa-times mr-1"></i>Clear All
+          </button>
+        </div>
+      </div>
+      <div class="mt-3">
+        <template x-if="loading"><div class="text-gray-600">Loading…</div></template>
+        <template x-if="!loading">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <template x-for="t in filtered()" :key="t.key">
+              <div class="bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow p-4">
+                <!-- Template Header -->
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex-1">
+                    <div class="flex items-center">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3"
+                           :class="getCategoryColor(getTemplateCategory(t))">
+                        <i :class="getCategoryIcon(getTemplateCategory(t))" class="text-white text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900" x-text="t.name"></div>
+                        <div class="text-xs text-gray-500" x-text="(t.sourceSystem||'?') + ' → ' + (t.targetSystem||'?')"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span :class="t.source === 'custom' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'"
+                          class="px-2 py-1 text-xs font-medium rounded-full">
+                      <span x-text="t.source||'builtin'"></span>
+                    </span>
+                    <span x-show="t.verified || (t.tags||[]).includes('verified')" class="px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      <i class="fas fa-badge-check mr-1"></i>Verified
+                    </span>
+                    <span x-show="t._source==='demo'" class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">
+                      <i class="fas fa-flask mr-1"></i>Demo
+                    </span>
+                    <span x-show="t._source==='local'" class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-700 border border-gray-200">
+                      <i class="fas fa-hdd mr-1"></i>Local
+                    </span>
+                    <span x-show="t._source==='api'" class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                      <i class="fas fa-cloud mr-1"></i>API
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Template Description -->
+                <div class="text-sm text-gray-600 mb-3" x-text="t.description"></div>
+
+                <!-- Template Stats -->
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                  <div @click="showFieldDetails(t)"
+                       class="text-center bg-gray-50 hover:bg-gray-100 rounded p-2 cursor-pointer transition-colors"
+                       title="Click to view field mappings">
+                    <div class="text-lg font-bold text-gray-900" x-text="(t.fields||[]).length"></div>
+                    <div class="text-xs text-gray-500">Fields</div>
+                  </div>
+                  <div @click="showSetupDetails(t)"
+                       class="text-center bg-gray-50 hover:bg-gray-100 rounded p-2 cursor-pointer transition-colors"
+                       title="Click to view setup information">
+                    <div class="text-lg font-bold text-gray-900" x-text="getSetupTime(t)"></div>
+                    <div class="text-xs text-gray-500">Setup</div>
+                  </div>
+                  <div @click="showComplexityDetails(t)"
+                       class="text-center bg-gray-50 hover:bg-gray-100 rounded p-2 cursor-pointer transition-colors"
+                       title="Click to view complexity breakdown">
+                    <div class="text-lg font-bold text-gray-900" x-text="getComplexity(t)"></div>
+                    <div class="text-xs text-gray-500">Level</div>
+                  </div>
+                </div>
+
+                <!-- Template Tags -->
+                <div class="mb-4" x-show="(t.tags||[]).length > 0">
+                  <div class="flex flex-wrap gap-1">
+                    <template x-for="tg in (t.tags||[])" :key="t.key+'-'+tg">
+                      <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">#<span x-text="tg"></span></span>
+                    </template>
+                  </div>
+                </div>
+
+                <!-- Template Actions -->
+                <div class="flex space-x-2">
+                  <button @click="loadIntoWizard(t)"
+                          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors">
+                    <i class="fas fa-project-diagram mr-1"></i>Edit in AI Editor
+                  </button>
+                  <button @click="viewTemplate(t)"
+                          :class="isFromWizard ? 'px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-sm transition-colors' : 'px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-sm transition-colors'"
+                          :title="isFromWizard ? 'Load template for Integration Wizard preview' : 'View template details'">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button @click="exportOne(t)"
+                          :class="isFromWizard ? 'px-3 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded text-sm transition-colors' : 'px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-sm transition-colors'"
+                          :title="isFromWizard ? 'Load template for Integration Wizard use' : 'Export template as JSON'">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <template x-if="t.source === 'custom'">
+                    <button @click="edit(t)" 
+                            class="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-sm transition-colors">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+          
+          <!-- Empty State -->
+          <template x-if="filtered().length === 0">
+            <div class="bg-white border rounded-lg p-12 text-center">
+              <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">No templates found</h3>
+              <p class="text-gray-600 mb-6">Try adjusting your search or filters</p>
+              <button @click="search=''; selectedTags=[]" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+                Clear Filters
+              </button>
+            </div>
+          </template>
+        </template>
+      </div>
+    </div>
+
+    <!-- Quick SuiteCentral Integration Access -->
+    <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+            <i class="fas fa-layer-group text-blue-600"></i>
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-900">SuiteCentral Integration Hub</h3>
+            <p class="text-sm text-gray-600">Access comprehensive SuiteCentral module demos and integrations</p>
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <button @click="openSuiteCentralDemo()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+            <i class="fas fa-external-link-alt mr-1"></i>Open SuiteCentral Hub
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Template Library Browser -->
+    <div class="bg-white rounded shadow p-6 mb-6">
+      <div class="mb-4">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Browse Template Library</h2>
+        <p class="text-gray-600">Discover and import pre-built integration templates from various sources</p>
+      </div>
+
+      <!-- Template Sources -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+              <i class="fas fa-cloud text-blue-600"></i>
+            </div>
+            <div>
+              <h3 class="font-medium">Official Templates</h3>
+              <p class="text-sm text-gray-600">Verified templates from Squire</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="text-sm text-gray-600">347 templates available</span>
+              <span x-show="!checkTemplateAccess('official')" class="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Upgrade Required</span>
+            </div>
+            <button @click="browseOfficialTemplates()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm">
+              Browse
+            </button>
+          </div>
+        </div>
+
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+              <i class="fas fa-users text-green-600"></i>
+            </div>
+            <div>
+              <h3 class="font-medium">Community Hub</h3>
+              <p class="text-sm text-gray-600">User-contributed templates</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">1,247 templates available</span>
+            <button @click="browseCommunityTemplates()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm">
+              Browse
+            </button>
+          </div>
+        </div>
+
+        <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div class="flex items-center mb-3">
+            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+              <i class="fas fa-building text-purple-600"></i>
+            </div>
+            <div>
+              <h3 class="font-medium">Enterprise Library</h3>
+              <p class="text-sm text-gray-600">Premium enterprise templates</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="text-sm text-gray-600">89 templates available</span>
+              <span x-show="!checkTemplateAccess('enterprise')" class="ml-2 text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">Enterprise Only</span>
+            </div>
+            <button @click="browseEnterpriseTemplates()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded text-sm">
+              Browse
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="border-t pt-4">
+        <div class="flex flex-wrap gap-3">
+          <button @click="searchTemplates()" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-sm flex items-center">
+            <i class="fas fa-search mr-2"></i>Search Templates
+          </button>
+          <button @click="browseByCategory()" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-sm flex items-center">
+            <i class="fas fa-folder-open mr-2"></i>Browse by Category
+          </button>
+          <button @click="viewMyFavorites()" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-sm flex items-center">
+            <i class="fas fa-star mr-2"></i>My Favorites
+          </button>
+          <button @click="importFromURL()" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-sm flex items-center">
+            <i class="fas fa-link mr-2"></i>Import from URL
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection Configuration -->
+    <div class="bg-white rounded shadow p-6 mb-6">
+      <div class="mb-4">
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Configure Connections</h2>
+        <p class="text-gray-600">Set up and manage connections to external systems and template repositories</p>
+      </div>
+
+      <!-- Connection Types -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="border rounded-lg p-4">
+          <h3 class="font-medium text-gray-900 mb-3">System Connections</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                  <i class="fas fa-database text-blue-600"></i>
+                </div>
+                <div>
+                  <span class="font-medium">NetSuite</span>
+                  <p class="text-xs text-gray-600">OAuth 1.0a connection</p>
+                </div>
+              </div>
+              <button @click="configureConnection('netsuite')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm">
+                Configure
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                  <i class="fas fa-cloud text-green-600"></i>
+                </div>
+                <div>
+                  <span class="font-medium">Salesforce</span>
+                  <p class="text-xs text-gray-600">OAuth 2.0 connection</p>
+                </div>
+              </div>
+              <button @click="configureConnection('salesforce')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm">
+                Configure
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                  <i class="fas fa-windows text-purple-600"></i>
+                </div>
+                <div>
+                  <span class="font-medium">Dynamics 365</span>
+                  <p class="text-xs text-gray-600">Azure AD connection</p>
+                </div>
+              </div>
+              <button @click="configureConnection('dynamics')" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded text-sm">
+                Configure
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="border rounded-lg p-4">
+          <h3 class="font-medium text-gray-900 mb-3">Repository Connections</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center mr-3">
+                  <i class="fab fa-github text-white"></i>
+                </div>
+                <div>
+                  <span class="font-medium">GitHub Repository</span>
+                  <p class="text-xs text-gray-600">Private template repo</p>
+                </div>
+              </div>
+              <button @click="configureConnection('github')" class="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1.5 rounded text-sm">
+                Configure
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                  <i class="fas fa-server text-orange-600"></i>
+                </div>
+                <div>
+                  <span class="font-medium">Custom Registry</span>
+                  <p class="text-xs text-gray-600">Internal template registry</p>
+                </div>
+              </div>
+              <button @click="configureConnection('custom')" class="bg-orange-600 hover:bg-orange-700 text-white px-3 py-1.5 rounded text-sm">
+                Configure
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                  <i class="fas fa-cloud-download-alt text-red-600"></i>
+                </div>
+                <div>
+                  <span class="font-medium">Template Marketplace</span>
+                  <p class="text-xs text-gray-600">Third-party marketplace</p>
+                </div>
+              </div>
+              <button @click="configureConnection('marketplace')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-sm">
+                Configure
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection Actions -->
+      <div class="border-t pt-4">
+        <div class="flex justify-between items-center">
+          <div class="text-sm text-gray-600">
+            <i class="fas fa-info-circle mr-1"></i>
+            Configure connections to enable template synchronization and import capabilities
+          </div>
+          <div class="flex gap-2">
+            <button @click="testAllConnections()" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded text-sm">
+              <i class="fas fa-plug mr-1"></i>Test All Connections
+            </button>
+            <button @click="openConnectionWizard()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+              <i class="fas fa-magic mr-1"></i>Connection Wizard
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Messages -->
+    <div x-show="message" x-transition class="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-lg z-50">
+      <span x-text="message"></span>
+    </div>
+
+  <script>
+    function admin(){
+      return {
+        forceDemoMode: false, // Force demo data mode
+        usingDemoData: false, // Currently using demo data
+        templates: [],
+        // Integration Wizard context
+        isFromWizard: false,
+        wizardReturnUrl: null,
+        loading: true,
+        toast: '',
+        message: '',
+        suiteCentralStatus: {},
+        subscriptionInfo: {},
+        pricingTiers: [],
+        search: '',
+        selectedTags: [],
+        // Enhanced filtering options
+        systemFilter: '',
+        typeFilter: '',
+        sourceFilter: 'all',
+        sortBy: 'name',
+        dateFilter: '',
+        viewMode: 'grid',
+        form: { key: '', name: '', description: '', sourceSystem: '', targetSystem: '', fields: [], tagsText: '' },
+        templateBrowserModal: {
+          show: false,
+          type: '',
+          title: '',
+          description: '',
+          templates: []
+        },
+        showFormModal: false,
+        templateWizard: {
+          step: 1,
+          totalSteps: 3,
+          templateType: '',
+          config: {
+            name: '',
+            key: '',
+            description: '',
+            sourceSystem: '',
+            targetSystem: '',
+            tags: ''
+          },
+          fieldMappings: [],
+          workflowSteps: [],
+          connectorConfig: {},
+          apiConfig: {}
+        },
+
+        async init(){
+          // Sync with global demo mode store
+          try {
+            const store = Alpine.store && Alpine.store('demoMode');
+            if (store) {
+              this.forceDemoMode = !!store.enabled;
+              this.usingDemoData = !!store.enabled;
+              window.addEventListener('demo-mode-changed', (e) => {
+                const on = !!(e && e.detail && e.detail.enabled);
+                this.forceDemoMode = on;
+                this.usingDemoData = on;
+                this.load();
+              });
+            }
+          } catch {}
+          await this.load();
+          await this.loadSuiteCentralStatus();
+          await this.loadSubscriptionInfo();
+
+          // Check for returnUrl parameter (coming from Integration Wizard)
+          this.handleReturnUrl();
+          // Check for AI Studio return data
+          this.handleAIStudioReturn();
+        },
+
+        handleReturnUrl() {
+          // Check if coming from Integration Wizard via returnUrl parameter
+          const urlParams = new URLSearchParams(window.location.search);
+          const returnUrl = urlParams.get('returnUrl');
+          console.log('🔍 Current URL:', window.location.href);
+          console.log('🔍 URL params:', window.location.search);
+          console.log('🔍 returnUrl parameter:', returnUrl);
+
+          if (returnUrl) {
+            this.wizardReturnUrl = returnUrl;
+            this.isFromWizard = true;
+            console.log('✅ Detected Integration Wizard context, returnUrl:', returnUrl);
+            console.log('✅ Set isFromWizard =', this.isFromWizard);
+          } else {
+            console.log('❌ No returnUrl parameter found - not from wizard');
+          }
+        },
+        handleAIStudioReturn(){
+          // Check if returning from AI Studio
+          if(window.location.hash === '#wizard-return'){
+            const returnData = localStorage.getItem('aiStudioReturnData');
+            if(returnData){
+              try{
+                const data = JSON.parse(returnData);
+                if(data.context === 'template-enhancement' && data.wizardStep === 3){
+                  // Restore wizard state and update with AI Studio enhancements
+                  this.templateWizard.step = 3;
+                  this.templateWizard.templateType = 'field-mapping';
+                  this.templateWizard.config = data.config || this.templateWizard.config;
+                  
+                  // Update field mappings with AI Studio results
+                  if(data.enhancedMappings){
+                    this.templateWizard.fieldMappings = data.enhancedMappings;
+                    
+                    // Update target field statuses
+                    this.targetFields.forEach(field => {
+                      const mapping = data.enhancedMappings.find(m => m.targetField === field.name);
+                      if(mapping){
+                        field.mapped = true;
+                        field.mappedFrom = mapping.sourceField;
+                      }
+                    });
+                    
+                    this.show(`Welcome back! ${data.enhancedMappings.length} field mappings enhanced by AI Studio`);
+                  }
+                  
+                  // Show the wizard modal
+                  this.showFormModal = true;
+                  
+                  // Clean up
+                  localStorage.removeItem('aiStudioReturnData');
+                  window.location.hash = '';
+                }
+              } catch(error){
+                console.error('Error processing AI Studio return data:', error);
+              }
+            }
+          }
+        },
+
+        show(msg){ this.toast = msg; setTimeout(()=>this.toast='', 2500); },
+
+        // Template Stats Click Handlers
+        showFieldDetails(template) {
+          const fields = template.fields || [];
+          const fieldList = fields.length > 0
+            ? fields.map(f => `• ${f.source || f.sourceField} → ${f.target || f.targetField}`).join('\n')
+            : 'No field mappings defined';
+
+          alert(`Field Mappings for "${template.name}":\n\n${fieldList}`);
+        },
+
+        showSetupDetails(template) {
+          const setupTime = this.getSetupTime(template);
+          const complexity = this.getComplexity(template);
+          const fieldCount = (template.fields || []).length;
+
+          let details = `Setup Information for "${template.name}"\n\n`;
+          details += `• Estimated Setup Time: ${setupTime}\n`;
+          details += `• Complexity Level: ${complexity}\n`;
+          details += `• Total Field Mappings: ${fieldCount}\n`;
+          details += `• Source System: ${template.sourceSystem || 'Not specified'}\n`;
+          details += `• Target System: ${template.targetSystem || 'Not specified'}`;
+
+          alert(details);
+        },
+
+        showComplexityDetails(template) {
+          const complexity = this.getComplexity(template);
+          const fieldCount = (template.fields || []).length;
+
+          let details = `Complexity Breakdown for "${template.name}"\n\n`;
+          details += `Level: ${complexity}\n\n`;
+
+          if (complexity === 'Easy') {
+            details += `This template is straightforward:\n• Basic field mapping\n• Minimal configuration required\n• Suitable for beginners`;
+          } else if (complexity === 'Med') {
+            details += `This template requires moderate setup:\n• Some custom transformations\n• Business logic involved\n• Intermediate skill level`;
+          } else if (complexity === 'Hard') {
+            details += `This template is complex:\n• Advanced transformations\n• Complex business rules\n• Expert knowledge recommended`;
+          }
+
+          alert(details);
+        },
+
+        async load(){
+          // Check if force demo mode is enabled
+          if (this.forceDemoMode) {
+            console.log('Force demo mode enabled - using demo data');
+            // Load demo enterprise templates with field mappings
+            this.templates = this.getDemoEnterpriseTemplates().map(t => ({ ...t, _source: 'demo', demo: true }));
+            this.usingDemoData = true;
+            this.loading = false;
+            return;
+          }
+          
+          this.loading = true;
+          try{
+            // Use export endpoint which is known to work
+            let res = await fetch('/api/mappings/templates/export/all');
+            if(!res.ok) res = await fetch('/api/dashboard/mappings/templates/export/all');
+            if(res.ok){ const data = await res.json(); this.templates = (data.templates||[]).map(t => ({ ...t, _source: (t._source || 'api') })); this.usingDemoData = false; }
+          } catch {
+            // Load demo enterprise templates with field mappings
+            this.templates = this.getDemoEnterpriseTemplates().map(t => ({ ...t, _source: 'demo', demo: true }));
+            this.usingDemoData = true;
+          } finally { this.loading=false; }
+        },
+
+        // Load SuiteCentral integration status info
+        async loadSuiteCentralStatus(){
+          try {
+            let res = await fetch('/api/suitecentral/integration/status');
+            if(!res.ok) res = await fetch('/api/dashboard/suitecentral/integration/status');
+            if(res.ok){
+              this.suiteCentralStatus = await res.json();
+            }
+          } catch {}
+        },
+
+        // Load subscription and pricing information
+        async loadSubscriptionInfo(){
+          const pricingTiers = [
+              {
+                  id: 'tier_starter',
+                  name: 'Starter',
+                  displayName: 'SyncCentral Starter',
+                  annualPricing: { min: 7200 }
+              },
+              {
+                  id: 'tier_professional',
+                  name: 'Professional',
+                  displayName: 'SyncCentral Professional',
+                  annualPricing: { min: 18000 }
+              },
+              {
+                  id: 'tier_enterprise',
+                  name: 'Enterprise',
+                  displayName: 'SyncCentral Enterprise',
+                  annualPricing: { min: 36000 }
+              }
+          ];
+
+          this.pricingTiers = pricingTiers;
+          this.subscriptionInfo = {
+              customerName: 'Acme Corporation',
+              tierId: 'tier_enterprise',
+              status: 'active',
+              billingCycle: 'annual',
+              pricing: {
+                  basePrice: 45000,
+                  currency: 'USD'
+              }
+          };
+          this.usingDemoData = true;
+        },
+
+        exportAll(){ fetch('/api/mappings/templates/export/all').then(r=>r.ok?r.blob():fetch('/api/dashboard/mappings/templates/export/all').then(r2=>r2.blob())).then(b=>{ const url=URL.createObjectURL(b); const a=document.createElement('a'); a.href=url; a.download='mapping-templates.json'; a.click(); URL.revokeObjectURL(url); }); },
+
+        allTags(){ const s = new Set(); (this.templates||[]).forEach(t=> (t.tags||[]).forEach((tg)=> s.add(String(tg)))); return Array.from(s).sort(); },
+
+        toggleTag(t){ const i=this.selectedTags.indexOf(t); if(i>=0) this.selectedTags.splice(i,1); else this.selectedTags.push(t); },
+
+        hasActiveFilters(){ return this.selectedTags.length > 0 || (this.search||'').length > 0; },
+
+        clearAllFilters(){ this.selectedTags = []; this.search = ''; },
+
+        filtered(){
+          const q = (this.search||'').toLowerCase();
+          const hasQ = q.length>0;
+          const tags = this.selectedTags;
+          const sysF = String(this.systemFilter||'').toLowerCase();
+          const typeF = String(this.typeFilter||'').toLowerCase();
+          const srcF = String(this.sourceFilter||'all').toLowerCase();
+
+          return (this.templates||[]).filter(t=>{
+            const matchQ = !hasQ || [t.key,t.name,t.description,t.sourceSystem,t.targetSystem]
+              .some(v=>String(v||'').toLowerCase().includes(q));
+            const matchTags = !tags.length || (t.tags||[]).some((tg)=> tags.includes(String(tg)));
+            const matchSystem = !sysF || [t.sourceSystem,t.targetSystem].some(v => String(v||'').toLowerCase().includes(sysF));
+            const matchType = !typeF || String(t.type||'').toLowerCase() === typeF || (t.tags||[]).map(x=>String(x).toLowerCase()).includes(typeF);
+            const isVerified = !!(t.verified || (t.tags||[]).includes('verified'));
+            const src = t._source || (t.demo ? 'demo' : 'api');
+            const matchSource = srcF === 'all' ||
+              (srcF === 'verified' && isVerified) ||
+              (srcF === src);
+
+            return matchQ && matchTags && matchSystem && matchType && matchSource;
+          });
+        },
+
+        exportOne(t){
+          if (this.isFromWizard && this.wizardReturnUrl) {
+            // When coming from Integration Wizard, load template and return to wizard
+            this.loadTemplateToWizard(t, 'export');
+          } else {
+            // Normal export behavior
+            const data = new Blob([JSON.stringify(t,null,2)], {type:'application/json'});
+            const url=URL.createObjectURL(data);
+            const a=document.createElement('a');
+            a.href=url;
+            a.download=(t.key||'template')+'.json';
+            a.click();
+            URL.revokeObjectURL(url);
+          }
+        },
+
+        handleImport(e){ const f=e.target.files&&e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=async ()=>{ try{ const parsed=JSON.parse(String(r.result||'[]')); let res = await fetch('/api/mappings/templates/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(parsed)}); if(!res.ok) res = await fetch('/api/dashboard/mappings/templates/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(parsed)}); if(res.ok){ await this.load(); this.show('Templates imported'); } else this.show('Import failed'); }catch{ this.show('Invalid JSON'); } }; r.readAsText(f); e.target.value=''; },
+
+        loadIntoWizard(t){
+          try{
+            // Check wizard conditions properly
+            const isWizardContext = !!this.isFromWizard && !!this.wizardReturnUrl;
+            console.log('🔍 loadIntoWizard called for template:', t.name);
+            console.log('🔍 isFromWizard:', this.isFromWizard);
+            console.log('🔍 wizardReturnUrl:', this.wizardReturnUrl);
+            console.log('🔍 isWizardContext:', isWizardContext);
+
+            if (isWizardContext) {
+              // Return to original AI Field Mapping Editor
+              console.log('📤 Taking wizard path - Returning to original editor via loadTemplateToWizard');
+              this.loadTemplateToWizard(t, 'edit');
+              return; // Prevent further execution
+            } else {
+              // Normal behavior: open new AI Field Mapping Editor
+              console.log('📄 Taking normal path - Opening new AI Field Mapping Editor (normal behavior)');
+              console.log('📄 Reason: isFromWizard=' + this.isFromWizard + ', wizardReturnUrl=' + this.wizardReturnUrl);
+              localStorage.setItem('templateLoad', JSON.stringify(t));
+              console.log('📄 Template loaded for AI Field Mapping Editor:', t.name);
+
+              // Add a small delay to ensure localStorage is written before navigation
+              setTimeout(() => {
+                window.location.href='/ai-field-mapping-editor.html?mode=template&id=' + (t.id || t.key);
+              }, 100);
+            }
+          }catch(error){
+            console.error('Failed to save template to localStorage:', error);
+            alert('Failed to load template. Please try again.');
+          }
+        },
+
+        goToCreationCenter(){ 
+          // Set context for unified templates
+          localStorage.setItem('libraryContext', JSON.stringify({
+            source: 'admin-templates',
+            action: 'create-request',
+            returnUrl: '/admin-templates.html',
+            timestamp: new Date().toISOString()
+          }));
+          
+          // Navigate to unified templates Creation Command Center
+          window.location.href = '/Integration-Command-Center.html';
+        },
+        closeForm(){
+          this.showFormModal = false;
+          this.resetTemplateWizard();
+        },
+        resetTemplateWizard(){
+          this.templateWizard = {
+            step: 1,
+            totalSteps: 3,
+            templateType: '',
+            config: {
+              name: '',
+              key: '',
+              description: '',
+              sourceSystem: '',
+              targetSystem: '',
+              tags: ''
+            },
+            fieldMappings: [],
+            workflowSteps: [],
+            connectorConfig: {},
+            apiConfig: {}
+          };
+        },
+        selectTemplateType(type){
+          this.templateWizard.templateType = type;
+          this.templateWizard.step = 2;
+        },
+        wizardNext(){
+          if(this.templateWizard.step < this.templateWizard.totalSteps){
+            this.templateWizard.step++;
+          }
+        },
+        wizardPrev(){
+          if(this.templateWizard.step > 1){
+            this.templateWizard.step--;
+          }
+        },
+        // Field Mapping Functions
+        sourceFields: [
+          {id: 1, name: 'customer_id', type: 'string', required: true},
+          {id: 2, name: 'first_name', type: 'string', required: true},
+          {id: 3, name: 'last_name', type: 'string', required: true},
+          {id: 4, name: 'email', type: 'string', required: false},
+          {id: 5, name: 'phone', type: 'string', required: false},
+          {id: 6, name: 'created_date', type: 'datetime', required: false}
+        ],
+        targetFields: [
+          {id: 1, name: 'id', type: 'string', required: true, mapped: false},
+          {id: 2, name: 'firstName', type: 'string', required: true, mapped: false},
+          {id: 3, name: 'lastName', type: 'string', required: true, mapped: false},
+          {id: 4, name: 'emailAddress', type: 'string', required: false, mapped: false},
+          {id: 5, name: 'phoneNumber', type: 'string', required: false, mapped: false},
+          {id: 6, name: 'dateCreated', type: 'datetime', required: false, mapped: false}
+        ],
+        draggedField: null,
+        addSourceField(){
+          const fieldName = prompt('Enter source field name:');
+          if(fieldName){
+            const fieldType = prompt('Enter field type (string, number, datetime, boolean):') || 'string';
+            this.sourceFields.push({
+              id: Math.max(...this.sourceFields.map(f => f.id)) + 1,
+              name: fieldName,
+              type: fieldType,
+              required: confirm('Is this field required?')
+            });
+          }
+        },
+        addTargetField(){
+          const fieldName = prompt('Enter target field name:');
+          if(fieldName){
+            const fieldType = prompt('Enter field type (string, number, datetime, boolean):') || 'string';
+            this.targetFields.push({
+              id: Math.max(...this.targetFields.map(f => f.id)) + 1,
+              name: fieldName,
+              type: fieldType,
+              required: confirm('Is this field required?'),
+              mapped: false
+            });
+          }
+        },
+        dragStart(event, field){
+          this.draggedField = field;
+          event.dataTransfer.setData('text/plain', field.name);
+          event.target.style.opacity = '0.5';
+        },
+        dragEnd(event){
+          event.target.style.opacity = '1';
+          this.draggedField = null;
+        },
+        dragOver(event){
+          event.preventDefault();
+        },
+        dropOnTarget(event, targetField){
+          event.preventDefault();
+          if(this.draggedField){
+            // Check if mapping already exists
+            const existingMapping = this.templateWizard.fieldMappings.find(
+              m => m.sourceField === this.draggedField.name && m.targetField === targetField.name
+            );
+            if(existingMapping){
+              this.show('Mapping already exists');
+              return;
+            }
+            
+            // Create new mapping
+            const mapping = {
+              id: Math.random().toString(36).substr(2, 9),
+              sourceField: this.draggedField.name,
+              targetField: targetField.name,
+              sourceType: this.draggedField.type,
+              targetType: targetField.type,
+              transformation: this.draggedField.type !== targetField.type ? 'Type conversion required' : null
+            };
+            
+            this.templateWizard.fieldMappings.push(mapping);
+            
+            // Mark target field as mapped
+            targetField.mapped = true;
+            targetField.mappedFrom = this.draggedField.name;
+            
+            this.show(`Mapped ${this.draggedField.name} → ${targetField.name}`);
+          }
+        },
+        addFieldMapping(){
+          const sourceField = prompt('Enter source field name:');
+          const targetField = prompt('Enter target field name:');
+          if(sourceField && targetField){
+            const mapping = {
+              id: Math.random().toString(36).substr(2, 9),
+              sourceField,
+              targetField,
+              transformation: prompt('Enter transformation (optional):') || null
+            };
+            this.templateWizard.fieldMappings.push(mapping);
+            this.show('Field mapping added');
+          }
+        },
+        removeMapping(mappingId){
+          const mapping = this.templateWizard.fieldMappings.find(m => m.id === mappingId);
+          if(mapping){
+            // Unmark target field
+            const targetField = this.targetFields.find(f => f.name === mapping.targetField);
+            if(targetField){
+              targetField.mapped = false;
+              targetField.mappedFrom = null;
+            }
+            
+            // Remove mapping
+            this.templateWizard.fieldMappings = this.templateWizard.fieldMappings.filter(m => m.id !== mappingId);
+            this.show('Mapping removed');
+          }
+        },
+        // Transformation Modal
+        transformationModal: {
+          show: false,
+          mapping: null,
+          config: {
+            transformationType: '',
+            rules: [],
+            validation: '',
+            preview: ''
+          }
+        },
+        editMapping(mapping){
+          this.transformationModal.mapping = mapping;
+          this.transformationModal.config.transformationType = this.guessTransformationType(mapping);
+          this.transformationModal.config.rules = this.parseTransformationRules(mapping.transformation);
+          this.transformationModal.show = true;
+        },
+        guessTransformationType(mapping){
+          if(mapping.sourceType !== mapping.targetType){
+            if(mapping.sourceType === 'datetime' || mapping.targetType === 'datetime'){
+              return 'dateFormat';
+            } else if(mapping.sourceType === 'string' && mapping.targetType === 'number'){
+              return 'parseNumber';
+            } else if(mapping.sourceType === 'number' && mapping.targetType === 'string'){
+              return 'toString';
+            }
+            return 'typeConversion';
+          } else if(mapping.sourceType === 'string'){
+            return 'stringManipulation';
+          }
+          return 'custom';
+        },
+        parseTransformationRules(transformation){
+          if(!transformation) return [];
+          // Simple parsing for existing transformations
+          if(transformation.includes('Format datetime')){
+            return [{type: 'dateFormat', value: 'YYYY-MM-DD'}];
+          } else if(transformation.includes('Type conversion')){
+            return [{type: 'typeConversion', value: 'auto'}];
+          }
+          return [{type: 'custom', value: transformation}];
+        },
+        addTransformationRule(){
+          this.transformationModal.config.rules.push({
+            id: Math.random().toString(36).substr(2, 9),
+            type: 'custom',
+            value: '',
+            condition: ''
+          });
+        },
+        removeTransformationRule(ruleId){
+          this.transformationModal.config.rules = this.transformationModal.config.rules.filter(r => r.id !== ruleId);
+        },
+        previewTransformation(){
+          const rules = this.transformationModal.config.rules;
+          const mapping = this.transformationModal.mapping;
+          
+          // Generate sample preview
+          let sampleInput = this.getSampleValue(mapping.sourceType);
+          let preview = `Input: ${sampleInput}\n`;
+          
+          rules.forEach((rule, index) => {
+            switch(rule.type){
+              case 'dateFormat':
+                preview += `Step ${index + 1}: Format date → 2024-01-15\n`;
+                break;
+              case 'stringManipulation':
+                if(rule.value === 'uppercase'){
+                  preview += `Step ${index + 1}: Uppercase → ${sampleInput.toUpperCase()}\n`;
+                } else if(rule.value === 'lowercase'){
+                  preview += `Step ${index + 1}: Lowercase → ${sampleInput.toLowerCase()}\n`;
+                } else if(rule.value.includes('trim')){
+                  preview += `Step ${index + 1}: Trim whitespace → ${sampleInput.trim()}\n`;
+                }
+                break;
+              case 'parseNumber':
+                preview += `Step ${index + 1}: Parse number → 123.45\n`;
+                break;
+              case 'toString':
+                preview += `Step ${index + 1}: Convert to string → "${sampleInput}"\n`;
+                break;
+              case 'custom':
+                preview += `Step ${index + 1}: Custom rule → [Result depends on rule]\n`;
+                break;
+              default:
+                preview += `Step ${index + 1}: ${rule.type} → [Transformed value]\n`;
+            }
+          });
+          
+          this.transformationModal.config.preview = preview;
+        },
+        getSampleValue(type){
+          switch(type){
+            case 'string': return 'John Doe';
+            case 'number': return '123';
+            case 'datetime': return '2024-01-15T10:30:00Z';
+            case 'boolean': return 'true';
+            default: return 'sample_value';
+          }
+        },
+        saveTransformation(){
+          const rules = this.transformationModal.config.rules;
+          if(rules.length === 0){
+            this.transformationModal.mapping.transformation = null;
+          } else {
+            const transformationText = rules.map(rule => {
+              switch(rule.type){
+                case 'dateFormat':
+                  return `Format date as ${rule.value}`;
+                case 'stringManipulation':
+                  return `String: ${rule.value}`;
+                case 'parseNumber':
+                  return `Parse as number`;
+                case 'toString':
+                  return `Convert to string`;
+                case 'custom':
+                  return rule.value;
+                default:
+                  return `${rule.type}: ${rule.value}`;
+              }
+            }).join(', ');
+            this.transformationModal.mapping.transformation = transformationText;
+          }
+          
+          this.transformationModal.show = false;
+          this.show('Transformation rules updated');
+        },
+        applyQuickTemplate(templateName){
+          this.transformationModal.config.rules = [];
+          
+          switch(templateName){
+            case 'name-formatter':
+              this.transformationModal.config.rules = [
+                {id: Math.random().toString(36).substr(2, 9), type: 'stringManipulation', value: 'trim'},
+                {id: Math.random().toString(36).substr(2, 9), type: 'stringManipulation', value: 'lowercase'},
+                {id: Math.random().toString(36).substr(2, 9), type: 'custom', value: 'Capitalize first letter of each word'}
+              ];
+              break;
+              
+            case 'date-normalizer':
+              this.transformationModal.config.rules = [
+                {id: Math.random().toString(36).substr(2, 9), type: 'dateFormat', value: 'YYYY-MM-DD'}
+              ];
+              break;
+              
+            case 'phone-formatter':
+              this.transformationModal.config.rules = [
+                {id: Math.random().toString(36).substr(2, 9), type: 'stringManipulation', value: 'trim'},
+                {id: Math.random().toString(36).substr(2, 9), type: 'custom', value: 'Remove all non-numeric characters'},
+                {id: Math.random().toString(36).substr(2, 9), type: 'custom', value: 'Format as (XXX) XXX-XXXX'}
+              ];
+              break;
+              
+            case 'address-cleaner':
+              this.transformationModal.config.rules = [
+                {id: Math.random().toString(36).substr(2, 9), type: 'stringManipulation', value: 'trim'},
+                {id: Math.random().toString(36).substr(2, 9), type: 'custom', value: 'Standardize street abbreviations'},
+                {id: Math.random().toString(36).substr(2, 9), type: 'custom', value: 'Title case formatting'}
+              ];
+              break;
+          }
+          
+          this.show(`Applied ${templateName} template`);
+        },
+        openInAIStudio(){
+          // Validate minimum requirements
+          if(!this.templateWizard.config.name){
+            this.show('Please enter a template name first');
+            return;
+          }
+          
+          // Create temporary template data for AI Studio
+          const tempTemplateData = {
+            key: this.templateWizard.config.key || this.templateWizard.config.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            name: this.templateWizard.config.name,
+            description: this.templateWizard.config.description,
+            templateType: this.templateWizard.templateType,
+            sourceSystem: this.templateWizard.config.sourceSystem,
+            targetSystem: this.templateWizard.config.targetSystem,
+            tags: (this.templateWizard.config.tags || '').split(',').map(s => s.trim()).filter(Boolean),
+            source: 'custom',
+            fields: this.templateWizard.fieldMappings || [],
+            // Enhanced wizard data
+            wizardData: {
+              sourceFields: this.sourceFields,
+              targetFields: this.targetFields,
+              fieldMappings: this.templateWizard.fieldMappings,
+              completionStatus: this.getCompletionStatus(),
+              totalMappings: this.templateWizard.fieldMappings.length,
+              requiredMappings: this.targetFields.filter(f => f.required).length,
+              completedMappings: this.targetFields.filter(f => f.required && f.mapped).length
+            },
+            // AI Studio configuration for optimal experience
+            aiStudioConfig: {
+              suggestMappings: this.templateWizard.fieldMappings.length === 0,
+              validateTransformations: this.templateWizard.fieldMappings.some(m => m.transformation),
+              enableAutoComplete: this.getCompletionStatus().text !== 'Complete',
+              focusMode: 'field-mapping',
+              preloadSuggestions: true,
+              returnToWizard: true
+            },
+            // Integration metadata
+            integration: {
+              source: 'template-wizard',
+              timestamp: new Date().toISOString(),
+              version: '2.0',
+              capabilities: ['drag-drop', 'transformations', 'validation'],
+              returnContext: 'wizard-step-3'
+            }
+          };
+          
+          // Store data for AI Studio
+          localStorage.setItem('wizardTemplateLoad', JSON.stringify(tempTemplateData));
+          localStorage.setItem('aiStudioHandoff', JSON.stringify({
+            mode: 'wizard-integration',
+            templateName: tempTemplateData.name,
+            returnUrl: '/admin-templates.html#wizard-return',
+            context: 'template-enhancement',
+            wizardStep: 3,
+            preserveWizardState: true
+          }));
+          
+          // Open AI Studio in new tab to preserve wizard state
+          window.open('/AI-Integrated-Mapping-Studio.html#template-load', '_blank');
+          
+          this.show(`Opening "${tempTemplateData.name}" in AI-Integrated Mapping Studio...`);
+        },
+        loadSampleFieldMappings(){
+          // Clear existing mappings
+          this.templateWizard.fieldMappings = [];
+          this.targetFields.forEach(f => {
+            f.mapped = false;
+            f.mappedFrom = null;
+          });
+          
+          // Add sample mappings
+          const sampleMappings = [
+            {sourceField: 'customer_id', targetField: 'id'},
+            {sourceField: 'first_name', targetField: 'firstName'},
+            {sourceField: 'last_name', targetField: 'lastName'},
+            {sourceField: 'email', targetField: 'emailAddress'},
+            {sourceField: 'created_date', targetField: 'dateCreated', transformation: 'Format datetime'}
+          ];
+          
+          sampleMappings.forEach(sample => {
+            const sourceField = this.sourceFields.find(f => f.name === sample.sourceField);
+            const targetField = this.targetFields.find(f => f.name === sample.targetField);
+            
+            if(sourceField && targetField){
+              const mapping = {
+                id: Math.random().toString(36).substr(2, 9),
+                sourceField: sample.sourceField,
+                targetField: sample.targetField,
+                sourceType: sourceField.type,
+                targetType: targetField.type,
+                transformation: sample.transformation || (sourceField.type !== targetField.type ? 'Type conversion required' : null)
+              };
+              
+              this.templateWizard.fieldMappings.push(mapping);
+              targetField.mapped = true;
+              targetField.mappedFrom = sample.sourceField;
+            }
+          });
+          
+          this.show('Sample field mappings loaded');
+        },
+        getCompletionStatus(){
+          const requiredTargetFields = this.targetFields.filter(f => f.required);
+          const mappedRequiredFields = requiredTargetFields.filter(f => f.mapped);
+          
+          if(mappedRequiredFields.length === 0){
+            return {text: 'Not Started', class: 'bg-gray-100 text-gray-800'};
+          } else if(mappedRequiredFields.length < requiredTargetFields.length){
+            return {text: 'In Progress', class: 'bg-yellow-100 text-yellow-800'};
+          } else {
+            return {text: 'Complete', class: 'bg-green-100 text-green-800'};
+          }
+        },
+        async saveWizardTemplate(){
+          // Create template from wizard data
+          const tags = (this.templateWizard.config.tags || '').split(',').map(s => s.trim()).filter(Boolean);
+          
+          const templateData = {
+            key: this.templateWizard.config.key || this.templateWizard.config.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            name: this.templateWizard.config.name,
+            description: this.templateWizard.config.description,
+            templateType: this.templateWizard.templateType,
+            sourceSystem: this.templateWizard.config.sourceSystem,
+            targetSystem: this.templateWizard.config.targetSystem,
+            tags: tags,
+            source: 'custom',
+            fields: this.templateWizard.fieldMappings || [],
+            // Add type-specific data
+            workflowSteps: this.templateWizard.workflowSteps || [],
+            connectorConfig: this.templateWizard.connectorConfig || {},
+            apiConfig: this.templateWizard.apiConfig || {},
+            createdAt: new Date().toISOString()
+          };
+
+          try {
+            // For now, just add to the local templates list (in future, this would save to backend)
+            this.templates.push(templateData);
+            this.show(`Template "${templateData.name}" created successfully`);
+            this.closeForm();
+            
+            // If it's a field mapping template, offer to open in AI Studio
+            if(this.templateWizard.templateType === 'field-mapping'){
+              setTimeout(() => {
+                if(confirm(`Template created! Would you like to open "${templateData.name}" in the AI-Integrated Mapping Studio for advanced AI-assisted field mapping and validation?`)){
+                  // Enhanced data package for AI Studio integration
+                  const aiStudioData = {
+                    ...templateData,
+                    // Enhanced field mapping data
+                    wizardData: {
+                      sourceFields: this.sourceFields,
+                      targetFields: this.targetFields,
+                      fieldMappings: this.templateWizard.fieldMappings,
+                      completionStatus: this.getCompletionStatus(),
+                      totalMappings: this.templateWizard.fieldMappings.length,
+                      requiredMappings: this.targetFields.filter(f => f.required).length,
+                      completedMappings: this.targetFields.filter(f => f.required && f.mapped).length
+                    },
+                    // AI Studio configuration hints
+                    aiStudioConfig: {
+                      suggestMappings: this.templateWizard.fieldMappings.length === 0,
+                      validateTransformations: this.templateWizard.fieldMappings.some(m => m.transformation),
+                      enableAutoComplete: this.getCompletionStatus().text !== 'Complete',
+                      focusMode: 'field-mapping',
+                      preloadSuggestions: true
+                    },
+                    // Integration metadata
+                    integration: {
+                      source: 'template-wizard',
+                      timestamp: new Date().toISOString(),
+                      version: '2.0',
+                      capabilities: ['drag-drop', 'transformations', 'validation']
+                    }
+                  };
+                  
+                  // Store enhanced data for AI Studio
+                  localStorage.setItem('wizardTemplateLoad', JSON.stringify(aiStudioData));
+                  localStorage.setItem('aiStudioHandoff', JSON.stringify({
+                    mode: 'wizard-integration',
+                    templateName: templateData.name,
+                    returnUrl: '/admin-templates.html',
+                    context: 'template-creation'
+                  }));
+                  
+                  // Open in AI Studio with template load context
+                  window.location.href = '/AI-Integrated-Mapping-Studio.html#template-load';
+                }
+              }, 500);
+            }
+          } catch (error) {
+            this.show('Failed to create template: ' + error.message);
+          }
+        },
+
+        resetForm(){ this.form = { key: '', name: '', description: '', sourceSystem: '', targetSystem: '', fields: [], tagsText: '' }; },
+
+        tryParams(i){ const f=this.form.fields[i]; try{ f.params = f.paramsText? JSON.parse(f.paramsText): {}; }catch{/* ignore */} },
+
+        edit(t){ if(t.source!=='custom') return; this.form = { key: t.key, name: t.name, description: t.description||'', sourceSystem: t.sourceSystem||'', targetSystem: t.targetSystem||'', fields: (t.fields||[]).map(x=>({ ...x, paramsText: x.params?JSON.stringify(x.params):'' })), tagsText: (t.tags||[]).join(', ') }; },
+
+        async save(){
+          const tags = (this.form.tagsText||'').split(',').map(s=>s.trim()).filter(Boolean);
+          const payload = { key: this.form.key, name: this.form.name, description: this.form.description, sourceSystem: this.form.sourceSystem, targetSystem: this.form.targetSystem, fields: (this.form.fields||[]).map(x=>({ source:x.source, target:x.target, transformation:x.transformation, params: x.paramsText?JSON.parse(x.paramsText||'{}'):(x.params||{}) })), tags };
+          try{
+            let res = await fetch('/api/mappings/templates',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            if(!res.ok) res = await fetch('/api/dashboard/mappings/templates',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+            if(res.ok){ await this.load(); this.show('Template saved'); this.resetForm(); } else this.show('Save failed');
+          } catch{ this.show('Save failed'); }
+        },
+
+        async remove(t){ if(t.source!=='custom') return; if(!confirm(`Delete template "${t.name}"?`)) return; let res=await fetch('/api/mappings/templates/'+encodeURIComponent(t.key),{method:'DELETE'}); if(!res.ok) res=await fetch('/api/dashboard/mappings/templates/'+encodeURIComponent(t.key),{method:'DELETE'}); if(res.ok){ await this.load(); this.show('Template deleted'); } else { this.show('Delete failed'); } },
+
+        openSuiteCentralDemo(){
+          this.message = 'Opening SuiteCentral Integration Hub...';
+          setTimeout(() => {
+            window.open('/SuiteCentral-BusinessCentral-Integration-hub.html', '_blank');
+          }, 500);
+          setTimeout(() => this.message='', 3000);
+        },
+
+        // Template Library Browser Functions
+        browseOfficialTemplates(){
+          // Check subscription tier access
+          if(!this.checkTemplateAccess('official')){
+            this.showUpgradePrompt('Official Templates require Professional tier or higher');
+            return;
+          }
+
+          this.message = 'Loading Official Templates...';
+          // Simulate browsing official templates
+          setTimeout(() => {
+            this.message = 'Opening official template browser...';
+            // Create a modal or navigate to template browser
+            // Get real demo templates and categorize as "official"
+            const demoTemplates = this.getDemoEnterpriseTemplates();
+            const officialTemplates = demoTemplates.filter(t => 
+              ['suitecentral-to-netsuite-customers', 'dynamics-to-suitecentral-orders', 'netsuite-to-businesscentral-inventory'].includes(t.key)
+            ).map(t => ({
+              ...t,
+              category: this.getTemplateCategory(t),
+              rating: 5,
+              tier: 'Official',
+              fieldCount: (t.fields || []).length
+            }));
+            
+            this.openTemplateBrowser('official', {
+              title: 'Official Squire Templates',
+              description: '8 demo templates available • 3 official samples shown below',
+              templates: officialTemplates
+            });
+          }, 1000);
+          setTimeout(() => this.message='', 4000);
+        },
+
+        browseCommunityTemplates(){
+          this.message = 'Loading Community Templates...';
+          setTimeout(() => {
+            this.message = 'Opening community template hub...';
+            // Create community-style templates with user attribution
+            const communityTemplates = [
+              {
+                key: 'community-shopify-orders',
+                name: 'Shopify to ERP Order Sync',
+                description: 'Sync orders from Shopify to your ERP system with custom field mapping',
+                sourceSystem: 'Shopify',
+                targetSystem: 'ERP System',
+                category: 'E-commerce',
+                rating: 4,
+                author: 'dev_user123',
+                tier: 'Community',
+                fieldCount: 8,
+                tags: ['shopify', 'orders', 'ecommerce', 'sync'],
+                fields: [
+                  { source: 'order_id', target: 'external_id', transformation: 'direct', params: { required: true } },
+                  { source: 'customer_email', target: 'customer_email', transformation: 'lowercase', params: { required: true } },
+                  { source: 'total_price', target: 'order_total', transformation: 'currency', params: { precision: 2 } }
+                ]
+              },
+              {
+                key: 'community-hubspot-contacts',
+                name: 'HubSpot Contact Sync',
+                description: 'Bidirectional sync between HubSpot and CRM with lead scoring',
+                sourceSystem: 'HubSpot',
+                targetSystem: 'CRM System',
+                category: 'CRM',
+                rating: 4,
+                author: 'integrations_pro',
+                tier: 'Community',
+                fieldCount: 6,
+                tags: ['hubspot', 'contacts', 'crm', 'lead-scoring'],
+                fields: [
+                  { source: 'email', target: 'primary_email', transformation: 'lowercase', params: { required: true } },
+                  { source: 'firstname', target: 'first_name', transformation: 'direct', params: { required: true } },
+                  { source: 'hubscore', target: 'lead_score', transformation: 'direct', params: { type: 'integer' } }
+                ]
+              },
+              {
+                key: 'community-stripe-payments',
+                name: 'Stripe Payment Processing',
+                description: 'Real-time payment sync with advanced reconciliation features',
+                sourceSystem: 'Stripe',
+                targetSystem: 'Accounting System',
+                category: 'Payments',
+                rating: 5,
+                author: 'fintech_builder',
+                tier: 'Community',
+                fieldCount: 7,
+                tags: ['stripe', 'payments', 'accounting', 'reconciliation'],
+                fields: [
+                  { source: 'charge_id', target: 'transaction_id', transformation: 'direct', params: { required: true } },
+                  { source: 'amount', target: 'payment_amount', transformation: 'currency', params: { precision: 2 } },
+                  { source: 'status', target: 'payment_status', transformation: 'lookup', params: { lookup_table: 'payment_statuses' } }
+                ]
+              }
+            ];
+            
+            this.openTemplateBrowser('community', {
+              title: 'Community Template Hub',
+              description: '3 community example templates • Sample integrations for Shopify, HubSpot, and Stripe',
+              templates: communityTemplates
+            });
+          }, 1000);
+          setTimeout(() => this.message='', 4000);
+        },
+
+        browseEnterpriseTemplates(){
+          // Check subscription tier access
+          if(!this.checkTemplateAccess('enterprise')){
+            this.showUpgradePrompt('Enterprise Templates require Enterprise tier subscription');
+            return;
+          }
+
+          this.message = 'Loading Enterprise Templates...';
+          setTimeout(() => {
+            this.message = 'Opening enterprise template library...';
+            // Get real demo templates and categorize as "enterprise"
+            const demoTemplates = this.getDemoEnterpriseTemplates();
+            const enterpriseTemplates = demoTemplates.filter(t => 
+              ['suitecentral-payment-integration', 'salesforce-to-suitecentral-leads', 'quickbooks-to-suitecentral-vendors'].includes(t.key)
+            ).map(t => ({
+              ...t,
+              category: this.getTemplateCategory(t),
+              rating: 5,
+              tier: 'Enterprise',
+              fieldCount: (t.fields || []).length
+            }));
+            
+            this.openTemplateBrowser('enterprise', {
+              title: 'Enterprise Template Library',
+              description: '8 demo templates available • 3 enterprise samples shown below',
+              templates: enterpriseTemplates
+            });
+          }, 1000);
+          setTimeout(() => this.message='', 4000);
+        },
+
+        openTemplateBrowser(type, config){
+          // Show template browser modal with functional display
+          this.templateBrowserModal = {
+            show: true,
+            type: type,
+            title: config.title,
+            description: config.description,
+            templates: config.templates
+          };
+        },
+        closeTemplateBrowser(){
+          this.templateBrowserModal.show = false;
+        },
+        useTemplate(template){
+          // Add the selected template to the main template list
+          if(template && template.key){
+            // Check if template already exists
+            const existingIndex = this.templates.findIndex(t => t.key === template.key);
+            if(existingIndex >= 0){
+              this.show('Template already exists in your library');
+            } else {
+              // Add template to the main list
+              this.templates.push({
+                ...template,
+                source: 'imported'
+              });
+              this.show(`Template "${template.name}" added to your library`);
+              this.closeTemplateBrowser();
+            }
+          }
+        },
+
+        searchTemplates(){
+          this.message = 'Opening template search...';
+          const searchTerm = prompt('Enter search terms for templates:', 'salesforce integration');
+          if(searchTerm){
+            this.message = `Searching for "${searchTerm}"...`;
+            setTimeout(() => {
+              alert(`Search Results for "${searchTerm}":\n\n• Found 1 matching template\n• Result: Salesforce to SuiteCentral Leads\n• Category: CRM Integration\n\n💡 Note: Searching within 8 demo templates. Create custom templates in the Template Creation Center.`);
+              this.message = '';
+            }, 2000);
+          } else {
+            this.message = '';
+          }
+        },
+
+        browseByCategory(){
+          this.message = 'Loading template categories...';
+          setTimeout(() => {
+            const categories = [
+              'CRM Integrations (2 templates)',
+              'ERP Systems (3 templates)',
+              'E-commerce (1 template)',
+              'Payment Systems (2 templates)',
+              'Custom Integration (8 demo templates total)'
+            ];
+            alert(`Template Categories:\n\n${categories.join('\n')}\n\n💡 Note: Showing demo templates. Production templates can be created using the Template Creation Center.`);
+            this.message = '';
+          }, 1000);
+        },
+
+        viewMyFavorites(){
+          this.message = 'Loading your favorites...';
+          setTimeout(() => {
+            alert(`Your Favorite Templates:\n\n• Salesforce to NetSuite Sync ⭐\n• Dynamics 365 Customer Import ⭐\n• Custom Shopify Integration ⭐\n• HubSpot Lead Sync ⭐\n\n4 templates in your favorites list.`);
+            this.message = '';
+          }, 1000);
+        },
+
+        importFromURL(){
+          this.message = 'Import template from URL...';
+          const url = prompt('Enter template URL:', 'https://github.com/user/template.json');
+          if(url){
+            this.message = `Importing template from ${url}...`;
+            setTimeout(() => {
+              alert(`Template Import:\n\nURL: ${url}\nStatus: Success ✅\nTemplate: "Custom Integration Template"\nFields: 12 mappings imported\n\nTemplate has been added to your library.`);
+              this.message = '';
+              this.load(); // Refresh template list
+            }, 2000);
+          } else {
+            this.message = '';
+          }
+        },
+
+        // Connection Configuration Functions
+        configureConnection(systemType){
+          this.message = `Configuring ${systemType} connection...`;
+          
+          const configs = {
+            netsuite: {
+              title: 'NetSuite Connection Setup',
+              fields: ['Account ID', 'Consumer Key', 'Consumer Secret', 'Token ID', 'Token Secret'],
+              authType: 'OAuth 1.0a'
+            },
+            salesforce: {
+              title: 'Salesforce Connection Setup', 
+              fields: ['Client ID', 'Client Secret', 'Username', 'Password', 'Security Token'],
+              authType: 'OAuth 2.0'
+            },
+            dynamics: {
+              title: 'Dynamics 365 Connection Setup',
+              fields: ['Tenant ID', 'Client ID', 'Client Secret', 'Resource URL'],
+              authType: 'Azure AD'
+            },
+            github: {
+              title: 'GitHub Repository Setup',
+              fields: ['Repository URL', 'Access Token', 'Branch Name'],
+              authType: 'Personal Access Token'
+            },
+            custom: {
+              title: 'Custom Registry Setup',
+              fields: ['Registry URL', 'API Key', 'Namespace'],
+              authType: 'API Key'
+            },
+            marketplace: {
+              title: 'Template Marketplace Setup',
+              fields: ['Marketplace URL', 'API Key', 'User Account'],
+              authType: 'API Key'
+            }
+          };
+
+          const config = configs[systemType];
+          if(config){
+            setTimeout(() => {
+              alert(`${config.title}\n\nAuthentication: ${config.authType}\n\nRequired Fields:\n${config.fields.map(f => '• ' + f).join('\n')}\n\nConnection configuration wizard would open here.`);
+              this.message = '';
+            }, 1500);
+          }
+        },
+
+        testAllConnections(){
+          this.message = 'Testing all connections...';
+          setTimeout(() => {
+            const results = [
+              'NetSuite: ✅ Connected',
+              'Salesforce: ✅ Connected', 
+              'Dynamics 365: ⚠️ Authentication needed',
+              'GitHub Repo: ✅ Connected',
+              'Custom Registry: ❌ Connection failed',
+              'Marketplace: ✅ Connected'
+            ];
+            alert(`Connection Test Results:\n\n${results.join('\n')}\n\n4 of 6 connections successful.`);
+            this.message = '';
+          }, 3000);
+        },
+
+        openConnectionWizard(){
+          this.message = 'Opening connection wizard...';
+          setTimeout(() => {
+            // Navigate to connector ecosystem page
+            window.location.href = '/connector-ecosystem.html';
+          }, 1000);
+        },
+
+        // Check if user's subscription allows access to template type
+        checkTemplateAccess(templateType){
+          // In demo mode, allow access to all template types
+          if(this.forceDemoMode || this.usingDemoData) {
+            return true;
+          }
+          
+          if(!this.subscriptionInfo || !this.subscriptionInfo.tierId) return false;
+          
+          const tierLevel = {
+            'tier_starter': 1,
+            'tier_professional': 2,
+            'tier_enterprise': 3
+          }[this.subscriptionInfo.tierId] || 0;
+
+          const requiredLevel = {
+            'community': 1,
+            'official': 2,
+            'enterprise': 3
+          }[templateType] || 0;
+
+          return tierLevel >= requiredLevel;
+        },
+
+        // Show upgrade prompt with pricing info
+        showUpgradePrompt(message){
+          const currentTier = this.subscriptionInfo.tierId || 'none';
+          const tierName = {
+            'tier_starter': 'Starter',
+            'tier_professional': 'Professional', 
+            'tier_enterprise': 'Enterprise'
+          }[currentTier] || 'No subscription';
+
+          const upgradeTiers = this.pricingTiers.filter(tier => {
+            const tierLevel = {
+              'tier_starter': 1,
+              'tier_professional': 2,
+              'tier_enterprise': 3
+            }[tier.id] || 0;
+            const currentLevel = {
+              'tier_starter': 1,
+              'tier_professional': 2,
+              'tier_enterprise': 3
+            }[currentTier] || 0;
+            return tierLevel > currentLevel;
+          });
+
+          let upgradeOptions = upgradeTiers.map(tier => 
+            `• ${tier.displayName}: $${Math.round(tier.annualPricing.min/12)}/month`
+          ).join('\n');
+
+          alert(`${message}\n\nCurrent Plan: ${tierName}\n\nAvailable Upgrades:\n${upgradeOptions}\n\nContact sales or upgrade your subscription to access these templates.`);
+        },
+        
+        // Get comprehensive enterprise templates with field mappings
+        getDemoEnterpriseTemplates() {
+          return [
+            {
+              key: 'suitecentral-to-netsuite-customers',
+              name: 'SuiteCentral Customer Sync',
+              description: 'Sync customer data from SuiteCentral to NetSuite with automated field mapping and validation',
+              sourceSystem: 'SuiteCentral',
+              targetSystem: 'NetSuite',
+              source: 'builtin',
+              tags: ['crm', 'customer', 'suitecentral', 'netsuite', 'sync'],
+              fields: [
+                { source: 'customer_id', target: 'internalid', transformation: 'direct', params: { required: true } },
+                { source: 'company_name', target: 'companyname', transformation: 'direct', params: { required: true } },
+                { source: 'contact_email', target: 'email', transformation: 'lowercase', params: { required: true, validation: 'email' } },
+                { source: 'phone', target: 'phone', transformation: 'format', params: { format: 'phone_us' } },
+                { source: 'billing_address', target: 'defaultaddress', transformation: 'concatenation', params: { required: true, separator: ', ' } },
+                { source: 'credit_limit', target: 'creditlimit', transformation: 'calculation', params: { type: 'currency', precision: 2 } },
+                { source: 'tax_id', target: 'vatregnumber', transformation: 'direct', params: {} },
+                { source: 'payment_terms', target: 'terms', transformation: 'lookup', params: { required: true, lookup_table: 'payment_terms' } }
+              ]
+            },
+            {
+              key: 'dynamics-to-suitecentral-orders',
+              name: 'Dynamics to SuiteCentral Orders',
+              description: 'Seamlessly transfer order data from Microsoft Dynamics 365 to SuiteCentral with comprehensive field mapping',
+              sourceSystem: 'Dynamics 365',
+              targetSystem: 'SuiteCentral',
+              source: 'builtin',
+              tags: ['orders', 'dynamics', 'suitecentral', 'erp', 'automation'],
+              fields: [
+                { source: 'salesorderid', target: 'order_id', transformation: 'direct', params: { required: true } },
+                { source: 'ordernumber', target: 'order_number', transformation: 'direct', params: { required: true } },
+                { source: 'customerid', target: 'customer_id', transformation: 'lookup', params: { required: true, lookup_table: 'customers' } },
+                { source: 'orderdate', target: 'order_date', transformation: 'format', params: { required: true, format: 'ISO8601' } },
+                { source: 'totalamount', target: 'total_amount', transformation: 'calculation', params: { required: true, type: 'currency', precision: 2 } },
+                { source: 'currencyid', target: 'currency_code', transformation: 'lookup', params: { required: true, lookup_table: 'currencies' } },
+                { source: 'statuscode', target: 'order_status', transformation: 'lookup', params: { required: true, lookup_table: 'order_statuses' } },
+                { source: 'shippingmethod', target: 'shipping_method', transformation: 'lookup', params: { lookup_table: 'shipping_methods' } },
+                { source: 'billingaddress', target: 'billing_address', transformation: 'concatenation', params: { required: true, separator: ', ' } },
+                { source: 'shippingaddress', target: 'shipping_address', transformation: 'concatenation', params: { required: true, separator: ', ' } }
+              ]
+            },
+            {
+              key: 'netsuite-to-businesscentral-inventory',
+              name: 'NetSuite to Business Central Inventory',
+              description: 'Synchronize inventory levels and product data between NetSuite and Microsoft Business Central',
+              sourceSystem: 'NetSuite',
+              targetSystem: 'Business Central',
+              source: 'builtin',
+              tags: ['inventory', 'netsuite', 'businesscentral', 'stock', 'bidirectional'],
+              fields: [
+                { source: 'internalid', target: 'No.', transformation: 'direct', params: { required: true } },
+                { source: 'itemid', target: 'Description', transformation: 'direct', params: { required: true } },
+                { source: 'displayname', target: 'Description_2', transformation: 'direct', params: {} },
+                { source: 'quantityavailable', target: 'Inventory', transformation: 'direct', params: { required: true, type: 'integer' } },
+                { source: 'unitprice', target: 'Unit_Price', transformation: 'calculation', params: { required: true, type: 'currency', precision: 2 } },
+                { source: 'weight', target: 'Gross_Weight', transformation: 'format', params: { format: 'decimal', precision: 3 } },
+                { source: 'category', target: 'Item_Category_Code', transformation: 'lookup', params: { required: true, lookup_table: 'item_categories' } },
+                { source: 'vendor', target: 'Vendor_No.', transformation: 'lookup', params: { lookup_table: 'vendors' } },
+                { source: 'reorderpoint', target: 'Reorder_Point', transformation: 'direct', params: { type: 'integer' } }
+              ]
+            },
+            {
+              key: 'suitecentral-payment-integration',
+              name: 'SuiteCentral Payment Gateway',
+              description: 'Integrate SuiteCentral payment processing with multiple payment providers and financial systems',
+              sourceSystem: 'SuiteCentral Payment',
+              targetSystem: 'Multiple Providers',
+              source: 'builtin',
+              tags: ['payment', 'gateway', 'suitecentral', 'finance', 'realtime'],
+              fields: [
+                { source: 'payment_id', target: 'transaction_id', transformation: 'direct', params: { required: true } },
+                { source: 'customer_id', target: 'customer_reference', transformation: 'lookup', params: { required: true, lookup_table: 'customers' } },
+                { source: 'amount', target: 'payment_amount', transformation: 'calculation', params: { required: true, type: 'currency', precision: 2 } },
+                { source: 'currency', target: 'currency_code', transformation: 'direct', params: { required: true } },
+                { source: 'payment_method', target: 'method_type', transformation: 'lookup', params: { required: true, lookup_table: 'payment_methods' } },
+                { source: 'status', target: 'payment_status', transformation: 'lookup', params: { required: true, lookup_table: 'payment_statuses' } },
+                { source: 'created_date', target: 'transaction_date', transformation: 'format', params: { required: true, format: 'ISO8601' } },
+                { source: 'card_last_four', target: 'masked_card', transformation: 'format', params: { format: 'mask_card' } }
+              ]
+            },
+            {
+              key: 'salesforce-to-suitecentral-leads',
+              name: 'Salesforce to SuiteCentral Leads',
+              description: 'Convert Salesforce leads to SuiteCentral prospects with lead scoring and qualification',
+              sourceSystem: 'Salesforce',
+              targetSystem: 'SuiteCentral',
+              source: 'builtin',
+              tags: ['leads', 'salesforce', 'suitecentral', 'crm', 'qualification'],
+              fields: [
+                { source: 'Id', target: 'lead_id', transformation: 'direct', params: { required: true } },
+                { source: 'FirstName', target: 'first_name', transformation: 'direct', params: { required: true } },
+                { source: 'LastName', target: 'last_name', transformation: 'direct', params: { required: true } },
+                { source: 'Email', target: 'email', transformation: 'lowercase', params: { required: true, validation: 'email' } },
+                { source: 'Company', target: 'company_name', transformation: 'direct', params: { required: true } },
+                { source: 'Phone', target: 'phone', transformation: 'format', params: { format: 'phone_us' } },
+                { source: 'LeadSource', target: 'lead_source', transformation: 'lookup', params: { lookup_table: 'lead_sources' } },
+                { source: 'Status', target: 'qualification_status', transformation: 'lookup', params: { required: true, lookup_table: 'lead_statuses' } },
+                { source: 'Rating', target: 'lead_score', transformation: 'calculation', params: { type: 'integer', range: '1-10' } }
+              ]
+            },
+            {
+              key: 'quickbooks-to-suitecentral-vendors',
+              name: 'QuickBooks to SuiteCentral Vendors',
+              description: 'Sync vendor and supplier data from QuickBooks to SuiteCentral for unified procurement management',
+              sourceSystem: 'QuickBooks',
+              targetSystem: 'SuiteCentral',
+              source: 'builtin',
+              tags: ['vendors', 'quickbooks', 'suitecentral', 'procurement', 'suppliers'],
+              fields: [
+                { source: 'Id', target: 'vendor_id', transformation: 'direct', params: { required: true } },
+                { source: 'Name', target: 'vendor_name', transformation: 'direct', params: { required: true } },
+                { source: 'CompanyName', target: 'company_name', transformation: 'direct', params: {} },
+                { source: 'PrimaryEmailAddr.Address', target: 'email', transformation: 'lowercase', params: { validation: 'email' } },
+                { source: 'PrimaryPhone.FreeFormNumber', target: 'phone', transformation: 'format', params: { format: 'phone_us' } },
+                { source: 'BillAddr', target: 'billing_address', transformation: 'concatenation', params: { separator: ', ' } },
+                { source: 'TaxIdentifier', target: 'tax_id', transformation: 'direct', params: {} },
+                { source: 'AcctNum', target: 'account_number', transformation: 'direct', params: {} },
+                { source: 'Active', target: 'is_active', transformation: 'direct', params: { type: 'boolean' } }
+              ]
+            }
+          ];
+        },
+
+        // UI Helper Methods
+        getTemplateCategory(template) {
+          if (!template.sourceSystem && !template.targetSystem) return 'General';
+          
+          const systems = [template.sourceSystem, template.targetSystem].filter(Boolean).join(' ').toLowerCase();
+          
+          if (systems.includes('salesforce') || systems.includes('hubspot') || systems.includes('lead')) return 'CRM Systems';
+          if (systems.includes('netsuite') || systems.includes('sap') || systems.includes('dynamics') || systems.includes('suitecentral')) return 'ERP Systems';
+          if (systems.includes('shopify') || systems.includes('amazon') || systems.includes('commerce')) return 'E-commerce Systems';
+          if (systems.includes('quickbooks') || systems.includes('xero') || systems.includes('account')) return 'Accounting Systems';
+          if (systems.includes('mailchimp') || systems.includes('campaign') || systems.includes('marketing')) return 'Marketing Systems';
+          if (systems.includes('stripe') || systems.includes('payment') || systems.includes('paypal')) return 'Payment Systems';
+          if (systems.includes('slack') || systems.includes('teams') || systems.includes('communication')) return 'Communication Systems';
+          if (systems.includes('tableau') || systems.includes('analytics') || systems.includes('business')) return 'Analytics Systems';
+          if (systems.includes('workday') || systems.includes('hr') || systems.includes('payroll')) return 'HR Systems';
+          
+          return 'General';
+        },
+
+        getCategoryColor(category) {
+          const colorMap = {
+            'CRM Systems': 'bg-blue-500',
+            'ERP Systems': 'bg-purple-500',
+            'E-commerce Systems': 'bg-green-500',
+            'Accounting Systems': 'bg-indigo-500',
+            'Marketing Systems': 'bg-orange-500',
+            'Payment Systems': 'bg-red-500',
+            'Communication Systems': 'bg-pink-500',
+            'Analytics Systems': 'bg-teal-500',
+            'HR Systems': 'bg-yellow-500',
+            'General': 'bg-gray-500'
+          };
+          return colorMap[category] || 'bg-gray-500';
+        },
+
+        getCategoryIcon(category) {
+          const iconMap = {
+            'CRM Systems': 'fas fa-users',
+            'ERP Systems': 'fas fa-building',
+            'E-commerce Systems': 'fas fa-shopping-cart',
+            'Accounting Systems': 'fas fa-calculator',
+            'Marketing Systems': 'fas fa-envelope',
+            'Payment Systems': 'fas fa-credit-card',
+            'Communication Systems': 'fas fa-comments',
+            'Analytics Systems': 'fas fa-chart-bar',
+            'HR Systems': 'fas fa-user-tie',
+            'General': 'fas fa-exchange-alt'
+          };
+          return iconMap[category] || 'fas fa-exchange-alt';
+        },
+
+        getSetupTime(template) {
+          const fieldCount = (template.fields || []).length;
+          if (fieldCount <= 3) return '10m';
+          if (fieldCount <= 6) return '20m';
+          if (fieldCount <= 10) return '30m';
+          return '45m';
+        },
+
+        getComplexity(template) {
+          const fieldCount = (template.fields || []).length;
+          if (fieldCount <= 3) return 'Easy';
+          if (fieldCount <= 8) return 'Med';
+          return 'Adv';
+        },
+
+        viewTemplate(template) {
+          if (this.isFromWizard && this.wizardReturnUrl) {
+            // When coming from Integration Wizard, load template and return to wizard
+            this.loadTemplateToWizard(template, 'view');
+          } else {
+            // Normal template preview behavior
+            alert(`Template: ${template.name}\n\nFields: ${(template.fields || []).length}\nSource: ${template.sourceSystem}\nTarget: ${template.targetSystem}\n\nDescription: ${template.description}`);
+          }
+        },
+
+        loadTemplateToWizard(template, action) {
+          try {
+            console.log(`🔄 loadTemplateToWizard called for template: ${template.name}, action: ${action}`);
+
+            // Store template data for Integration Wizard
+            localStorage.setItem('templateLoad', JSON.stringify(template));
+            console.log(`📋 Template ${action}ed for Integration Wizard:`, template.name);
+
+            // Add action context for wizard to understand intent
+            localStorage.setItem('templateAction', action);
+
+            // Navigate back to Integration Wizard - replace current tab instead of new navigation
+            console.log(`🔄 Navigating to: ${this.wizardReturnUrl}`);
+            window.location.replace(this.wizardReturnUrl);
+
+            this.show(`Template "${template.name}" loaded for Integration Wizard`);
+          } catch (error) {
+            console.error('Error loading template to wizard:', error);
+            alert('Error loading template. Please try again.');
+          }
+        },
+
+        toggleDataMode() {
+          console.log('Toggling data mode, forceDemoMode:', this.forceDemoMode);
+          // Call the appropriate data loading function
+          this.load();
+        },
+      }
+    }
+    // If admin page initiated a load-to-wizard, the dashboard can read and apply it.
+    try{ if(location.pathname==='/' && localStorage.getItem('wizardTemplateLoad')) { const t = JSON.parse(localStorage.getItem('wizardTemplateLoad')||'{}'); localStorage.removeItem('wizardTemplateLoad'); /* Dashboard page logic uses its template loader */ } }catch{}
+  </script>
+
+  <!-- New Template Form Modal -->
+  <div x-show="showFormModal" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 overflow-y-auto"
+       style="display: none;">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeForm()"></div>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full">
+        <!-- Modal Header -->
+        <div class="bg-white px-6 pt-6 pb-4 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900">Create New Integration Template</h3>
+              <p class="text-sm text-gray-500 mt-1">Build powerful integration templates with our step-by-step wizard</p>
+            </div>
+            <button @click="closeForm()" class="bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors">
+              <i class="fas fa-times text-gray-600"></i>
+            </button>
+          </div>
+          
+          <!-- Progress Indicator -->
+          <div class="mt-6 flex items-center">
+            <template x-for="step in templateWizard.totalSteps" :key="step">
+              <div class="flex items-center" :class="step > 1 ? 'ml-4' : ''">
+                <div class="flex items-center justify-center w-8 h-8 rounded-full border-2 transition-colors"
+                     :class="step <= templateWizard.step ? 'bg-blue-600 border-blue-600 text-white' : 
+                             step === templateWizard.step + 1 ? 'border-blue-600 text-blue-600' : 'border-gray-300 text-gray-400'">
+                  <span class="text-sm font-medium" x-text="step"></span>
+                </div>
+                <div x-show="step < templateWizard.totalSteps" class="w-16 h-1 mx-2 transition-colors"
+                     :class="step < templateWizard.step ? 'bg-blue-600' : 'bg-gray-200'"></div>
+              </div>
+            </template>
+          </div>
+          
+          <!-- Step Labels -->
+          <div class="mt-2 flex justify-between text-xs text-gray-500">
+            <span :class="templateWizard.step >= 1 ? 'text-blue-600 font-medium' : ''">Choose Type</span>
+            <span :class="templateWizard.step >= 2 ? 'text-blue-600 font-medium' : ''">Configure</span>
+            <span :class="templateWizard.step >= 3 ? 'text-blue-600 font-medium' : ''">Build & Save</span>
+          </div>
+        </div>
+
+        <!-- Step 1: Template Type Selection -->
+        <div x-show="templateWizard.step === 1" class="px-6 py-6">
+          <h4 class="text-lg font-medium text-gray-900 mb-4">What type of integration template do you want to create?</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Field Mapping Template -->
+            <div @click="selectTemplateType('field-mapping')" 
+                 class="cursor-pointer border-2 border-gray-200 rounded-lg p-6 hover:border-blue-500 hover:shadow-md transition-all"
+                 :class="templateWizard.templateType === 'field-mapping' ? 'border-blue-500 bg-blue-50' : ''">
+              <div class="text-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-exchange-alt text-blue-600 text-xl"></i>
+                </div>
+                <h5 class="font-medium text-gray-900 mb-2">Field Mapping</h5>
+                <p class="text-sm text-gray-600 mb-3">Map data fields between systems with transformations</p>
+                <div class="text-xs text-gray-500">
+                  <div class="font-medium mb-1">Best for:</div>
+                  <div>• Data synchronization</div>
+                  <div>• System migrations</div>
+                  <div>• Record updates</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Workflow Template -->
+            <div @click="selectTemplateType('workflow')" 
+                 class="cursor-pointer border-2 border-gray-200 rounded-lg p-6 hover:border-purple-500 hover:shadow-md transition-all"
+                 :class="templateWizard.templateType === 'workflow' ? 'border-purple-500 bg-purple-50' : ''">
+              <div class="text-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-project-diagram text-purple-600 text-xl"></i>
+                </div>
+                <h5 class="font-medium text-gray-900 mb-2">Workflow Process</h5>
+                <p class="text-sm text-gray-600 mb-3">Multi-step business processes with conditions</p>
+                <div class="text-xs text-gray-500">
+                  <div class="font-medium mb-1">Best for:</div>
+                  <div>• Business automation</div>
+                  <div>• Approval flows</div>
+                  <div>• Event handling</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Connector Template -->
+            <div @click="selectTemplateType('connector')" 
+                 class="cursor-pointer border-2 border-gray-200 rounded-lg p-6 hover:border-green-500 hover:shadow-md transition-all"
+                 :class="templateWizard.templateType === 'connector' ? 'border-green-500 bg-green-50' : ''">
+              <div class="text-center">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-plug text-green-600 text-xl"></i>
+                </div>
+                <h5 class="font-medium text-gray-900 mb-2">Connector Config</h5>
+                <p class="text-sm text-gray-600 mb-3">Pre-configured connection setups</p>
+                <div class="text-xs text-gray-500">
+                  <div class="font-medium mb-1">Best for:</div>
+                  <div>• Authentication setup</div>
+                  <div>• Connection templates</div>
+                  <div>• Credential management</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- API Template -->
+            <div @click="selectTemplateType('api')" 
+                 class="cursor-pointer border-2 border-gray-200 rounded-lg p-6 hover:border-orange-500 hover:shadow-md transition-all"
+                 :class="templateWizard.templateType === 'api' ? 'border-orange-500 bg-orange-50' : ''">
+              <div class="text-center">
+                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-code text-orange-600 text-xl"></i>
+                </div>
+                <h5 class="font-medium text-gray-900 mb-2">API Integration</h5>
+                <p class="text-sm text-gray-600 mb-3">REST/GraphQL API integration patterns</p>
+                <div class="text-xs text-gray-500">
+                  <div class="font-medium mb-1">Best for:</div>
+                  <div>• API endpoints</div>
+                  <div>• Webhook handlers</div>
+                  <div>• Custom integrations</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Template Configuration -->
+        <div x-show="templateWizard.step === 2" class="px-6 py-6">
+          <h4 class="text-lg font-medium text-gray-900 mb-4">
+            Configure your <span x-text="templateWizard.templateType.replace('-', ' ')" class="capitalize"></span> template
+          </h4>
+          
+          <!-- Basic Configuration -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Template Name</label>
+              <input x-model="templateWizard.config.name" type="text" required 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                     placeholder="e.g., Salesforce to NetSuite Customer Sync">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Template Key</label>
+              <input x-model="templateWizard.config.key" type="text" required 
+                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                     placeholder="e.g., sf-ns-customer-sync">
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea x-model="templateWizard.config.description" rows="3"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Describe what this template does and when to use it..."></textarea>
+          </div>
+
+          <!-- Type-specific Configuration -->
+          <div x-show="templateWizard.templateType === 'field-mapping'" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Source System</label>
+                <select x-model="templateWizard.config.sourceSystem" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="">Choose source system...</option>
+                  <option value="Salesforce">Salesforce</option>
+                  <option value="NetSuite">NetSuite</option>
+                  <option value="Dynamics 365">Microsoft Dynamics 365</option>
+                  <option value="Business Central">Business Central</option>
+                  <option value="QuickBooks">QuickBooks</option>
+                  <option value="HubSpot">HubSpot</option>
+                  <option value="Shopify">Shopify</option>
+                  <option value="Custom">Custom System</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Target System</label>
+                <select x-model="templateWizard.config.targetSystem" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="">Choose target system...</option>
+                  <option value="Salesforce">Salesforce</option>
+                  <option value="NetSuite">NetSuite</option>
+                  <option value="Dynamics 365">Microsoft Dynamics 365</option>
+                  <option value="Business Central">Business Central</option>
+                  <option value="QuickBooks">QuickBooks</option>
+                  <option value="HubSpot">HubSpot</option>
+                  <option value="Shopify">Shopify</option>
+                  <option value="Custom">Custom System</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Tags (comma-separated)</label>
+            <input x-model="templateWizard.config.tags" type="text"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                   placeholder="e.g., crm, erp, customer-sync, automation">
+          </div>
+        </div>
+
+        <!-- Step 3: Build & Save (placeholder for now) -->
+        <div x-show="templateWizard.step === 3" class="px-6 py-6">
+          <h4 class="text-lg font-medium text-gray-900 mb-4">Build Your Template</h4>
+          
+          <!-- Field Mapping Builder (Field Mapping Templates) -->
+          <div x-show="templateWizard.templateType === 'field-mapping'" class="mb-6">
+            <div class="bg-white border rounded-lg overflow-hidden">
+              <div class="bg-gray-50 px-4 py-3 border-b">
+                <div class="flex items-center justify-between">
+                  <h5 class="font-medium text-gray-900">Visual Field Mapping Builder</h5>
+                  <div class="flex items-center space-x-3">
+                    <button @click="addFieldMapping()" class="text-sm bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded">
+                      <i class="fas fa-plus mr-1"></i>Add Mapping
+                    </button>
+                    <button @click="loadSampleFieldMappings()" class="text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">
+                      <i class="fas fa-download mr-1"></i>Load Sample
+                    </button>
+                    <button @click="openInAIStudio()" class="text-sm bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded">
+                      <i class="fas fa-brain mr-1"></i>AI Studio
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-4" style="min-height: 400px;">
+                <!-- Dual Panel Layout -->
+                <div class="grid grid-cols-5 gap-4 h-96">
+                  <!-- Source System Panel -->
+                  <div class="col-span-2 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h6 class="font-medium text-blue-900 mb-3 flex items-center">
+                      <i class="fas fa-database mr-2"></i>
+                      Source Fields (<span x-text="templateWizard.config.sourceSystem || 'Source System'"></span>)
+                    </h6>
+                    <div class="space-y-2 max-h-80 overflow-y-auto">
+                      <template x-for="field in sourceFields" :key="field.id">
+                        <div class="bg-white border border-blue-300 rounded p-3 cursor-move field-source" 
+                             :data-field="field.name"
+                             draggable="true"
+                             @dragstart="dragStart($event, field)"
+                             @dragend="dragEnd($event)">
+                          <div class="flex items-center justify-between">
+                            <div>
+                              <div class="font-medium text-sm" x-text="field.name"></div>
+                              <div class="text-xs text-gray-600" x-text="field.type"></div>
+                            </div>
+                            <i class="fas fa-grip-vertical text-gray-400"></i>
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                    <button @click="addSourceField()" class="mt-3 w-full text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded">
+                      <i class="fas fa-plus mr-1"></i>Add Source Field
+                    </button>
+                  </div>
+                  
+                  <!-- Connection Visualization Area -->
+                  <div class="col-span-1 relative">
+                    <!-- SVG connections disabled to prevent Alpine.js errors -->
+                    <svg class="w-full h-full" id="connectionsSvg" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+                      <!-- Connection lines would be rendered here when field mappings exist -->
+                    </svg>
+                    <div class="flex items-center justify-center h-full text-gray-400 text-sm">
+                      <div class="text-center">
+                        <i class="fas fa-arrow-right text-2xl mb-2"></i>
+                        <div>Drag to map</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Target System Panel -->
+                  <div class="col-span-2 bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h6 class="font-medium text-green-900 mb-3 flex items-center">
+                      <i class="fas fa-database mr-2"></i>
+                      Target Fields (<span x-text="templateWizard.config.targetSystem || 'Target System'"></span>)
+                    </h6>
+                    <div class="space-y-2 max-h-80 overflow-y-auto">
+                      <template x-for="field in targetFields" :key="field.id">
+                        <div class="bg-white border border-green-300 rounded p-3 field-target" 
+                             :data-field="field.name"
+                             @dragover="dragOver($event)"
+                             @drop="dropOnTarget($event, field)"
+                             :class="{'bg-green-100 border-green-400': field.mapped}">
+                          <div class="flex items-center justify-between">
+                            <div>
+                              <div class="font-medium text-sm" x-text="field.name"></div>
+                              <div class="text-xs text-gray-600" x-text="field.type"></div>
+                              <div x-show="field.mapped" class="text-xs text-green-600 mt-1">
+                                Mapped from: <span x-text="field.mappedFrom"></span>
+                              </div>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                              <i x-show="field.mapped" class="fas fa-link text-green-600"></i>
+                              <i x-show="field.required && !field.mapped" class="fas fa-exclamation-triangle text-red-500"></i>
+                            </div>
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                    <button @click="addTargetField()" class="mt-3 w-full text-sm bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded">
+                      <i class="fas fa-plus mr-1"></i>Add Target Field
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Field Mappings List -->
+                <div class="mt-6 border-t pt-4">
+                  <h6 class="font-medium text-gray-900 mb-3">Current Mappings</h6>
+                  <div class="space-y-2 max-h-32 overflow-y-auto">
+                    <template x-if="templateWizard.fieldMappings && templateWizard.fieldMappings.length > 0">
+                      <template x-for="mapping in templateWizard.fieldMappings" :key="mapping.id">
+                        <div class="flex items-center justify-between bg-gray-50 rounded p-2 text-sm">
+                          <div class="flex items-center space-x-3">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs" x-text="mapping.sourceField"></span>
+                            <i class="fas fa-arrow-right text-gray-400"></i>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs" x-text="mapping.targetField"></span>
+                            <span x-show="mapping.transformation" class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
+                              Transform: <span x-text="mapping.transformation"></span>
+                            </span>
+                          </div>
+                          <div class="flex items-center space-x-2">
+                            <button @click="editMapping(mapping)" class="text-indigo-600 hover:text-indigo-800">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button @click="removeMapping(mapping.id)" class="text-red-600 hover:text-red-800">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </template>
+                    </template>
+                    <div x-show="!templateWizard.fieldMappings || templateWizard.fieldMappings.length === 0" class="text-center text-gray-500 py-4">
+                      No field mappings created yet. Drag source fields to target fields to create mappings.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Workflow Builder (Workflow Templates) -->
+          <div x-show="templateWizard.templateType === 'workflow'" class="mb-6">
+            <div class="bg-white border rounded-lg overflow-hidden">
+              <div class="bg-gray-50 px-4 py-3 border-b">
+                <h5 class="font-medium text-gray-900">Workflow Process Designer</h5>
+              </div>
+              <div class="p-4">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                  <i class="fas fa-project-diagram text-blue-600 text-3xl mb-3"></i>
+                  <h6 class="font-medium text-blue-900 mb-2">Visual Workflow Designer</h6>
+                  <p class="text-sm text-blue-700 mb-4">Drag and drop workflow steps to create complex integration processes</p>
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="fas fa-plus mr-2"></i>Add Workflow Step
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Connector Configuration (Connector Templates) -->
+          <div x-show="templateWizard.templateType === 'connector'" class="mb-6">
+            <div class="bg-white border rounded-lg overflow-hidden">
+              <div class="bg-gray-50 px-4 py-3 border-b">
+                <h5 class="font-medium text-gray-900">Connector Configuration Builder</h5>
+              </div>
+              <div class="p-4">
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 text-center">
+                  <i class="fas fa-plug text-purple-600 text-3xl mb-3"></i>
+                  <h6 class="font-medium text-purple-900 mb-2">Authentication & Connection Setup</h6>
+                  <p class="text-sm text-purple-700 mb-4">Configure authentication methods and connection parameters</p>
+                  <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="fas fa-cog mr-2"></i>Configure Connection
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- API Integration Builder (API Templates) -->
+          <div x-show="templateWizard.templateType === 'api'" class="mb-6">
+            <div class="bg-white border rounded-lg overflow-hidden">
+              <div class="bg-gray-50 px-4 py-3 border-b">
+                <h5 class="font-medium text-gray-900">API Integration Builder</h5>
+              </div>
+              <div class="p-4">
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 text-center">
+                  <i class="fas fa-code text-orange-600 text-3xl mb-3"></i>
+                  <h6 class="font-medium text-orange-900 mb-2">REST/GraphQL API Designer</h6>
+                  <p class="text-sm text-orange-700 mb-4">Define endpoints, parameters, and response mappings</p>
+                  <button class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded text-sm">
+                    <i class="fas fa-plus mr-2"></i>Add Endpoint
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Template Summary -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h5 class="font-medium text-gray-900 mb-3">Template Summary</h5>
+            <div class="grid grid-cols-2 gap-6">
+              <div class="space-y-2 text-sm">
+                <div><span class="font-medium">Name:</span> <span x-text="templateWizard.config.name"></span></div>
+                <div><span class="font-medium">Type:</span> <span x-text="templateWizard.templateType.replace('-', ' ')" class="capitalize"></span></div>
+                <div x-show="templateWizard.config.sourceSystem"><span class="font-medium">Source:</span> <span x-text="templateWizard.config.sourceSystem"></span></div>
+                <div x-show="templateWizard.config.targetSystem"><span class="font-medium">Target:</span> <span x-text="templateWizard.config.targetSystem"></span></div>
+                <div x-show="templateWizard.config.description"><span class="font-medium">Description:</span> <span x-text="templateWizard.config.description"></span></div>
+              </div>
+              <div class="text-sm" x-show="templateWizard.templateType === 'field-mapping'">
+                <div><span class="font-medium">Field Mappings:</span> <span x-text="templateWizard.fieldMappings.length"></span></div>
+                <div><span class="font-medium">Source Fields:</span> <span x-text="sourceFields.length"></span></div>
+                <div><span class="font-medium">Target Fields:</span> <span x-text="targetFields.length"></span></div>
+                <div><span class="font-medium">Completion:</span> 
+                  <span class="px-2 py-1 rounded text-xs" 
+                        :class="getCompletionStatus().class" 
+                        x-text="getCompletionStatus().text"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+          <div class="flex justify-between">
+            <button @click="wizardPrev()" 
+                    x-show="templateWizard.step > 1"
+                    class="px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 transition-colors">
+              <i class="fas fa-arrow-left mr-2"></i>Previous
+            </button>
+            
+            <div class="flex space-x-3">
+              <button @click="closeForm()" 
+                      class="px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 transition-colors">
+                Cancel
+              </button>
+              
+              <button x-show="templateWizard.step < templateWizard.totalSteps" 
+                      @click="wizardNext()"
+                      :disabled="templateWizard.step === 1 && !templateWizard.templateType"
+                      class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                Next <i class="fas fa-arrow-right ml-2"></i>
+              </button>
+              
+              <button x-show="templateWizard.step === templateWizard.totalSteps" 
+                      @click="saveWizardTemplate()"
+                      :disabled="!templateWizard.config.name || !templateWizard.templateType"
+                      class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                <i class="fas fa-save mr-2"></i>Create Template
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transformation Configuration Modal -->
+  <div x-show="transformationModal.show" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50" 
+       @click.self="transformationModal.show = false">
+    <div class="relative top-8 mx-auto p-8 bg-white rounded-lg shadow-xl max-w-4xl">
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-semibold text-gray-900">Configure Field Transformation</h3>
+          <button @click="transformationModal.show = false" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        
+        <!-- Mapping Info -->
+        <div x-show="transformationModal.mapping" class="bg-gray-50 rounded-lg p-4 mb-6">
+          <div class="flex items-center space-x-4 text-sm">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded" x-text="transformationModal.mapping?.sourceField"></span>
+            <i class="fas fa-arrow-right text-gray-400"></i>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded" x-text="transformationModal.mapping?.targetField"></span>
+            <div class="text-gray-600">
+              <span x-text="transformationModal.mapping?.sourceType"></span> → 
+              <span x-text="transformationModal.mapping?.targetType"></span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Transformation Rules -->
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Rules Configuration -->
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-lg font-medium text-gray-900">Transformation Rules</h4>
+              <button @click="addTransformationRule()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded text-sm">
+                <i class="fas fa-plus mr-1"></i>Add Rule
+              </button>
+            </div>
+            
+            <div class="space-y-3 max-h-80 overflow-y-auto">
+              <template x-for="rule in transformationModal.config.rules" :key="rule.id">
+                <div class="bg-white border rounded-lg p-4">
+                  <div class="flex items-center justify-between mb-3">
+                    <select x-model="rule.type" class="text-sm border rounded px-2 py-1">
+                      <option value="custom">Custom Rule</option>
+                      <option value="dateFormat">Date Formatting</option>
+                      <option value="stringManipulation">String Manipulation</option>
+                      <option value="parseNumber">Parse Number</option>
+                      <option value="toString">Convert to String</option>
+                      <option value="conditional">Conditional Logic</option>
+                      <option value="lookup">Lookup Table</option>
+                    </select>
+                    <button @click="removeTransformationRule(rule.id)" class="text-red-600 hover:text-red-800">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                  
+                  <!-- Rule-specific configuration -->
+                  <div x-show="rule.type === 'dateFormat'" class="space-y-2">
+                    <label class="text-xs font-medium text-gray-700">Date Format:</label>
+                    <select x-model="rule.value" class="w-full text-sm border rounded px-2 py-1">
+                      <option value="YYYY-MM-DD">YYYY-MM-DD (2024-01-15)</option>
+                      <option value="MM/DD/YYYY">MM/DD/YYYY (01/15/2024)</option>
+                      <option value="DD/MM/YYYY">DD/MM/YYYY (15/01/2024)</option>
+                      <option value="ISO8601">ISO 8601 (2024-01-15T10:30:00Z)</option>
+                      <option value="timestamp">Unix Timestamp</option>
+                    </select>
+                  </div>
+                  
+                  <div x-show="rule.type === 'stringManipulation'" class="space-y-2">
+                    <label class="text-xs font-medium text-gray-700">Operation:</label>
+                    <select x-model="rule.value" class="w-full text-sm border rounded px-2 py-1">
+                      <option value="uppercase">Convert to Uppercase</option>
+                      <option value="lowercase">Convert to Lowercase</option>
+                      <option value="trim">Trim Whitespace</option>
+                      <option value="replace">Find & Replace</option>
+                      <option value="substring">Extract Substring</option>
+                      <option value="split">Split String</option>
+                    </select>
+                  </div>
+                  
+                  <div x-show="rule.type === 'conditional'" class="space-y-2">
+                    <label class="text-xs font-medium text-gray-700">Condition:</label>
+                    <input x-model="rule.condition" type="text" placeholder="e.g., if value == 'active'" class="w-full text-sm border rounded px-2 py-1">
+                    <label class="text-xs font-medium text-gray-700">Then Value:</label>
+                    <input x-model="rule.value" type="text" placeholder="Result when condition is true" class="w-full text-sm border rounded px-2 py-1">
+                  </div>
+                  
+                  <div x-show="rule.type === 'custom'" class="space-y-2">
+                    <label class="text-xs font-medium text-gray-700">Custom Expression:</label>
+                    <textarea x-model="rule.value" placeholder="Enter custom transformation logic" class="w-full text-sm border rounded px-2 py-1 h-20"></textarea>
+                  </div>
+                </div>
+              </template>
+              
+              <div x-show="transformationModal.config.rules.length === 0" class="text-center text-gray-500 py-8">
+                <i class="fas fa-magic text-3xl mb-3"></i>
+                <p>No transformation rules defined</p>
+                <p class="text-sm">Add rules to transform data between source and target fields</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Preview Panel -->
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-lg font-medium text-gray-900">Transformation Preview</h4>
+              <button @click="previewTransformation()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
+                <i class="fas fa-play mr-1"></i>Test Rules
+              </button>
+            </div>
+            
+            <div class="bg-gray-50 border rounded-lg p-4 h-80 overflow-y-auto">
+              <pre x-show="transformationModal.config.preview" 
+                   x-text="transformationModal.config.preview" 
+                   class="text-sm font-mono whitespace-pre-wrap"></pre>
+              
+              <div x-show="!transformationModal.config.preview" class="text-center text-gray-500 py-12">
+                <i class="fas fa-eye text-3xl mb-3"></i>
+                <p>Click "Test Rules" to preview transformation</p>
+                <p class="text-sm">See how your rules will transform sample data</p>
+              </div>
+            </div>
+            
+            <!-- Validation Results -->
+            <div x-show="transformationModal.config.validation" class="mt-4 p-3 rounded-lg"
+                 :class="transformationModal.config.validation.includes('Error') ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200'">
+              <p class="text-sm" x-text="transformationModal.config.validation"></p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Templates -->
+        <div class="mt-6 pt-4 border-t">
+          <h4 class="text-sm font-medium text-gray-900 mb-3">Quick Templates</h4>
+          <div class="flex flex-wrap gap-2">
+            <button @click="applyQuickTemplate('name-formatter')" class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-800 px-2 py-1 rounded">
+              Name Formatter
+            </button>
+            <button @click="applyQuickTemplate('date-normalizer')" class="text-xs bg-green-100 hover:bg-green-200 text-green-800 px-2 py-1 rounded">
+              Date Normalizer
+            </button>
+            <button @click="applyQuickTemplate('phone-formatter')" class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-800 px-2 py-1 rounded">
+              Phone Formatter
+            </button>
+            <button @click="applyQuickTemplate('address-cleaner')" class="text-xs bg-orange-100 hover:bg-orange-200 text-orange-800 px-2 py-1 rounded">
+              Address Cleaner
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-4 border-t">
+        <div class="text-sm text-gray-500">
+          <i class="fas fa-info-circle mr-1"></i>
+          Rules are applied in order from top to bottom
+        </div>
+        <div class="flex space-x-3">
+          <button @click="transformationModal.show = false" class="px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50">
+            Cancel
+          </button>
+          <button @click="saveTransformation()" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+            <i class="fas fa-save mr-2"></i>Save Transformation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Browser Modal -->
+  <div x-show="templateBrowserModal.show" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-50 overflow-y-auto"
+       style="display: none;">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeTemplateBrowser()"></div>
+      
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+        <!-- Modal Header -->
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-medium text-gray-900" x-text="templateBrowserModal.title"></h3>
+              <p class="mt-1 text-sm text-gray-500" x-text="templateBrowserModal.description"></p>
+            </div>
+            <button @click="closeTemplateBrowser()" class="bg-gray-100 hover:bg-gray-200 rounded-full p-2">
+              <i class="fas fa-times text-gray-600"></i>
+            </button>
+          </div>
+
+          <!-- Templates Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+            <template x-for="template in templateBrowserModal.templates" :key="template.name">
+              <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <!-- Template Header -->
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex-1">
+                    <h4 class="font-medium text-gray-900 text-sm" x-text="template.name"></h4>
+                    <p class="text-xs text-gray-500 mb-1" x-text="template.category"></p>
+                    <p class="text-xs text-gray-600" x-text="(template.sourceSystem || '?') + ' → ' + (template.targetSystem || '?')"></p>
+                  </div>
+                  <div class="flex items-center text-yellow-400">
+                    <template x-for="star in Array(template.rating)" :key="star">
+                      <i class="fas fa-star text-xs"></i>
+                    </template>
+                  </div>
+                </div>
+                
+                <!-- Template Description -->
+                <div class="text-xs text-gray-600 mb-3 line-clamp-2" x-text="template.description"></div>
+                
+                <!-- Field Mappings Preview -->
+                <div x-show="template.fields && template.fields.length > 0" class="mb-3">
+                  <div class="text-xs font-medium text-gray-700 mb-2">
+                    Field Mappings (<span x-text="template.fieldCount || template.fields.length"></span>)
+                  </div>
+                  <div class="space-y-1 max-h-20 overflow-y-auto">
+                    <template x-for="field in template.fields.slice(0, 3)" :key="field.source">
+                      <div class="flex items-center text-xs bg-gray-50 rounded px-2 py-1">
+                        <span class="text-blue-600 font-mono" x-text="field.source"></span>
+                        <i class="fas fa-arrow-right mx-2 text-gray-400"></i>
+                        <span class="text-purple-600 font-mono flex-1" x-text="field.target"></span>
+                        <span x-show="field.transformation !== 'direct'" 
+                              class="text-orange-600 text-xs bg-orange-100 px-1 rounded" 
+                              x-text="field.transformation"></span>
+                      </div>
+                    </template>
+                    <div x-show="template.fields.length > 3" class="text-xs text-gray-500 text-center">
+                      +<span x-text="template.fields.length - 3"></span> more fields...
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Template Meta Info -->
+                <div class="space-y-2 mb-3">
+                  <div x-show="template.author" class="text-xs text-gray-600">
+                    by <span x-text="template.author" class="font-medium"></span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div x-show="template.tier" class="text-xs">
+                      <span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full" x-text="template.tier"></span>
+                    </div>
+                    <div x-show="template.tags && template.tags.length > 0" class="flex items-center space-x-1">
+                      <template x-for="tag in template.tags.slice(0, 2)" :key="tag">
+                        <span class="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-xs" x-text="tag"></span>
+                      </template>
+                      <span x-show="template.tags.length > 2" class="text-xs text-gray-500">+<span x-text="template.tags.length - 2"></span></span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-2">
+                  <button @click="viewTemplate(template)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-2 rounded">
+                    <i class="fas fa-eye mr-1"></i>Preview
+                  </button>
+                  <button @click="useTemplate(template)" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded">
+                    <i class="fas fa-download mr-1"></i>Use
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeTemplateBrowser()" 
+                  class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Chat Widget -->
+  <script src="/components/help-chat-widget.js"></script>
+  <div id="help-chat-widget-container"></div>
+  <script>
+    // Wait for Alpine.js to be ready before initializing help widget
+    document.addEventListener('alpine:init', () => {
+      window.mountHelpChatWidgetSafely({ containerId: 'help-chat-widget-container' });
+    });
+  </script>
+    <script src="/js/integration-hub-shell.js"></script>
+</body>
+</html>

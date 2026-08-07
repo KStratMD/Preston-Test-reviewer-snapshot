@@ -1,0 +1,471 @@
+:root {
+  --ih-shell-sidebar-bg: #0f2740;
+  --ih-shell-sidebar-bg-2: #173a5c;
+  --ih-shell-sidebar-text: #eaf2fb;
+  --ih-shell-sidebar-muted: #9fb4ca;
+  --ih-shell-blue: #0f6bff;
+  --ih-shell-blue-dark: #0a4fbf;
+  --ih-shell-canvas: #f6f8fb;
+  --ih-shell-card: #ffffff;
+  --ih-shell-border: #dbe4ef;
+  --ih-shell-text: #172033;
+  --ih-shell-muted: #61728a;
+  --ih-shell-shadow: 0 18px 45px rgba(15, 39, 64, 0.08);
+  --ih-shell-radius: 14px;
+}
+
+.ih-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 25% 0%, rgba(15, 107, 255, 0.08), transparent 28rem),
+    var(--ih-shell-canvas);
+  color: var(--ih-shell-text);
+}
+
+/* Dark-mode awareness: the home dashboard keeps a working dark-mode toggle that
+   adds `.dark` to <html>/<body>. Without these overrides the unconditional light
+   .ih-shell surfaces would mix with the page's dark `dark:*` variants. Keep the
+   shell coherent in dark mode (canvas, rail, tabs, cards, strips go dark). */
+.dark .ih-shell {
+  background:
+    radial-gradient(circle at 25% 0%, rgba(15, 107, 255, 0.12), transparent 28rem),
+    #0f172a;
+  color: #e2e8f0;
+}
+
+.dark .ih-shell-top-rail {
+  background: rgba(15, 23, 42, 0.92) !important;
+  border-bottom-color: #334155 !important;
+}
+
+.dark .ih-shell-top-tab {
+  color: #cbd5e1;
+}
+
+.dark .ih-shell-top-tab[aria-current="page"] {
+  color: #60a5fa;
+  border-bottom-color: #60a5fa;
+}
+
+/* Admin menu controls carry hard-coded light Tailwind text classes; on the dark
+   rail they'd be near-unreadable. Re-color them (scoped + higher specificity so
+   they beat the inline utilities) without touching the markup. */
+.dark .ih-admin-menu .text-slate-900 {
+  color: #f1f5f9;
+}
+.dark .ih-admin-menu .text-slate-700,
+.dark .ih-admin-menu button {
+  color: #cbd5e1;
+}
+.dark .ih-admin-menu .text-slate-500 {
+  color: #94a3b8;
+}
+
+.dark .ih-doc-card,
+.dark .ih-info-row,
+.dark .ih-review-strip {
+  background: linear-gradient(135deg, #1e293b, #16202e);
+  border-color: #334155;
+}
+
+.dark .ih-info-row {
+  color: #cbd5e1;
+}
+
+/* The info row + Review Actions strip markup carries hard-coded light text
+   utilities; when the home dashboard's dark toggle flips these panels to a dark
+   background they'd be dark-on-dark. Re-color the specific utilities used inside
+   them (scoped + higher specificity so they beat the inline classes). */
+.dark .ih-info-row .text-blue-900 {
+  color: #dbeafe;
+}
+.dark .ih-review-strip .text-gray-900 {
+  color: #f1f5f9;
+}
+.dark .ih-review-strip .text-gray-700 {
+  color: #cbd5e1;
+}
+.dark .ih-review-strip .text-gray-600 {
+  color: #94a3b8;
+}
+
+.ih-shell-sidebar {
+  background: linear-gradient(180deg, var(--ih-shell-sidebar-bg), var(--ih-shell-sidebar-bg-2));
+  color: var(--ih-shell-sidebar-text);
+  box-shadow: 6px 0 24px rgba(15, 39, 64, 0.24);
+}
+
+.ih-shell-sidebar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ih-shell-nav-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ih-shell-nav-heading {
+  color: var(--ih-shell-sidebar-muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ih-shell-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.75rem;
+  color: var(--ih-shell-sidebar-text);
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.ih-shell-nav-link:hover,
+.ih-shell-nav-link[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(2px);
+}
+
+.ih-shell-top-rail {
+  /* !important so the injected rail beats page-level `header { background ... !important }`
+     rules, while still letting `.dark .ih-shell-top-rail` (higher specificity) win. */
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-bottom: 1px solid var(--ih-shell-border) !important;
+  box-shadow: 0 8px 24px rgba(15, 39, 64, 0.05);
+  backdrop-filter: blur(16px);
+}
+
+.ih-shell-top-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 3px solid transparent;
+  color: #203047;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.ih-shell-top-tab[aria-current="page"] {
+  border-bottom-color: var(--ih-shell-blue);
+  color: var(--ih-shell-blue);
+}
+
+/* Some shelled pages also mount demo-tab-nav.js, whose fixed close/back pill sits
+   at top:12px and would overlap the injected rail (the rail is in normal flow, the
+   pill is position:fixed so it ignores it). Push the pill below the rail using the
+   rail height the shell JS publishes (--ih-rail-h); :has() applies only when a rail
+   is present, and !important beats the pill's inline top. */
+body:has(.ih-shell-top-rail) #demo-tab-nav-control {
+  top: calc(var(--ih-rail-h, 64px) + 12px) !important;
+}
+
+/* Keep the top rail usable on narrow viewports — let the tabs wrap to a second
+   row instead of overflowing off-screen, and tighten tab padding on phones.
+   Applies to both the injected rail and the hand-coded rails. */
+.ih-shell-top-rail nav {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .ih-shell-top-tab {
+    padding: 0.7rem 0.85rem;
+  }
+  /* Wrap the whole rail row (not just the tab nav) so right-side controls —
+     the home page's Ask Help Assistant + admin menu, or Back to Hub — stack
+     below the tabs instead of being pushed off-screen. */
+  .ih-shell-top-rail > div {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+}
+
+.ih-shell-card {
+  background: var(--ih-shell-card);
+  border: 1px solid var(--ih-shell-border);
+  border-radius: var(--ih-shell-radius);
+  box-shadow: var(--ih-shell-shadow);
+}
+
+.ih-doc-card {
+  min-height: 12rem;
+  border: 1px solid var(--ih-shell-border);
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #ffffff, #f7fbff);
+  box-shadow: 0 12px 30px rgba(15, 39, 64, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ih-doc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(15, 39, 64, 0.12);
+}
+
+.ih-doc-card--emerald {
+  background: linear-gradient(135deg, #f2fff8, #ffffff);
+  border-color: #b9efd4;
+}
+
+.ih-doc-card--blue {
+  background: linear-gradient(135deg, #f4f9ff, #ffffff);
+  border-color: #b9d8ff;
+}
+
+.ih-doc-card--slate {
+  background: linear-gradient(135deg, #f8fafc, #ffffff);
+  border-color: #d9e2ee;
+}
+
+.ih-doc-card--amber {
+  background: linear-gradient(135deg, #fff9ec, #ffffff);
+  border-color: #f8dfa8;
+}
+
+.ih-doc-card--cyan {
+  background: linear-gradient(135deg, #f0fcff, #ffffff);
+  border-color: #bcecff;
+}
+
+.ih-doc-card--rose {
+  background: linear-gradient(135deg, #fff5f5, #ffffff);
+  border-color: #ffc9c9;
+}
+
+.ih-doc-card--violet {
+  background: linear-gradient(135deg, #f8f5ff, #ffffff);
+  border-color: #d9ccff;
+}
+
+.ih-info-row {
+  border: 1px solid #bfdbfe;
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+  border-radius: 0.8rem;
+}
+
+.ih-review-strip {
+  border: 1px solid #cfe0ff;
+  background: linear-gradient(135deg, #ffffff, #f4f8ff);
+  border-radius: 1rem;
+}
+
+.ih-admin-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--ih-shell-text);
+}
+
+.ih-admin-avatar {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f2740;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+/* Admin-menu dropdowns (notifications bell + account). The panels reuse the
+   page's Alpine notification state; styling lives here (scoped) rather than
+   inline so the dark-mode variants below can override cleanly. */
+.ih-admin-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ih-admin-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ih-admin-badge {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.5rem;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  padding: 0 0.3rem;
+  border-radius: 9999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.05rem;
+  text-align: center;
+}
+
+.ih-admin-panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  width: 20rem;
+  max-height: 26rem;
+  overflow-y: auto;
+  background: var(--ih-shell-card);
+  border: 1px solid var(--ih-shell-border);
+  border-radius: var(--ih-shell-radius);
+  box-shadow: var(--ih-shell-shadow);
+  padding: 0.5rem;
+  z-index: 50;
+}
+
+.ih-admin-panel-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ih-shell-muted);
+  padding: 0.35rem 0.55rem 0.5rem;
+}
+
+.ih-admin-panel-empty {
+  color: var(--ih-shell-muted);
+  font-size: 0.85rem;
+  padding: 0.6rem 0.55rem;
+}
+
+.ih-admin-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.55rem;
+  border-radius: 0.6rem;
+  border-left: 3px solid transparent;
+  margin-bottom: 0.35rem;
+  background: #f6f8fb;
+}
+
+.ih-admin-note-icon {
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.ih-admin-note-text {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--ih-shell-text);
+}
+
+.ih-admin-note-dismiss {
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ih-shell-muted);
+}
+
+.ih-admin-note-success { border-left-color: #16a34a; }
+.ih-admin-note-success .ih-admin-note-icon { color: #16a34a; }
+.ih-admin-note-info { border-left-color: #2563eb; }
+.ih-admin-note-info .ih-admin-note-icon { color: #2563eb; }
+.ih-admin-note-warning { border-left-color: #d97706; }
+.ih-admin-note-warning .ih-admin-note-icon { color: #d97706; }
+.ih-admin-note-error { border-left-color: #dc2626; }
+.ih-admin-note-error .ih-admin-note-icon { color: #dc2626; }
+
+.ih-admin-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.55rem;
+  border-radius: 0.6rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.88rem;
+  color: var(--ih-shell-text);
+  text-decoration: none;
+}
+
+.ih-admin-item:hover {
+  background: #eef2f9;
+}
+
+/* Dark-mode panel surfaces (navy card, light text) — matches the .dark .ih-shell
+   palette so the dropdowns stay legible on the dark top rail. */
+.dark .ih-admin-panel {
+  background: #16202e;
+  border-color: #334155;
+}
+.dark .ih-admin-note {
+  background: #1e293b;
+}
+.dark .ih-admin-note-text,
+.dark .ih-admin-item {
+  color: #e2e8f0;
+}
+.dark .ih-admin-item:hover {
+  background: #243349;
+}
+.dark .ih-admin-panel-header,
+.dark .ih-admin-panel-empty,
+.dark .ih-admin-note-dismiss {
+  color: #94a3b8;
+}
+
+/* Docked Help Assistant — when the widget is mounted in docked mode, the chat
+   panel renders as a full-height right-edge column (opened from the top-rail
+   "Ask Help Assistant" button) instead of a floating window. The container is a
+   passthrough (display:contents) so it adds no empty box to the page flow; the
+   panel positions itself. Overrides the widget's inline position/size styles. */
+.ih-assistant-dock {
+  display: contents;
+}
+
+[data-help-chat-mode="docked"] [x-ref="chatWindow"] {
+  position: fixed !important;
+  inset: 0 0 0 auto !important;
+  width: min(26rem, 100%) !important;
+  max-width: 100% !important;
+  height: 100vh !important;
+  z-index: 60 !important;
+}
+
+[data-help-chat-mode="docked"] [x-ref="chatWindow"] > div {
+  height: 100vh;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -16px 0 42px rgba(15, 39, 64, 0.16);
+}
+
+[data-help-chat-mode="docked"] [x-ref="messagesContainer"] {
+  flex: 1 1 auto !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* In docked mode the top-rail trigger replaces the floating bubble. */
+[data-help-chat-mode="docked"] [data-help-chat-toggle] {
+  display: none !important;
+}
+
+/* While the docked panel is open, make room for it so content reflows beside
+   the panel instead of being overlaid. Scoped to pages that actually mount a
+   docked assistant (via :has) so the transition can't leak onto unrelated
+   Tailwind layouts that happen to use `.flex.h-screen` on other shelled pages. */
+body:has([data-help-chat-mode="docked"]) .flex.h-screen {
+  transition: padding-right 0.2s ease;
+}
+
+body.ih-assistant-open:has([data-help-chat-mode="docked"]) .flex.h-screen {
+  padding-right: min(26rem, 100%);
+}
+
+@media (max-width: 768px) {
+  /* On narrow screens the panel is full-width; don't reserve extra space. */
+  body.ih-assistant-open:has([data-help-chat-mode="docked"]) .flex.h-screen {
+    padding-right: 0;
+  }
+}

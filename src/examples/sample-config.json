@@ -1,0 +1,25 @@
+{
+  "id": "sample_config_001",
+  "name": "Sample Example Integration",
+  "sourceSystem": "Salesforce",
+  "targetSystem": "NetSuite",
+  "syncDirection": "bidirectional",
+  "syncMode": "realtime",
+  "isActive": false,
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2024-01-01T00:00:00Z",
+  "fieldMappings": [
+    {
+      "sourceField": "Name",
+      "targetField": "companyname",
+      "isRequired": true,
+      "transformationType": "direct"
+    }
+  ],
+  "transformationRules": [],
+  "authentication": {
+    "type": "api_key",
+    "credentials": { "key": "your_key" },
+    "refreshable": false
+  }
+}

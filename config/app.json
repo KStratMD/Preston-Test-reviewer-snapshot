@@ -1,0 +1,22 @@
+{
+  "app": {
+    "name": "Integration Hub",
+    "version": "1.0.0"
+  },
+  "server": {
+    "port": 3000
+  },
+  "database": {
+    "connectionString": "test://localhost:5432/testdb"
+  },
+  "logging": {
+    "level": "info"
+  },
+  "features": {
+    "circuitBreaker": true,
+    "eventBus": true
+  },
+  "performance": {
+    "maxConcurrentRequests": 100
+  }
+}

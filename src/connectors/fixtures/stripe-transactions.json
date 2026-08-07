@@ -1,0 +1,151 @@
+{
+  "stripe": [
+    {
+      "id": "ch_3QK1ABC123456789",
+      "object": "charge",
+      "amount": 12500,
+      "amount_captured": 12500,
+      "amount_refunded": 0,
+      "currency": "usd",
+      "customer": "cus_StripeDemo001",
+      "description": "Demo payment for Order #1001",
+      "status": "succeeded",
+      "payment_method": "pm_card_visa",
+      "created": 1697500000,
+      "metadata": {
+        "order_id": "ORD-1001",
+        "customer_email": "john.doe@demo.com"
+      },
+      "receipt_email": "john.doe@demo.com",
+      "receipt_url": "https://pay.stripe.com/receipts/demo",
+      "refunded": false,
+      "source": {
+        "id": "card_1ABC123",
+        "brand": "Visa",
+        "last4": "4242",
+        "exp_month": 12,
+        "exp_year": 2026
+      }
+    },
+    {
+      "id": "ch_3QK2DEF456789012",
+      "object": "charge",
+      "amount": 8900,
+      "amount_captured": 8900,
+      "amount_refunded": 0,
+      "currency": "usd",
+      "customer": "cus_StripeDemo002",
+      "description": "Demo payment for Order #1002",
+      "status": "succeeded",
+      "payment_method": "pm_card_mastercard",
+      "created": 1697510000,
+      "metadata": {
+        "order_id": "ORD-1002",
+        "customer_email": "jane.smith@demo.com"
+      },
+      "receipt_email": "jane.smith@demo.com",
+      "receipt_url": "https://pay.stripe.com/receipts/demo",
+      "refunded": false,
+      "source": {
+        "id": "card_2DEF456",
+        "brand": "MasterCard",
+        "last4": "5555",
+        "exp_month": 6,
+        "exp_year": 2027
+      }
+    },
+    {
+      "id": "ch_3QK3GHI789012345",
+      "object": "charge",
+      "amount": 25000,
+      "amount_captured": 25000,
+      "amount_refunded": 5000,
+      "currency": "usd",
+      "customer": "cus_StripeDemo003",
+      "description": "Demo payment for Order #1003 (partial refund)",
+      "status": "succeeded",
+      "payment_method": "pm_card_amex",
+      "created": 1697520000,
+      "metadata": {
+        "order_id": "ORD-1003",
+        "customer_email": "bob.johnson@demo.com"
+      },
+      "receipt_email": "bob.johnson@demo.com",
+      "receipt_url": "https://pay.stripe.com/receipts/demo",
+      "refunded": true,
+      "source": {
+        "id": "card_3GHI789",
+        "brand": "American Express",
+        "last4": "0005",
+        "exp_month": 3,
+        "exp_year": 2026
+      },
+      "refunds": {
+        "data": [
+          {
+            "id": "re_1ABC123",
+            "amount": 5000,
+            "created": 1697530000,
+            "status": "succeeded",
+            "reason": "requested_by_customer"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ch_3QK4JKL012345678",
+      "object": "charge",
+      "amount": 15500,
+      "amount_captured": 15500,
+      "amount_refunded": 0,
+      "currency": "usd",
+      "customer": "cus_StripeDemo004",
+      "description": "Demo subscription payment",
+      "status": "succeeded",
+      "payment_method": "pm_card_visa",
+      "created": 1697540000,
+      "metadata": {
+        "subscription_id": "SUB-5001",
+        "customer_email": "alice.williams@demo.com"
+      },
+      "receipt_email": "alice.williams@demo.com",
+      "receipt_url": "https://pay.stripe.com/receipts/demo",
+      "refunded": false,
+      "source": {
+        "id": "card_4JKL012",
+        "brand": "Visa",
+        "last4": "1111",
+        "exp_month": 9,
+        "exp_year": 2028
+      }
+    },
+    {
+      "id": "ch_3QK5MNO345678901",
+      "object": "charge",
+      "amount": 45000,
+      "amount_captured": 45000,
+      "amount_refunded": 0,
+      "currency": "usd",
+      "customer": "cus_StripeDemo005",
+      "description": "Demo large order payment",
+      "status": "succeeded",
+      "payment_method": "pm_card_visa",
+      "created": 1697550000,
+      "metadata": {
+        "order_id": "ORD-1005",
+        "customer_email": "charlie.brown@demo.com",
+        "invoice_number": "INV-2025-001"
+      },
+      "receipt_email": "charlie.brown@demo.com",
+      "receipt_url": "https://pay.stripe.com/receipts/demo",
+      "refunded": false,
+      "source": {
+        "id": "card_5MNO345",
+        "brand": "Visa",
+        "last4": "7777",
+        "exp_month": 11,
+        "exp_year": 2025
+      }
+    }
+  ]
+}

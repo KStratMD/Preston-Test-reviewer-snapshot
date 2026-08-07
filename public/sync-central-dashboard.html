@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncCentral Cockpit - Integration Monitoring | SuiteCentral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/erp-theme.css">
+    <script src="/js/platform-detector.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        /* NetSuite-inspired ERP Theme */
+        :root {
+            --erp-header-bg: #607799;
+            --erp-bg: #e0e6ef;
+            --erp-border: #b5b5b5;
+            --erp-text: #333333;
+            --erp-link: #255599;
+            --accent-blue: #255599;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+        }
+
+        body {
+            background-color: var(--erp-bg);
+            color: var(--erp-text);
+            font-family: 'Open Sans', 'Segoe UI', sans-serif;
+            font-size: 13px;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Layout & Containers */
+        .erp-header {
+            background-color: var(--erp-header-bg);
+            padding: 8px 20px;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .erp-content {
+            padding: 15px 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .erp-card {
+            background: white;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Navigation (Tabs) */
+        .erp-nav {
+            border-bottom: 1px solid #cccccc;
+            margin-bottom: 15px;
+            padding-top: 5px;
+        }
+
+        .erp-tab {
+            padding: 8px 16px;
+            background: #e5e5e5;
+            border: 1px solid #cccccc;
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
+            color: #666;
+            font-weight: 600;
+            font-size: 13px;
+            margin-right: 2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .erp-tab.active {
+            background: white;
+            color: #333;
+            border-top: 3px solid #607799;
+            position: relative;
+            top: 1px;
+            z-index: 10;
+            font-weight: 700;
+        }
+
+        .erp-tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        /* Utilities */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .mb-6 {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--erp-link);
+            color: white;
+            border-color: #1d4ed8;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #ccc;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .status-healthy {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .status-warning {
+            background-color: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .status-error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Chart/Metric specifics */
+        .metric-change {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .metric-change.positive {
+            color: var(--accent-green);
+        }
+
+        .metric-change.negative {
+            color: var(--accent-red);
+        }
+
+        /* List Items (Logs, connections) */
+        .connection-card,
+        .data-flow,
+        .error-item,
+        .log-entry {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 3px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        .connection-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .log-entry {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            border-bottom: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .grid-4,
+            .grid-3,
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/integration-hub-shell.css">
+</head>
+
+<body data-shell-section="build" x-data="syncCentralDashboard()" x-init="initialize()">
+    <header class="erp-header">
+        <div class="header-left">
+            <button onclick="goBackToDashboard()"
+                style="background:none; border:none; color:white; cursor:pointer; margin-right:15px; font-size:16px;">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div style="font-size:18px; font-weight:700; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-sync-alt"></i> SyncCentral
+            </div>
+            <span class="status-badge"
+                :class="overallHealth === 'healthy' ? 'status-healthy' : overallHealth === 'warning' ? 'status-warning' : 'status-error'"
+                style="margin-left: 15px;" x-text="overallHealth.toUpperCase()">
+            </span>
+            <span class="erp-badge" :class="dataSource === 'api' ? 'erp-badge-success' : 'erp-badge-info'"
+                style="margin-left: 10px;">
+                <i class="fas" :class="dataSource === 'api' ? 'fa-plug' : 'fa-flask'"></i>
+                <span x-text="dataSource === 'api' ? 'Live' : 'Demo'"></span>
+            </span>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <span style="font-size: 11px; color: rgba(255,255,255,0.8);">
+                Last sync: <span x-text="lastSyncTime">--</span>
+            </span>
+            <button class="btn"
+                style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);"
+                @click="refreshData()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+    </header>
+
+    <div class="erp-content">
+        <!-- KPI Cards -->
+        <div class="grid-4 mb-6">
+            <div class="card">
+                <div class="card-title">Active Connections</div>
+                <div class="metric-value" x-text="stats.activeConnections">0</div>
+                <div class="metric-change positive">
+                    <i class="fas fa-check-circle"></i>
+                    <span x-text="stats.healthyConnections + ' healthy'"></span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Data Flows</div>
+                <div class="metric-value" x-text="stats.activeFlows">0</div>
+                <div class="metric-change positive">
+                    <i class="fas fa-arrow-right"></i>
+                    <span x-text="stats.transactionsToday.toLocaleString() + ' today'"></span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">API Success Rate</div>
+                <div class="metric-value"
+                    :style="'color: ' + (stats.successRate >= 99 ? 'var(--accent-green)' : stats.successRate >= 95 ? 'var(--accent-yellow)' : 'var(--accent-red)')"
+                    x-text="stats.successRate.toFixed(1) + '%'">0%</div>
+                <div class="metric-change" :class="stats.successRate >= 99 ? 'positive' : 'negative'">
+                    <span x-text="stats.avgLatency + 'ms avg latency'"></span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Errors (24h)</div>
+                <div class="metric-value"
+                    :style="'color: ' + (stats.errorCount === 0 ? 'var(--accent-green)' : 'var(--accent-red)')"
+                    x-text="stats.errorCount">0</div>
+                <div class="metric-change" :class="stats.dlqCount === 0 ? 'positive' : 'negative'">
+                    <span x-text="stats.dlqCount + ' in DLQ'"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="erp-nav">
+            <button class="erp-tab" :class="{ active: activeTab === 'connections' }" @click="activeTab = 'connections'">
+                <i class="fas fa-plug"></i> Integrations
+            </button>
+            <button class="erp-tab" :class="{ active: activeTab === 'flows' }" @click="activeTab = 'flows'">
+                <i class="fas fa-stream"></i> Data Flows
+            </button>
+            <button class="erp-tab" :class="{ active: activeTab === 'errors' }" @click="activeTab = 'errors'">
+                <i class="fas fa-exclamation-triangle"></i> Errors
+                <span x-show="stats.errorCount > 0" x-text="'(' + stats.errorCount + ')'"
+                    style="margin-left: 0.25rem;"></span>
+            </button>
+            <button class="erp-tab" :class="{ active: activeTab === 'logs' }" @click="activeTab = 'logs'">
+                <i class="fas fa-list-alt"></i> Activity Logs
+            </button>
+        </div>
+
+        <!-- Connections Tab -->
+        <div x-show="activeTab === 'connections'">
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-plug"></i> Active Connections</h3>
+                    <template x-for="conn in connections" :key="conn.id">
+                        <div class="connection-card">
+                            <div class="connection-info">
+                                <div class="connection-icon"
+                                    :style="'background: ' + conn.color + '20; color: ' + conn.color">
+                                    <i :class="conn.icon"></i>
+                                </div>
+                                <div class="connection-details">
+                                    <h4 x-text="conn.name"></h4>
+                                    <p x-text="conn.type + ' • ' + conn.lastSync"></p>
+                                </div>
+                            </div>
+                            <div class="connection-status">
+                                <div class="status-dot" :class="conn.status"></div>
+                                <span x-text="conn.status.charAt(0).toUpperCase() + conn.status.slice(1)"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-chart-pie"></i> Connection Health</h3>
+                    <div style="padding: 2rem; text-align: center;">
+                        <div style="font-size: 4rem; font-weight: 700; color: var(--accent-green);"
+                            x-text="Math.round((stats.healthyConnections / stats.activeConnections) * 100) + '%'">0%
+                        </div>
+                        <div style="color: var(--text-secondary);">Overall Health Score</div>
+                        <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent-green);"
+                                    x-text="stats.healthyConnections">0</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Healthy</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent-yellow);"
+                                    x-text="stats.warningConnections">0</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Warning</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent-red);"
+                                    x-text="stats.errorConnections">0</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Error</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Flows Tab -->
+        <div x-show="activeTab === 'flows'">
+            <div class="card">
+                <h3 class="section-title"><i class="fas fa-stream"></i> Active Data Flows</h3>
+                <template x-for="flow in dataFlows" :key="flow.id">
+                    <div class="data-flow">
+                        <div class="flow-header">
+                            <div>
+                                <span class="flow-name" x-text="flow.name"></span>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary); margin-left: 0.5rem;"
+                                    x-text="flow.source + ' → ' + flow.destination"></span>
+                            </div>
+                            <div class="flow-stats">
+                                <span><i class="fas fa-check" style="color: var(--accent-green);"></i> <span
+                                        x-text="flow.successCount.toLocaleString()"></span></span>
+                                <span><i class="fas fa-times" style="color: var(--accent-red);"></i> <span
+                                        x-text="flow.errorCount"></span></span>
+                                <span><i class="fas fa-clock"></i> <span x-text="flow.avgLatency + 'ms'"></span></span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"
+                                :style="'width: ' + flow.successRate + '%; background: ' + (flow.successRate >= 99 ? 'var(--accent-green)' : flow.successRate >= 95 ? 'var(--accent-yellow)' : 'var(--accent-red)')">
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Errors Tab -->
+        <div x-show="activeTab === 'errors'">
+            <div class="grid-2">
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-exclamation-triangle"></i> Recent Errors</h3>
+                    <template x-if="errors.length === 0">
+                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <i class="fas fa-check-circle"
+                                style="font-size: 3rem; color: var(--accent-green); margin-bottom: 1rem;"></i>
+                            <p>No errors in the last 24 hours</p>
+                        </div>
+                    </template>
+                    <template x-for="error in errors" :key="error.id">
+                        <div class="error-item">
+                            <div class="error-header">
+                                <span class="error-title" x-text="error.type"></span>
+                                <span class="error-time" x-text="error.time"></span>
+                            </div>
+                            <p class="error-message" x-text="error.message"></p>
+                            <div class="error-actions">
+                                <button class="btn btn-primary" @click="retryError(error.id)">Retry</button>
+                                <button class="btn btn-secondary" @click="skipError(error.id)">Skip</button>
+                                <a class="btn btn-secondary" href="/sync-error-assist.html" target="_blank"
+                                    rel="noopener noreferrer"
+                                    title="Open SyncErrorAssist — AI diagnosis with reasoning trace and operator approval queue">
+                                    <i class="fas fa-robot"></i> AI Diagnosis</a>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="erp-card">
+                    <h3 class="section-title"><i class="fas fa-inbox"></i> Dead Letter Queue</h3>
+                    <div
+                        style="padding: 1rem; background: var(--bg-tertiary); border-radius: 0.75rem; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Messages in DLQ</span>
+                            <span style="font-size: 1.5rem; font-weight: 700;"
+                                :style="'color: ' + (stats.dlqCount === 0 ? 'var(--accent-green)' : 'var(--accent-red)')"
+                                x-text="stats.dlqCount">0</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" @click="reprocessDLQ()" :disabled="stats.dlqCount === 0">
+                            <i class="fas fa-redo"></i> Reprocess All
+                        </button>
+                        <button class="btn btn-danger" @click="purgeDLQ()" :disabled="stats.dlqCount === 0">
+                            <i class="fas fa-trash"></i> Purge
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Log Tab -->
+        <div x-show="activeTab === 'logs'">
+            <div class="erp-card">
+                <h3 class="section-title"><i class="fas fa-list-alt"></i> Activity Log</h3>
+                <div style="max-height: 500px; overflow-y: auto;">
+                    <template x-for="log in activityLogs" :key="log.id">
+                        <div class="log-entry">
+                            <span class="log-time" x-text="log.time"></span>
+                            <span class="log-level" :class="log.level" x-text="log.level.toUpperCase()"></span>
+                            <span class="log-message" x-text="log.message"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function syncCentralDashboard() {
+            return {
+                loading: true,
+                dataSource: 'demo',
+                activeTab: 'connections',
+                overallHealth: 'healthy',
+                lastSyncTime: 'Just now',
+                stats: {
+                    activeConnections: 8,
+                    healthyConnections: 7,
+                    warningConnections: 1,
+                    errorConnections: 0,
+                    activeFlows: 12,
+                    transactionsToday: 45892,
+                    successRate: 99.7,
+                    avgLatency: 145,
+                    errorCount: 3,
+                    dlqCount: 2
+                },
+                connections: [
+                    { id: 1, name: 'NetSuite Production', type: 'ERP', icon: 'fas fa-database', color: '#f59e0b', status: 'active', lastSync: '2 min ago' },
+                    { id: 2, name: 'Shopify Plus', type: 'eCommerce', icon: 'fab fa-shopify', color: '#96bf48', status: 'active', lastSync: '1 min ago' },
+                    { id: 3, name: 'Salesforce CRM', type: 'CRM', icon: 'fab fa-salesforce', color: '#00a1e0', status: 'active', lastSync: '5 min ago' },
+                    { id: 4, name: 'Stripe Payments', type: 'Payment', icon: 'fab fa-stripe', color: '#6772e5', status: 'active', lastSync: 'Real-time' },
+                    { id: 5, name: 'ShipStation', type: '3PL', icon: 'fas fa-shipping-fast', color: '#10b981', status: 'active', lastSync: '3 min ago' },
+                    { id: 6, name: 'Amazon SP-API', type: 'Marketplace', icon: 'fab fa-amazon', color: '#ff9900', status: 'warning', lastSync: '15 min ago' },
+                    { id: 7, name: 'HubSpot', type: 'Marketing', icon: 'fab fa-hubspot', color: '#ff7a59', status: 'active', lastSync: '8 min ago' },
+                    { id: 8, name: 'QuickBooks', type: 'Accounting', icon: 'fas fa-calculator', color: '#2ca01c', status: 'active', lastSync: '10 min ago' }
+                ],
+                dataFlows: [
+                    { id: 1, name: 'Order Sync', source: 'Shopify', destination: 'NetSuite', successCount: 12453, errorCount: 2, avgLatency: 234, successRate: 99.98 },
+                    { id: 2, name: 'Inventory Update', source: 'NetSuite', destination: 'Shopify', successCount: 8921, errorCount: 0, avgLatency: 156, successRate: 100 },
+                    { id: 3, name: 'Customer Sync', source: 'Salesforce', destination: 'NetSuite', successCount: 5423, errorCount: 1, avgLatency: 189, successRate: 99.98 },
+                    { id: 4, name: 'Payment Reconciliation', source: 'Stripe', destination: 'NetSuite', successCount: 3892, errorCount: 0, avgLatency: 89, successRate: 100 },
+                    { id: 5, name: 'Shipment Tracking', source: 'ShipStation', destination: 'Shopify', successCount: 7234, errorCount: 0, avgLatency: 112, successRate: 100 },
+                    { id: 6, name: 'Product Catalog', source: 'NetSuite', destination: 'Amazon', successCount: 2156, errorCount: 3, avgLatency: 456, successRate: 99.86 }
+                ],
+                errors: [
+                    { id: 1, type: 'API Rate Limit', message: 'Amazon SP-API rate limit exceeded for GetOrders endpoint', time: '15 min ago' },
+                    { id: 2, type: 'Validation Error', message: 'Customer record missing required field: taxId', time: '1 hour ago' },
+                    { id: 3, type: 'Connection Timeout', message: 'NetSuite SuiteTalk API connection timed out after 30s', time: '3 hours ago' }
+                ],
+                activityLogs: [
+                    { id: 1, time: '16:21:05', level: 'success', message: 'Order #45892 synced to NetSuite successfully' },
+                    { id: 2, time: '16:20:58', level: 'info', message: 'Inventory webhook received from Shopify (SKU: WIDGET-001)' },
+                    { id: 3, time: '16:20:45', level: 'success', message: 'Customer sync completed: 15 records updated' },
+                    { id: 4, time: '16:20:32', level: 'warn', message: 'Amazon API response time elevated: 456ms' },
+                    { id: 5, time: '16:20:15', level: 'success', message: 'Payment reconciliation batch completed: $12,450.00' },
+                    { id: 6, time: '16:19:58', level: 'info', message: 'Scheduled sync started: Product Catalog' },
+                    { id: 7, time: '16:19:45', level: 'error', message: 'Rate limit exceeded for Amazon SP-API' },
+                    { id: 8, time: '16:18:30', level: 'success', message: 'Shipment tracking updated: 23 packages in transit' }
+                ],
+
+                async initialize() {
+                    console.log('SyncCentral Cockpit initialized');
+                    await this.loadData();
+                    this.updateHealth();
+                },
+
+                async loadData() {
+                    this.loading = true;
+                    try {
+                        this.loadDemoData();
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                loadDemoData() {
+                    this.dataSource = 'demo';
+                    // stats are already defined in the component return, but let's ensure they are set
+                },
+
+                updateHealth() {
+                    if (this.stats.errorConnections > 0 || this.stats.successRate < 95) {
+                        this.overallHealth = 'error';
+                    } else if (this.stats.warningConnections > 0 || this.stats.successRate < 99) {
+                        this.overallHealth = 'warning';
+                    } else {
+                        this.overallHealth = 'healthy';
+                    }
+                },
+
+                refreshData() {
+                    this.lastSyncTime = 'Just now';
+                    console.log('Refreshing data...');
+                },
+
+                retryError(errorId) {
+                    this.errors = this.errors.filter(e => e.id !== errorId);
+                    this.stats.errorCount = this.errors.length;
+                    alert('Error retry initiated');
+                },
+
+                skipError(errorId) {
+                    this.errors = this.errors.filter(e => e.id !== errorId);
+                    this.stats.errorCount = this.errors.length;
+                    alert('Error skipped');
+                },
+
+                reprocessDLQ() {
+                    alert('Reprocessing DLQ messages...');
+                    this.stats.dlqCount = 0;
+                },
+
+                purgeDLQ() {
+                    if (confirm('Are you sure you want to purge all DLQ messages? This cannot be undone.')) {
+                        this.stats.dlqCount = 0;
+                        alert('DLQ purged');
+                    }
+                }
+            };
+        }
+
+        function goBackToDashboard() {
+            if (window.DemoTabNav && typeof window.DemoTabNav.closeOrBack === 'function') {
+                window.DemoTabNav.closeOrBack('/executive/demo-center.html');
+                return;
+            }
+            window.location.href = '/executive/demo-center.html';
+        }
+    </script>
+  <script src="/js/demo-tab-nav.js"></script>
+  <script>
+    window.DemoTabNav.init({ fallbackUrl: '/executive/demo-center.html' });
+  </script>
+    <script src="/js/integration-hub-shell.js"></script>
+</body>
+
+</html>

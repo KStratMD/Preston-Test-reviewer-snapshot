@@ -1,0 +1,185 @@
+{
+  "adyen": [
+    {
+      "pspReference": "ADY-8815805661234567",
+      "resultCode": "Authorised",
+      "amount": {
+        "value": 15000,
+        "currency": "USD"
+      },
+      "merchantReference": "DEMO-ORD-1001",
+      "paymentMethod": {
+        "type": "scheme",
+        "brand": "visa",
+        "lastFour": "1234"
+      },
+      "creationDate": "2025-10-15T12:30:00Z",
+      "status": "authorised",
+      "eventCode": "AUTHORISATION",
+      "success": true,
+      "merchantAccountCode": "DemoMerchantECOM",
+      "additionalData": {
+        "cardBin": "424242",
+        "cardSummary": "1234",
+        "expiryDate": "12/2026",
+        "cardHolderName": "John Demo",
+        "threeDAuthenticated": "true",
+        "threeDOffered": "true"
+      },
+      "fraudResult": {
+        "accountScore": 95,
+        "results": [
+          {
+            "accountScore": 95,
+            "checkId": 1,
+            "name": "CardChunkUsage"
+          }
+        ]
+      }
+    },
+    {
+      "pspReference": "ADY-8815805662345678",
+      "resultCode": "Authorised",
+      "amount": {
+        "value": 8900,
+        "currency": "USD"
+      },
+      "merchantReference": "DEMO-ORD-1002",
+      "paymentMethod": {
+        "type": "scheme",
+        "brand": "mc",
+        "lastFour": "5555"
+      },
+      "creationDate": "2025-10-16T08:15:00Z",
+      "status": "authorised",
+      "eventCode": "AUTHORISATION",
+      "success": true,
+      "merchantAccountCode": "DemoMerchantECOM",
+      "additionalData": {
+        "cardBin": "555555",
+        "cardSummary": "5555",
+        "expiryDate": "06/2027",
+        "cardHolderName": "Jane Customer",
+        "threeDAuthenticated": "true",
+        "threeDOffered": "true"
+      },
+      "fraudResult": {
+        "accountScore": 98,
+        "results": [
+          {
+            "accountScore": 98,
+            "checkId": 1,
+            "name": "CardChunkUsage"
+          }
+        ]
+      }
+    },
+    {
+      "pspReference": "ADY-8815805663456789",
+      "resultCode": "Authorised",
+      "amount": {
+        "value": 25000,
+        "currency": "USD"
+      },
+      "merchantReference": "DEMO-ORD-1003",
+      "paymentMethod": {
+        "type": "scheme",
+        "brand": "amex",
+        "lastFour": "0005"
+      },
+      "creationDate": "2025-10-16T14:45:00Z",
+      "status": "authorised",
+      "eventCode": "AUTHORISATION",
+      "success": true,
+      "merchantAccountCode": "DemoMerchantECOM",
+      "additionalData": {
+        "cardBin": "378282",
+        "cardSummary": "0005",
+        "expiryDate": "03/2026",
+        "cardHolderName": "Bob Johnson",
+        "threeDAuthenticated": "false",
+        "threeDOffered": "true"
+      },
+      "fraudResult": {
+        "accountScore": 88,
+        "results": [
+          {
+            "accountScore": 88,
+            "checkId": 1,
+            "name": "CardChunkUsage"
+          },
+          {
+            "accountScore": 90,
+            "checkId": 2,
+            "name": "HolderNameCheck"
+          }
+        ]
+      }
+    },
+    {
+      "pspReference": "ADY-8815805664567890",
+      "resultCode": "Refused",
+      "amount": {
+        "value": 5000,
+        "currency": "USD"
+      },
+      "merchantReference": "DEMO-ORD-1004",
+      "paymentMethod": {
+        "type": "scheme",
+        "brand": "visa",
+        "lastFour": "9999"
+      },
+      "creationDate": "2025-10-17T10:20:00Z",
+      "status": "refused",
+      "eventCode": "AUTHORISATION",
+      "success": false,
+      "refusalReason": "Insufficient funds",
+      "merchantAccountCode": "DemoMerchantECOM",
+      "additionalData": {
+        "cardBin": "424242",
+        "cardSummary": "9999",
+        "expiryDate": "08/2025",
+        "cardHolderName": "Alice Test"
+      }
+    },
+    {
+      "pspReference": "ADY-8815805665678901",
+      "resultCode": "Authorised",
+      "amount": {
+        "value": 12000,
+        "currency": "USD"
+      },
+      "merchantReference": "DEMO-ORD-1005",
+      "paymentMethod": {
+        "type": "scheme",
+        "brand": "visa",
+        "lastFour": "7777"
+      },
+      "creationDate": "2025-10-17T16:00:00Z",
+      "status": "captured",
+      "eventCode": "CAPTURE",
+      "success": true,
+      "merchantAccountCode": "DemoMerchantECOM",
+      "operations": ["CANCEL", "REFUND"],
+      "additionalData": {
+        "cardBin": "424242",
+        "cardSummary": "7777",
+        "expiryDate": "11/2025",
+        "cardHolderName": "Charlie Brown",
+        "threeDAuthenticated": "true",
+        "threeDOffered": "true",
+        "captureDate": "2025-10-17T16:05:00Z"
+      },
+      "fraudResult": {
+        "accountScore": 100,
+        "results": [
+          {
+            "accountScore": 100,
+            "checkId": 1,
+            "name": "CardChunkUsage"
+          }
+        ]
+      }
+    }
+  ]
+}
