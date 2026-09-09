@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Integration Wizard with Automation Libraries</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 h-full">
+    
+    <div x-data="enhancedIntegrationWizard()" x-init="init()" class="h-full p-8">
+        
+        <!-- Enhanced Integration Wizard with Automation Libraries -->
+        <div class="max-w-6xl mx-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Enhanced Integration Wizard</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Powered by AutomationLibraries & SyncCentral</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Demo Data Indicator -->
+                        <div x-show="usingDemoData" 
+                             class="bg-yellow-100 border border-yellow-300 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                            <i class="fas fa-flask mr-2"></i>
+                            Demo Data
+                        </div>
+                        
+                        <div x-show="automationLibraries.length > 0" class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check-circle mr-1"></i>
+                            <span x-text="automationLibraries.length"></span> Automation Libraries Loaded
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Automation Library Status -->
+                <div class="p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-gray-200 dark:border-gray-700">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- PayoutCentral Status -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-money-check-alt text-green-600 dark:text-green-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-900 dark:text-white">PayoutCentral</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400">Payment Automation</p>
+                                    </div>
+                                </div>
+                                <span x-show="getLibraryByCategory('payout')" class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Active</span>
+                                <span x-show="!getLibraryByCategory('payout')" class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">Loading...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- QualityCentral Status -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-check-double text-blue-600 dark:text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-900 dark:text-white">QualityCentral</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400">Quality Automation</p>
+                                    </div>
+                                </div>
+                                <span x-show="getLibraryByCategory('quality')" class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Active</span>
+                                <span x-show="!getLibraryByCategory('quality')" class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">Loading...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- InstallerCentral Status -->
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-cogs text-purple-600 dark:text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-900 dark:text-white">InstallerCentral</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400">Deployment Automation</p>
+                                    </div>
+                                </div>
+                                <span x-show="getLibraryByCategory('installer')" class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">Active</span>
+                                <span x-show="!getLibraryByCategory('installer')" class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Connector Selection -->
+                <div class="p-6">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                            <i class="fas fa-plug mr-2 text-blue-600"></i>Select Integration Connectors
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400">Choose from traditional connectors or advanced automation libraries</p>
+                    </div>
+
+                    <!-- Connector Categories -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        
+                        <!-- Traditional Connectors -->
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                <i class="fas fa-database mr-2 text-gray-600"></i>Traditional Connectors
+                            </h4>
+                            <div class="space-y-3">
+                                <template x-for="connector in traditionalConnectors" :key="connector.id">
+                                    <div class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 cursor-pointer hover:shadow-md transition-shadow"
+                                         @click="selectConnector(connector, 'traditional')">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div :class="connector.color + ' w-10 h-10 rounded-lg flex items-center justify-center mr-3'">
+                                                    <i :class="connector.icon + ' text-lg'"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="font-medium text-gray-900 dark:text-white" x-text="connector.name"></h5>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400" x-text="connector.category"></p>
+                                                </div>
+                                            </div>
+                                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm">
+                                                Select
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Automation Libraries -->
+                        <div class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg p-6 border border-purple-200 dark:border-purple-700">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                <i class="fas fa-robot mr-2 text-purple-600"></i>Automation Libraries
+                                <span class="text-sm bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full ml-2">NEW</span>
+                            </h4>
+                            <div class="space-y-3">
+                                <template x-for="connector in automationConnectors" :key="connector.id">
+                                    <div class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600 cursor-pointer hover:shadow-md transition-shadow"
+                                         @click="selectConnector(connector, 'automation')">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div :class="connector.color + ' w-10 h-10 rounded-lg flex items-center justify-center mr-3'">
+                                                    <i :class="connector.icon + ' text-lg'"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="font-medium text-gray-900 dark:text-white" x-text="connector.name"></h5>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400" x-text="connector.category"></p>
+                                                    <div class="flex items-center mt-1">
+                                                        <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded mr-2">
+                                                            <span x-text="connector.automationTemplates?.length || 0"></span> templates
+                                                        </span>
+                                                        <span class="text-xs text-gray-500" x-text="connector.syncType"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-3 py-1.5 rounded text-sm">
+                                                Select
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Integration Preview -->
+                    <div x-show="selectedConnector" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl p-6 mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                            <i class="fas fa-eye mr-2 text-blue-600"></i>Selected Integration Preview
+                        </h4>
+                        
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center">
+                                <div :class="selectedConnector?.color + ' w-16 h-16 rounded-xl flex items-center justify-center mr-4'">
+                                    <i :class="selectedConnector?.icon + ' text-2xl'"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-xl font-bold text-gray-900 dark:text-white" x-text="selectedConnector?.name"></h5>
+                                    <p class="text-gray-600 dark:text-gray-400" x-text="selectedConnector?.category"></p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1" x-text="selectedConnector?.description"></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span :class="selectedConnector?.type === 'automation' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'" 
+                                      class="px-3 py-1 rounded-full text-sm font-medium"
+                                      x-text="selectedConnector?.type === 'automation' ? 'Automation Library' : 'Traditional Connector'"></span>
+                                <button @click="selectedConnector = null" 
+                                        class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg text-sm font-medium">
+                                    <i class="fas fa-times mr-2"></i>Remove
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Automation Templates (if applicable) -->
+                        <div x-show="selectedConnector?.type === 'automation' && selectedConnector?.automationTemplates?.length > 0" 
+                             class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+                            <h6 class="font-medium text-gray-900 dark:text-white mb-3">
+                                <i class="fas fa-list mr-2"></i>Available Automation Templates
+                            </h6>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <template x-for="template in (selectedConnector?.automationTemplates || []).slice(0, 4)" :key="template.id">
+                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                                        <h6 class="font-medium text-sm text-gray-900 dark:text-white" x-text="template.name"></h6>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1" x-text="template.description"></p>
+                                        <div class="flex items-center mt-2">
+                                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded mr-2" x-text="template.triggerType"></span>
+                                            <span class="text-xs text-gray-500">
+                                                <span x-text="template.steps?.length || 0"></span> steps
+                                            </span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Traditional Connector Details -->
+                        <div x-show="selectedConnector?.type === 'traditional'" 
+                             class="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                            <div>
+                                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Setup Time:</span>
+                                <p class="text-lg font-semibold text-gray-900 dark:text-white" x-text="selectedConnector?.setupTime"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Sync Type:</span>
+                                <p class="text-lg font-semibold text-gray-900 dark:text-white" x-text="selectedConnector?.syncType"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Data Types:</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300" x-text="selectedConnector?.dataTypes?.join(', ')"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            <span x-text="selectedConnector ? 'Ready to create integration with ' + selectedConnector.name : 'Select a connector to continue'"></span>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button @click="testConnection()" 
+                                    :disabled="!selectedConnector"
+                                    class="bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 px-6 py-3 rounded-lg font-medium">
+                                <i class="fas fa-plug mr-2"></i>Test Connection
+                            </button>
+                            <button @click="createIntegration()" 
+                                    :disabled="!selectedConnector"
+                                    class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium">
+                                <i class="fas fa-rocket mr-2"></i>Create Integration
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div x-show="message" x-transition class="fixed top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded shadow-lg z-50">
+            <span x-text="message"></span>
+        </div>
+    </div>
+
+    <script>
+        const DEMO_AUTOMATION_LIBRARIES = Object.freeze([
+            {
+                name: 'PayoutCentral',
+                category: 'payout',
+                automations: [{
+                    id: 'template_payout_ach',
+                    name: 'ACH Payout Processing',
+                    description: 'Process ACH payments to vendors with automated approval workflow',
+                    triggerType: 'manual',
+                    steps: [
+                        { id: 'validate_vendor', name: 'Validate Vendor' },
+                        { id: 'create_payment', name: 'Create Payment Record' }
+                    ]
+                }]
+            },
+            {
+                name: 'QualityCentral',
+                category: 'quality',
+                automations: [{
+                    id: 'template_quality_comprehensive',
+                    name: 'Comprehensive Quality Check',
+                    description: 'Run full quality assessment including data, performance, and security checks',
+                    triggerType: 'scheduled',
+                    steps: [
+                        { id: 'data_quality', name: 'Data Quality Check' },
+                        { id: 'performance_test', name: 'Performance Testing' }
+                    ]
+                }]
+            },
+            {
+                name: 'InstallerCentral',
+                category: 'installer',
+                automations: [{
+                    id: 'template_install_connector',
+                    name: 'Connector Installation',
+                    description: 'Install and configure integration connectors with health checks',
+                    triggerType: 'manual',
+                    steps: [
+                        { id: 'download_package', name: 'Download Package' },
+                        { id: 'install_dependencies', name: 'Install Dependencies' }
+                    ]
+                }]
+            }
+        ]);
+
+        function enhancedIntegrationWizard() {
+            return {
+                // Demo data state
+                usingDemoData: false, // Currently using demo data
+                
+                // State
+                automationLibraries: [],
+                selectedConnector: null,
+                message: '',
+                
+                // Traditional connectors
+                traditionalConnectors: [
+                    {
+                        id: 'salesforce',
+                        name: 'Salesforce',
+                        category: 'CRM & Sales',
+                        description: 'World\'s #1 CRM platform with sales, service, and marketing automation',
+                        icon: 'fab fa-salesforce',
+                        color: 'bg-blue-100',
+                        setupTime: '10 min',
+                        syncType: 'Real-time',
+                        dataTypes: ['Accounts', 'Contacts', 'Leads', 'Opportunities'],
+                        type: 'traditional'
+                    },
+                    {
+                        id: 'netsuite',
+                        name: 'NetSuite',
+                        category: 'ERP Systems',
+                        description: 'Complete ERP solution with financial management',
+                        icon: 'fas fa-building',
+                        color: 'bg-green-100',
+                        setupTime: '15 min',
+                        syncType: 'Real-time',
+                        dataTypes: ['Customers', 'Orders', 'Items', 'Invoices'],
+                        type: 'traditional'
+                    },
+                    {
+                        id: 'hubspot',
+                        name: 'HubSpot',
+                        category: 'CRM & Marketing',
+                        description: 'Inbound marketing and CRM platform',
+                        icon: 'fas fa-rocket',
+                        color: 'bg-orange-100',
+                        setupTime: '8 min',
+                        syncType: 'Real-time',
+                        dataTypes: ['Contacts', 'Companies', 'Deals'],
+                        type: 'traditional'
+                    }
+                ],
+
+                // Automation connectors (populated from API)
+                automationConnectors: [],
+
+                async init() {
+                    console.log('Enhanced Integration Wizard initialized');
+                    await this.loadAutomationLibraries();
+                },
+
+                // Load automation libraries from the new service
+                async loadAutomationLibraries() {
+                    this.automationLibraries = DEMO_AUTOMATION_LIBRARIES;
+                    this.usingDemoData = true;
+                    this.populateAutomationConnectors();
+                    this.message = 'Using demo automation libraries';
+                    setTimeout(() => this.message = '', 3000);
+                },
+
+                // Get library by category
+                getLibraryByCategory(category) {
+                    return this.automationLibraries.find(lib => lib.category === category);
+                },
+
+                // Populate connector options from automation libraries
+                populateAutomationConnectors() {
+                    this.automationConnectors = [];
+                    
+                    // Add PayoutCentral automations
+                    const payoutLibrary = this.getLibraryByCategory('payout');
+                    if (payoutLibrary) {
+                        this.automationConnectors.push({
+                            id: 'payoutcentral',
+                            name: 'PayoutCentral',
+                            category: 'Payment Automation',
+                            description: 'Automated vendor payment processing and approval workflows',
+                            icon: 'fas fa-money-check-alt',
+                            color: 'bg-green-100',
+                            setupTime: '10 min',
+                            syncType: 'Event-driven',
+                            dataTypes: ['Vendor Payments', 'Approval Workflows', 'Payment Status'],
+                            automationTemplates: payoutLibrary.automations || [],
+                            type: 'automation'
+                        });
+                    }
+
+                    // Add QualityCentral automations
+                    const qualityLibrary = this.getLibraryByCategory('quality');
+                    if (qualityLibrary) {
+                        this.automationConnectors.push({
+                            id: 'qualitycentral',
+                            name: 'QualityCentral',
+                            category: 'Quality Automation',
+                            description: 'Automated data quality checks and validation workflows',
+                            icon: 'fas fa-check-double',
+                            color: 'bg-blue-100',
+                            setupTime: '8 min',
+                            syncType: 'Scheduled',
+                            dataTypes: ['Data Quality Reports', 'Validation Results', 'Error Tracking'],
+                            automationTemplates: qualityLibrary.automations || [],
+                            type: 'automation'
+                        });
+                    }
+
+                    // Add InstallerCentral automations
+                    const installerLibrary = this.getLibraryByCategory('installer');
+                    if (installerLibrary) {
+                        this.automationConnectors.push({
+                            id: 'installercentral',
+                            name: 'InstallerCentral',
+                            category: 'Deployment Automation',
+                            description: 'Automated software deployment and configuration management',
+                            icon: 'fas fa-cogs',
+                            color: 'bg-purple-100',
+                            setupTime: '15 min',
+                            syncType: 'On-demand',
+                            dataTypes: ['Deployment Tasks', 'Configuration Status', 'Environment Health'],
+                            automationTemplates: installerLibrary.automations || [],
+                            type: 'automation'
+                        });
+                    }
+                },
+
+                // Select connector
+                selectConnector(connector, type) {
+                    this.selectedConnector = { ...connector, type };
+                    this.message = `Selected ${connector.name} ${type === 'automation' ? 'automation library' : 'connector'}`;
+                    setTimeout(() => this.message = '', 2000);
+                },
+
+                // Test connection
+                async testConnection() {
+                    if (!this.selectedConnector) return;
+
+                    this.message = `Testing connection to ${this.selectedConnector.name}...`;
+                    
+                    // Simulate connection test
+                    setTimeout(() => {
+                        this.message = `✅ Connection to ${this.selectedConnector.name} successful!`;
+                        setTimeout(() => this.message = '', 3000);
+                    }, 2000);
+                },
+
+                // Create integration
+                async createIntegration() {
+                    if (!this.selectedConnector) return;
+
+                    this.message = 'Creating integration...';
+
+                    setTimeout(() => {
+                        const templateCount = this.selectedConnector.automationTemplates?.length || 0;
+                        alert(`Integration created successfully!\n\n` +
+                              `Connector: ${this.selectedConnector.name}\n` +
+                              `Type: ${this.selectedConnector.type === 'automation' ? 'Automation Library' : 'Traditional Connector'}\n` +
+                              `Category: ${this.selectedConnector.category}\n` +
+                              (templateCount > 0 ? `Automation Templates: ${templateCount} configured\n` : '') +
+                              `Data Types: ${this.selectedConnector.dataTypes?.join(', ')}`);
+                        
+                        this.message = 'Integration created successfully!';
+                        setTimeout(() => this.message = '', 3000);
+                    }, 2000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

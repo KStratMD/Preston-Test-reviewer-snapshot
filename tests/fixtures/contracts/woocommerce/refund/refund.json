@@ -1,0 +1,16 @@
+{
+  "id": 7101,
+  "date_created": "2026-08-16T10:00:00",
+  "amount": "35.00",
+  "reason": "Synthetic partial refund",
+  "line_items": [
+    {
+      "id": 9301,
+      "name": "Red medium",
+      "sku": "SKU-RED-M",
+      "quantity": -1,
+      "total": "-35.00",
+      "total_tax": "0.00"
+    }
+  ]
+}

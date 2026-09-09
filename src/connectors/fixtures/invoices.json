@@ -1,0 +1,318 @@
+{
+  "squire": [
+    {
+      "id": "SQ_INV_001",
+      "invoiceNumber": "INV-2024-0001",
+      "customerId": "SQ_CUST_001",
+      "customerName": "Acme Manufacturing Inc",
+      "invoiceDate": "2024-01-20T09:00:00Z",
+      "dueDate": "2024-02-20T09:00:00Z",
+      "status": "Sent",
+      "totalAmount": 18950.00,
+      "amountPaid": 0.00,
+      "amountDue": 18950.00,
+      "currency": "USD",
+      "lineItems": [
+        {
+          "lineNumber": 1,
+          "productCode": "WIDGET-A100",
+          "description": "Industrial Widget Type A",
+          "quantity": 50,
+          "unitPrice": 125.00,
+          "discount": 0.00,
+          "taxAmount": 625.00,
+          "totalPrice": 6875.00
+        },
+        {
+          "lineNumber": 2,
+          "productCode": "SERVICE-INST",
+          "description": "Installation Services",
+          "quantity": 8,
+          "unitPrice": 150.00,
+          "discount": 100.00,
+          "taxAmount": 90.00,
+          "totalPrice": 1290.00
+        }
+      ],
+      "subtotal": 15750.00,
+      "taxTotal": 715.00,
+      "discountTotal": 100.00,
+      "notes": "Net 30 payment terms. Thank you for your business."
+    }
+  ],
+  "quickbooks": [
+    {
+      "Id": "2001",
+      "DocNumber": "INV-1001",
+      "TxnDate": "2024-01-20",
+      "DueDate": "2024-02-19",
+      "CustomerRef": {
+        "value": "1",
+        "name": "Acme Corporation"
+      },
+      "Line": [
+        {
+          "Amount": 6200.00,
+          "DetailType": "SalesItemLineDetail",
+          "SalesItemLineDetail": {
+            "ItemRef": { "value": "10", "name": "Consulting Services" },
+            "Qty": 40,
+            "UnitPrice": 155.00,
+            "TaxCodeRef": { "value": "TAX" }
+          },
+          "Description": "Management consulting - January 2024"
+        },
+        {
+          "Amount": 1500.00,
+          "DetailType": "SalesItemLineDetail",
+          "SalesItemLineDetail": {
+            "ItemRef": { "value": "15", "name": "Software License" },
+            "Qty": 10,
+            "UnitPrice": 150.00,
+            "TaxCodeRef": { "value": "NON" }
+          },
+          "Description": "Annual software licenses"
+        }
+      ],
+      "TxnTaxDetail": {
+        "TotalTax": 496.00
+      },
+      "TotalAmt": 8196.00,
+      "Balance": 8196.00,
+      "EmailStatus": "EmailSent",
+      "BillEmail": { "Address": "ap@acmecorp.com" }
+    }
+  ],
+  "salesforce": [
+    {
+      "Id": "a013h000004TpGAAA0",
+      "InvoiceNumber": "INV-00001001",
+      "Status": "Posted",
+      "InvoiceDate": "2024-01-20",
+      "DueDate": "2024-02-19",
+      "AccountId": "0013h00000BmiUGAAZ",
+      "BillingAccountId": "0013h00000BmiUGAAZ",
+      "TotalAmount": 125000.00,
+      "TotalAmountWithTax": 133750.00,
+      "TotalTaxAmount": 8750.00,
+      "Balance": 133750.00,
+      "InvoiceLineItems": [
+        {
+          "Product2Id": "01t3h000002EpveAAC",
+          "Quantity": 500,
+          "UnitPrice": 250.00,
+          "ListPrice": 275.00,
+          "Discount": 25.00,
+          "TotalPrice": 125000.00,
+          "Description": "Enterprise Software Licenses - Bulk Purchase"
+        }
+      ],
+      "BillingAddress": {
+        "street": "123 Business Plaza",
+        "city": "New York",
+        "state": "NY",
+        "postalCode": "10001",
+        "country": "USA"
+      },
+      "PaymentTerms": "Net 30"
+    }
+  ],
+  "businesscentral": [
+    {
+      "id": "7d226c9c-55f4-ea22-cc54-000d3a3feca2",
+      "number": "SI-108001",
+      "invoiceDate": "2024-01-20",
+      "dueDate": "2024-02-19",
+      "customerNumber": "10000",
+      "customerName": "Adatum Corporation",
+      "currencyCode": "USD",
+      "status": "Open",
+      "salesInvoiceLines": [
+        {
+          "lineType": "Item",
+          "description": "Office Chair Professional",
+          "quantity": 10,
+          "unitPrice": 450.00,
+          "discountPercent": 5.0,
+          "discountAmount": 225.00,
+          "netAmount": 4275.00,
+          "taxPercent": 8.5,
+          "taxAmount": 363.38
+        },
+        {
+          "lineType": "Item",
+          "description": "Standing Desk Electric",
+          "quantity": 5,
+          "unitPrice": 850.00,
+          "discountPercent": 0.0,
+          "discountAmount": 0.00,
+          "netAmount": 4250.00,
+          "taxPercent": 8.5,
+          "taxAmount": 361.25
+        }
+      ],
+      "totalAmountExcludingTax": 8525.00,
+      "totalTaxAmount": 724.63,
+      "totalAmountIncludingTax": 9249.63,
+      "remainingAmount": 9249.63,
+      "billToCustomer": {
+        "name": "Adatum Corporation",
+        "address": "192 Market Square",
+        "city": "Atlanta",
+        "state": "GA",
+        "zipCode": "30303"
+      }
+    }
+  ],
+  "netsuite": [
+    {
+      "internalId": "12345",
+      "tranId": "INV-2024-001",
+      "tranDate": "2024-01-20",
+      "dueDate": "2024-02-19",
+      "status": "Open",
+      "entity": {
+        "internalId": "678",
+        "name": "Tech Solutions Inc"
+      },
+      "total": 45750.00,
+      "amountPaid": 0.00,
+      "amountRemaining": 45750.00,
+      "currency": {
+        "internalId": "1",
+        "name": "USD"
+      },
+      "item": [
+        {
+          "item": {
+            "internalId": "101",
+            "name": "Cloud Storage - Premium"
+          },
+          "quantity": 100,
+          "rate": 350.00,
+          "amount": 35000.00,
+          "taxRate1": 8.5,
+          "tax1Amt": 2975.00,
+          "grossAmt": 37975.00,
+          "description": "Annual cloud storage subscription"
+        },
+        {
+          "item": {
+            "internalId": "102",
+            "name": "Support Services - Enterprise"
+          },
+          "quantity": 12,
+          "rate": 750.00,
+          "amount": 9000.00,
+          "taxRate1": 0.0,
+          "tax1Amt": 0.00,
+          "grossAmt": 9000.00,
+          "description": "Monthly enterprise support (12 months prepaid)"
+        }
+      ],
+      "subtotal": 44000.00,
+      "taxtotal": 2975.00,
+      "terms": {
+        "internalId": "2",
+        "name": "Net 30"
+      }
+    }
+  ],
+  "stripe": [
+    {
+      "id": "in_1MjKL2HYgSvKb9p8qP3xYz4R",
+      "object": "invoice",
+      "account_country": "US",
+      "account_name": "Preston Integration Hub",
+      "amount_due": 15000,
+      "amount_paid": 0,
+      "amount_remaining": 15000,
+      "billing_reason": "subscription_cycle",
+      "created": 1674201600,
+      "currency": "usd",
+      "customer": "cus_MjKL2HYgSvKb9p8q",
+      "customer_email": "billing@techsolutions.com",
+      "customer_name": "Tech Solutions Inc",
+      "due_date": 1676880000,
+      "hosted_invoice_url": "https://invoice.stripe.com/i/acct_...",
+      "invoice_pdf": "https://pay.stripe.com/invoice/.../pdf",
+      "lines": {
+        "object": "list",
+        "data": [
+          {
+            "id": "il_1MjKL2HYgSvKb9p8qP3xYz4S",
+            "object": "line_item",
+            "amount": 15000,
+            "currency": "usd",
+            "description": "Enterprise Plan - Monthly Subscription",
+            "period": {
+              "start": 1674201600,
+              "end": 1676793600
+            },
+            "price": {
+              "id": "price_1MjKL2HYgSvKb9p8q",
+              "unit_amount": 15000,
+              "recurring": {
+                "interval": "month",
+                "interval_count": 1
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "total_count": 1
+      },
+      "metadata": {
+        "order_id": "ORD-2024-001"
+      },
+      "number": "PRES-2024-0001",
+      "paid": false,
+      "status": "open",
+      "subtotal": 15000,
+      "tax": 0,
+      "total": 15000
+    }
+  ],
+  "xero": [
+    {
+      "InvoiceID": "ed255415-e141-4150-aab7-8cfa2c9f5fb7",
+      "InvoiceNumber": "INV-0001",
+      "Type": "ACCREC",
+      "Contact": {
+        "ContactID": "a3675fc4-f8dd-4f03-ba5b-f1870566bcd7",
+        "Name": "ABC Furniture"
+      },
+      "Date": "2024-01-20",
+      "DueDate": "2024-02-19",
+      "Status": "AUTHORISED",
+      "LineAmountTypes": "Exclusive",
+      "LineItems": [
+        {
+          "Description": "Consulting services as agreed",
+          "Quantity": 10.00,
+          "UnitAmount": 100.00,
+          "AccountCode": "200",
+          "TaxType": "OUTPUT2",
+          "TaxAmount": 135.00,
+          "LineAmount": 1000.00
+        },
+        {
+          "Description": "Development work - January sprint",
+          "Quantity": 20.00,
+          "UnitAmount": 150.00,
+          "AccountCode": "200",
+          "TaxType": "OUTPUT2",
+          "TaxAmount": 405.00,
+          "LineAmount": 3000.00
+        }
+      ],
+      "SubTotal": 4000.00,
+      "TotalTax": 540.00,
+      "Total": 4540.00,
+      "AmountDue": 4540.00,
+      "AmountPaid": 0.00,
+      "CurrencyCode": "USD",
+      "Reference": "Website redesign project"
+    }
+  ]
+}

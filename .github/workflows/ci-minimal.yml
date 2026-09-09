@@ -1,0 +1,701 @@
+name: CI
+
+on:
+  push:
+    branches: [main, Working-Branch]
+  pull_request:
+    branches: [main, Working-Branch]
+
+env:
+  NODE_VERSION: '22'
+  HUSKY: '0'
+  NODE_ENV: 'test'
+
+jobs:
+  # Single job that does everything you actually need
+  test:
+    name: Build, Lint, and Test
+    runs-on: ubuntu-latest
+    # PR-C3.1a — bumped 15→18 after two runs (#834 f2eacdf9 + 20f73d6e)
+    # clocked 15m02s and 15m16s respectively. The "Run tests with coverage"
+    # step is the long pole at ~9-10min; cumulative time with all audit
+    # gates + build + coverage profile + post-cleanup is borderline at 15m.
+    # PR #890 — bumped 18→25: recent runs clock 17m15s-17m30s and one was
+    # cancelled at the 18m wall (runner jitter). 25 restores the ~3min
+    # headroom the 15→18 bump originally intended.
+    # PR #1253 (2026-09-06) — bumped 25→35: the job was cancelled at the
+    # 25m wall twice in a row inside its LAST step (core coverage profile)
+    # with every test step green (25m16s, 25m15s), then passed in 24m46s;
+    # the suite is 15.2k tests and the job sits at the cap. 35 restores
+    # ~10min of headroom.
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Lint (Quality Gate)
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Any-budget ratchet
+        run: node scripts/check-any-budget.mjs
+
+      # Tranche 2 A4: shrink-only baseline of legacy FieldMapping /
+      # TransformationRule declarations outside the canonical contract
+      # (src/domain/mapping/MappingContract.ts). AST-based (Codex Z-05).
+      # Regression test wired into "Audit-tooling regression tests" below.
+      - name: Mapping-contract declarations ratchet
+        run: node scripts/check-mapping-contract-declarations.mjs
+
+      - name: Tracked-artifact guard
+        run: node scripts/check-tracked-artifacts.mjs
+
+      - name: Strict-null budget ratchet
+        run: node scripts/check-strict-null-budget.mjs
+
+      - name: Core type-safety ratchet
+        run: node scripts/check-core-type-safety.mjs
+
+      - name: Connector outbound-DLP gate
+        run: npm run audit-connector-outbound-governance
+
+      - name: Order-to-cash fixture freshness (blocking)
+        run: |
+          npm run check:order-to-cash-fixtures
+          npm run fixtures:order-to-cash && git diff --exit-code -- tests/fixtures/order-to-cash
+          bash tests/scripts/check-order-to-cash-fixtures.test.sh
+
+      - name: Connector retry bypass gate
+        run: |
+          npm run audit-connector-retry-bypass
+          bash tests/scripts/check-connector-retry-bypass.test.sh
+
+      - name: System identity isolation audit
+        run: node scripts/check-system-identity-isolation.mjs
+
+      - name: Status-claims audit (Phase 3 + Phase 4 proof-cards + PR 6A registry)
+        run: node scripts/audit-status-claims.mjs --check-proof-cards --check-wired-connectors
+
+      - name: Source-of-truth coverage gate (PR 13)
+        run: node scripts/check-source-of-truth-coverage.mjs
+
+      # PR-D (repo-review finding C1): the caller-system gate previously ran only its
+      # fixture regression test (below), never the live src/routes/** scan, so a
+      # route self-attesting as its own SourceSystem (the PR-13b R6↔R13
+      # oscillation this gate exists to prevent) would pass CI. Point the scanner
+      # at the production tree here; exit contract is already fail-closed 0/1/2.
+      - name: Route caller-system production scan (blocking)
+        run: node scripts/check-route-caller-system.mjs
+
+      # PR-D (repo-review finding C7): routes must resolve tenant-scoped configs via
+      # getConfigurationForTenant, never the ambiguous getConfiguration(id).
+      # The tree is clean today; this locks it in before it can regress.
+      - name: Route getConfiguration abstention gate (blocking)
+        run: node scripts/check-route-getconfiguration-abstention.mjs
+
+      # PR-F0: Route Policy Manifest audit. Pins policy<->manifest set
+      # equality (mount consistency is transitive via audit-tenant-coverage),
+      # base-policy presence, classification consistency, the closed
+      # RATE_PROFILES registry, ambiguous-overlap rejection, and the
+      # SYSTEM_IDENTITY-fallback ratchet (.route-system-identity-baseline),
+      # now empty. --forbid-system-identity-fallback enforces the zero: it
+      # fails if the baseline ever gains a non-comment line again.
+      # Regression test wired into "Audit-tooling regression tests" below.
+      - name: Route policy audit (blocking)
+        run: npm run audit-route-policy
+
+      # Every mounted /api operation must be documented, measured against the
+      # REAL production composition (Server.compose(), which mounts
+      # /api/integrations and /api/help after App construction). Shrink-only
+      # baseline: .openapi-route-coverage-baseline.
+      - name: OpenAPI route coverage (blocking)
+        # Both are pinned. DEMO_MODE is the one that actually moves the surface:
+        # left unset, a persisted global/demo_mode row in the gitignored local
+        # SQLite database decides whether the mockDashboardAPIs router mounts,
+        # which is a 27-operation difference between a developer's machine and a
+        # clean checkout.
+        env:
+          NODE_ENV: test
+          DEMO_MODE: '0'
+        run: npm run check:openapi-route-coverage
+
+      # PR2 (F6 sub-project B): server code must never call its own HTTP API.
+      # Those calls carried no credentials, got a 401, and silently fell back to
+      # fixture data — fabricated numbers rendering exactly like real ones.
+      # Regression test wired into "Audit-tooling regression tests" below.
+      - name: Loopback self-fetch audit (blocking)
+        run: npm run audit-no-loopback-self-fetch
+
+      - name: Guarded-write coverage (blocking)
+        run: node scripts/check-guarded-writes.mjs
+
+      - name: Guarded-write descriptor-equivalence gate (PR 13c-2)
+        run: node scripts/check-write-descriptor-equivalence.mjs
+
+      - name: WorkflowCentral payload-custody drift gate (Phase 1 / ADR-019)
+        run: node scripts/audit-workflow-central-payload-custody.mjs
+
+      # Reviewer-mirror reproducibility gate (defensible-A item 2): fails the day
+      # a mirror-shipped test depends on a file the allowlist excludes, or a
+      # dynamic-dep test isn't in the staged-mirror execution set. Runs on every
+      # PR (reviewer-mirror.yml only triggers on mirror-evidence paths, so a new
+      # file-reading test added elsewhere would otherwise slip through to main).
+      - name: Reviewer-mirror reproducibility gate (defensible-A)
+        run: node scripts/check-mirror-reproducibility.mjs
+
+      - name: Proof-cards audit (Phase 4)
+        run: node scripts/audit-proof-cards.mjs
+
+      # PR-H (repo-review finding B5): review-hub connector tier chips must
+      # match each connector's source-level productionStatus (joined via
+      # metrics.json connectors.items) so a promotion can't leave the hub
+      # silently claiming the old tier.
+      - name: Review-hub connector chip drift gate (blocking)
+        run: node scripts/check-review-hub-connector-chips.mjs
+
+      - name: Check architecture knowledge manifest
+        run: node scripts/check-architecture-knowledge-manifest.mjs
+
+      - name: Portfolio evidence drift gate (PR 22)
+        run: node scripts/audit-portfolio-evidence.mjs
+
+      - name: Audit tenant coverage (blocking)
+        run: node scripts/audit-status-claims.mjs --check-tenant-coverage
+
+      - name: Audit tenant-isolation-invariant (PR 2C-Auth, blocking)
+        run: node scripts/audit-status-claims.mjs --check-tenant-isolation-invariant
+
+      # C5: forbid `req.headers['x-user-id']` (no exceptions; no
+      # legitimate site exists — userId must come from
+      # `extractIdentityContext(req)`) and forbid unverified
+      # `req.headers['x-tenant-id']` / `x-organization-id` reads under
+      # src/ unless the IMMEDIATELY-PRECEDING non-blank line is a
+      # comment-only line (after trimStart(), starts with `//`, `/*`,
+      # or `*`) carrying the marker token `allow-identity-header-read:
+      # <reason>`. Same-line trailing markers like `expr; // allow-...`
+      # are NOT accepted. The marker contract is documented in detail in
+      # `scripts/check-identity-header-reads.mjs`; adding a new marker
+      # site requires reviewer sign-off (the marker must annotate an
+      # admin-role-gated fallback or a library-internal extraction,
+      # not a fresh route handler).
+      - name: Audit identity-header reads (C5, blocking)
+        run: npm run audit-identity-header-reads
+
+      # C2 — block plaintext-tolerant `getString(...)` reads of secret-shaped
+      # tenant-configuration keys (suffixes: hmac_secret, secret, password,
+      # api_key, signing_key). New secret-bearing settings MUST use
+      # `TenantConfigurationRepository.getSecretString(tenantId, key)`, which
+      # returns null on missing row, decrypts via SecretManager on
+      # `is_encrypted=true` rows, and THROWS on plaintext rows. Comment-only
+      # lines that mention the banned pattern are exempt so JSDoc snippets
+      # can describe the unsafe form. Full contract is documented in
+      # `scripts/check-secret-key-encryption.mjs`.
+      - name: Audit secret-key encryption (C2, blocking)
+        run: npm run audit-secret-key-encryption
+
+      # C3.1c — forbid direct reads of governance.* tenant configuration keys outside GovernanceService.ts
+      - name: Audit governance-posture reads (C3.1c, blocking)
+        run: npm run audit-governance-posture-reads
+
+      - name: Audit configuration artifacts (A1 credential containment, blocking)
+        run: npm run audit:configuration-artifacts
+
+      - name: Strategic-claims gate (PR 16)
+        run: node scripts/check-strategic-claims.mjs
+
+      - name: Demo-module production-claim gate (blocking)
+        run: node scripts/check-demo-module-claims.mjs
+
+      - name: Skipped-tests documentation audit (Phase 5)
+        run: npm run audit-skipped-tests
+
+      - name: Flow-template instrumentation audit (PR 14 narrowed)
+        run: npm run audit-flow-templates
+
+      - name: Lineage instrumentation gate (PR 12)
+        run: npm run audit-lineage-instrumentation
+
+      - name: Postgres integration drift gate (PR-OP-3-pre)
+        run: node scripts/check-postgres-integration-env.mjs
+
+      - name: CLI-agent notes sync (AGENTS.md Part 1 ↔ docs/CODEX-WORKING-NOTES.md)
+        run: node scripts/check-cli-agent-notes-sync.mjs
+
+      - name: Shared handoff contract
+        run: node scripts/check-shared-handoff.mjs
+
+      # tranche-1 D5 step 2: regulated-medical vocabulary must not reach prose in the
+      # customer-scope proposal artifacts (docs/superpowers/{specs,plans}/2026-09-02-*.md,
+      # docs/blueprint/**, and any doc opted in through front matter).
+      - name: Customer-scope terminology gate (blocking)
+        run: npm run audit-terminology
+
+      - name: NotebookLM manifest count gate (footer ↔ Include list)
+        run: npm run audit-notebooklm-manifest
+
+      # OpenTelemetry graph gate: npm ls must validate the tree (nonzero exit
+      # or `problems` fail immediately), then every @opentelemetry/* package —
+      # direct AND transitive — must resolve to exactly one version. Multiple
+      # resolved @opentelemetry/api versions introduce compatibility-order
+      # ambiguity in the globalThis provider registration. Regression test
+      # wired into "Audit-tooling regression tests" below.
+      - name: OpenTelemetry graph audit (blocking)
+        run: npm run audit-otel-graph
+
+      - name: Audit-tooling regression tests (Phase 4 + Phase 5 + PR 6A)
+        run: |
+          bash tests/scripts/audit-status-claims.test.sh
+          bash tests/scripts/audit-status-claims-wired.test.sh
+          bash tests/scripts/audit-proof-cards.test.sh
+          bash tests/scripts/check-review-hub-connector-chips.test.sh
+          bash tests/scripts/check-mapping-contract-declarations.test.sh
+          bash tests/scripts/check-terminology.test.sh
+          bash tests/scripts/blueprint-cli.test.sh
+          bash tests/scripts/audit-portfolio-evidence.test.sh
+          bash tests/scripts/check-skipped-tests-documented.test.sh
+          bash tests/scripts/check-system-identity-isolation.test.sh
+          bash tests/scripts/canonicalEntityAudit.test.sh
+          bash tests/scripts/check-secret-key-encryption.test.sh
+          bash tests/scripts/check-governance-posture-reads.test.sh
+          bash tests/scripts/check-core-coverage-budget.test.sh
+          bash tests/scripts/check-core-type-safety.test.sh
+          bash tests/scripts/check-inbound-links.test.sh
+          bash tests/scripts/check-flow-template-instrumentation.test.sh
+          bash tests/scripts/check-lineage-instrumentation.test.sh
+          bash tests/scripts/check-source-of-truth-coverage.test.sh
+          bash tests/scripts/check-guarded-writes.test.sh
+          bash tests/scripts/check-route-caller-system.test.sh
+          bash tests/scripts/check-route-getconfiguration-abstention.test.sh
+          bash tests/scripts/check-write-descriptor-equivalence.test.sh
+          bash tests/scripts/metrics-tools.test.sh
+          bash tests/scripts/jest-teardown-exit-code.test.sh
+          bash tests/scripts/check-tenant-coverage.test.sh
+          bash tests/scripts/check-route-policy.test.sh
+          bash tests/scripts/check-openapi-route-coverage.test.sh
+          bash tests/scripts/check-tenant-isolation-invariant.test.sh
+          bash tests/scripts/check-identity-header-reads.test.sh
+          bash tests/scripts/pre-push-skip-ci.test.sh
+          bash tests/scripts/check-verification-date-drift.test.sh
+          bash tests/scripts/substitute-verification-tokens.test.sh
+          bash tests/scripts/check-baseline-drift.test.sh
+          bash tests/scripts/audit-and-update-docs-exclusions.test.sh
+          bash tests/scripts/provision-pilot-tenant.test.sh
+          bash tests/scripts/check-reviewer-mirror-public-visibility.test.sh
+          bash tests/scripts/shared-handoff.test.sh
+          bash tests/scripts/handoff-authority.test.sh
+          bash tests/scripts/check-postgres-integration-env.test.sh
+          bash tests/scripts/check-strategic-claims.test.sh
+          bash tests/scripts/check-demo-module-claims.test.sh
+          bash tests/scripts/check-mirror-reproducibility.test.sh
+          bash tests/scripts/check-architecture-knowledge-manifest.test.sh
+          bash tests/scripts/check-notebooklm-manifest-count.test.sh
+          bash tests/scripts/check-connector-outbound-governance.test.sh
+          bash tests/scripts/check-html-whitelist-sync.test.sh
+          bash tests/scripts/check-static-payment-fields.test.sh
+          bash tests/scripts/check-media-cache-buster.test.sh
+          bash tests/scripts/check-otel-graph.test.sh
+          bash tests/scripts/check-no-loopback-self-fetch.test.sh
+          bash tests/scripts/agent-sync-tooling.test.sh
+          bash tests/scripts/bash-runtime.test.sh
+          bash tests/scripts/sync-status.test.sh
+          bash tests/scripts/hosted-image-smoke.test.sh
+          bash tests/scripts/e2e-smoke-environment.test.sh
+          bash tests/scripts/ci-shell-test-registration.test.sh
+
+      - name: Baseline drift guard
+        run: node scripts/check-baseline-drift.mjs
+
+      # Verification-date drift guard: catches "Last verified <date>"
+      # stamps in the wiki snapshot whose date != .baseline-drift.json:
+      # current.asOfDate. Quoted references ("Last verified ...") are skipped
+      # automatically via the script's lookbehind. PR #779 R6 motivated
+      # this gate. Regression test wired into the audit-tooling step
+      # above (tests/scripts/check-verification-date-drift.test.sh).
+      - name: Verification-date drift guard
+        run: node scripts/check-verification-date-drift.mjs
+
+      # Inbound-link gate (post-Phase-6A): the production scanner at
+      # scripts/check-inbound-links.mjs walks docs/, public/, src/, scripts/,
+      # tests/ for broken repo-relative refs. Baseline reached 0 violations
+      # in PR #771 (35 → 3 → 0 after the PR #770 proof-card content landed
+      # on main). Promoting from informational/local-only to a hard CI gate
+      # so future drift can't accumulate silently. The regression test for
+      # the scanner itself remains under "Audit-tooling regression tests"
+      # above (tests/scripts/check-inbound-links.test.sh).
+      - name: Inbound-link audit (blocking)
+        run: node scripts/check-inbound-links.mjs
+
+      # htmlFiles <-> public/*.html two-way sync gate: every RouteSetup.ts
+      # whitelist entry must have a backing file, and every top-level
+      # public/*.html must be whitelisted or explicitly EXEMPT. Regression
+      # test under "Audit-tooling regression tests" above
+      # (tests/scripts/check-html-whitelist-sync.test.sh).
+      - name: HTML whitelist sync audit (blocking)
+        run: npm run audit-html-whitelist-sync
+
+      # No HTML under public/ may collect payment-card data. The static tree is
+      # served to anyone, so a card field there collects cardholder data outside
+      # any server-side control — which is what customer-payment-portal.html did
+      # until 2026-09-02. No allowlist: card entry belongs in a processor-hosted
+      # field. Regression test under "Audit-tooling regression tests" above
+      # (tests/scripts/check-static-payment-fields.test.sh).
+      - name: Static payment-field audit (blocking)
+        run: npm run audit-static-payment-fields
+
+      # Media cache-buster gate: every public/**/*.html src=/href= reference
+      # to /media/demos/*.mp4 must carry a ?v= cache-buster (CF Pages 7-day
+      # cache + stale text/html SPA-fallback trap — see the Sync Error
+      # Assist incident, project_hosted_media_needs_cache_buster_query).
+      # .webm is grandfathered. Regression test under "Audit-tooling
+      # regression tests" above (tests/scripts/check-media-cache-buster.test.sh).
+      - name: Media cache-buster audit (blocking)
+        run: npm run audit-media-cache-buster
+
+      # PR 10a: verify the embedded CSP bootstrap-script hash is in sync
+      # against committed source BEFORE `npm run build`'s `prebuild` hook
+      # could rewrite it (which would mask a real drift in CI).
+      - name: Embedded CSP hash sync (PR 10a)
+        run: node scripts/check-embedded-csp-hash.mjs
+
+      # PR 10a: enforce that every src/embedded/adapters/*.adapter.ts has
+      # a paired test in tests/playwright/embedded/adapter-conformance.spec.ts.
+      # Exits 0 while no adapters exist (PR 10b not started); becomes a
+      # gate the moment PR 10b adds the first adapter file.
+      - name: Embedded adapter-conformance gate (PR 10a)
+        run: node scripts/check-adapter-conformance.mjs
+
+      - name: Build
+        run: npm run build
+
+      # tranche-1 D5 step 1: the generated API reference is committed (docs/api/API.md).
+      # Regenerate it in the required profile and fail closed when the committed
+      # copy has drifted from openapi.full.yaml, so a stale reference cannot merge.
+      # Fail closed on absence too: the generator silently falls back to
+      # openapi.yaml when openapi.full.yaml is missing, and `git diff` ignores an
+      # untracked regenerated file, so both inputs must be tracked before the run.
+      - name: Build API docs (fail-closed swagger)
+        run: |
+          git ls-files --error-unmatch openapi.full.yaml docs/api/API.md
+          npm run build:api-docs
+          git diff --exit-code -- docs/api/API.md
+
+      # Unmocked OpenTelemetry runtime smoke: real DistributedTracingService ->
+      # NodeSDK -> OTLP HTTP exporter against a loopback collector. The unit
+      # suite cannot host this (fastMocks stubs src/observability, fake timers
+      # break the batch processor, forceExit masks leaked handles).
+      - name: OpenTelemetry runtime smoke (blocking)
+        run: npm run test:smoke:otel
+
+      - name: Run tests with coverage
+        env:
+          # Bump Node heap to absorb the combined cost of --coverage
+          # instrumentation + --json buffer. Default ~1.5GB started OOMing
+          # at PR #839 (10,889 tests vs ~9,868 baseline; Codex review flagged
+          # `FATAL ERROR: Ineffective mark-compacts near heap limit`). 6GB
+          # is comfortably under GitHub Actions' 7GB runner allocation.
+          NODE_OPTIONS: --max-old-space-size=6144
+        run: |
+          # Capture jest's exit code without `set -e` aborting; we still
+          # want test-summary.json to be inspected by the next step even
+          # if jest exits non-zero (which it should when tests fail). The
+          # final check uses both jest's exit code and the
+          # test-summary.json failure counts to decide whether to fail
+          # this step, and exits generically non-zero on failure. See
+          # PR #713: jest exit-code propagation through `bash -e {0}`
+          # was unreliable in this CI step (a known WSL2-vs-Linux
+          # divergence we couldn't reproduce locally), and the previous
+          # unconditional behaviour silently passed PRs #683-#711 with
+          # 6 failing suites.
+          set +e
+          npm run test:coverage:ci -- --json --outputFile=test-summary.json
+          JEST_EC=$?
+          set -e
+          echo "Jest exit code: $JEST_EC"
+          if [ ! -f test-summary.json ]; then
+            # Always fail when the report is missing — even if jest exited
+            # 0 (which would be suspicious on its own), absence of evidence
+            # is not evidence of pass. (Codex review on PR #713.)
+            echo "::error::test-summary.json missing — jest didn't produce a report."
+            exit 1
+          fi
+          # Report failed tests and failed suites separately so the
+          # numbers in the log line up with jest's own summary line.
+          # (Adding them together — Codex review on PR #713 — would
+          # surface 21 for 15 failed tests in 6 failed suites, which
+          # is confusing.)
+          read -r FAILED_TESTS FAILED_SUITES < <(node -e "const j=require('./test-summary.json'); console.log((j.numFailedTests||0), (j.numFailedTestSuites||0))")
+          echo "test-summary.json: failedTests=$FAILED_TESTS, failedSuites=$FAILED_SUITES"
+          if [ "$JEST_EC" -ne 0 ] || [ "$FAILED_TESTS" -gt 0 ] || [ "$FAILED_SUITES" -gt 0 ]; then
+            echo "::error::Jest failed or reported test failures (exit=$JEST_EC, failedTests=$FAILED_TESTS, failedSuites=$FAILED_SUITES) — failing step honestly."
+            exit 1
+          fi
+
+      - name: Bootstrap cloc (pinned) for the metrics freshness gate
+        # verify-metrics is fail-closed on cloc: without it, loc.total_ts cannot
+        # be regenerated and the gate aborts instead of quietly dropping the
+        # field and reporting success. This runner had no cloc at all, which is
+        # how a stale committed metrics.json passed every required check on
+        # PR #1193. Pinned + checksum-verified (cloc 1.98) via the same script
+        # reviewer-mirror.yml uses — never an unpinned package-manager install,
+        # so the committed number can't move because a runner image changed.
+        # The script's own path_prepend only affects its subshell, so export
+        # INSTALL_DIR to GITHUB_PATH explicitly rather than relying on the
+        # runner image happening to have ~/.local/bin on PATH — an assumption
+        # that, if wrong, degrades silently into the exact blind gate being
+        # fixed here.
+        run: |
+          bash scripts/bootstrap-review-tools.sh cloc
+          echo "${INSTALL_DIR:-$HOME/.local/bin}" >> "$GITHUB_PATH"
+
+      - name: Metrics freshness gate (tests/coverage current)
+        # The suite above produced test-summary.json + coverage/coverage-summary.json,
+        # so this strict comparison can include tests.*/coverage.* (still excluding
+        # generated_at/git_sha). loc.total_ts IS compared now that cloc is
+        # provisioned above. Fails if committed metrics.json undercounts the live
+        # suite — re-stamp:
+        #   npm run metrics:generate:authoring && npm run metrics:sync-tokens && git add metrics.json
+        run: node scripts/verify-metrics.mjs --include-test-coverage
+
+      - name: Run core coverage profile (Phase 5b — narrow testMatch, ~85s)
+        run: npm run test:coverage:core
+
+      - name: Core coverage budget ratchet (Phase 5b)
+        run: node scripts/check-core-coverage-budget.mjs
+
+      - name: Detect Codecov token
+        id: codecov-token
+        if: always()
+        env:
+          CODECOV_TOKEN_PRESENT: ${{ secrets.CODECOV_TOKEN != '' }}
+        run: |
+          if [[ "$CODECOV_TOKEN_PRESENT" == "true" ]]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v7
+        if: always() && steps.codecov-token.outputs.present == 'true'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          files: ./coverage/lcov.info
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: |
+            coverage/
+            test-results/
+
+  # Full integration profile (jest.slow.config.cjs, tests/integration/**).
+  # Replaces the former integration-smoke job (a strict 6-suite subset —
+  # `npm run test:integration:smoke` remains for local quality:pr). Motivated
+  # by PR #895: the profile was not CI-run, so 4 suites broken by the 13c-4
+  # auth-gating + 13b guardedWrite changes stayed invisible for a month.
+  # Live-credential suites (netsuite.connector.live.*, provider availability
+  # probes) self-skip when their env vars / local server are absent, so the
+  # profile is hermetic in CI (in-memory SQLite, Redis disabled via setupEnv).
+  integration:
+    name: Integration (full profile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --no-audit
+      - name: Build
+        run: npm run build
+      - name: Full integration profile
+        # jest.slow.config.cjs pins maxWorkers: 1, so every suite in the profile
+        # shares one Node process and heap use accumulates across the whole run.
+        # Measured on PR #1234: 83 of the 84 suites reported PASS and the process
+        # then died at 2,000 MB against Node's ~2 GB default (exit 134, "Reached
+        # heap limit"). The profile was one suite short of its ceiling before that
+        # PR added one, so the next integration test to land would have failed the
+        # same way regardless of its content.
+        #
+        # Raising the ceiling is a stopgap, not a fix: the durable answer is for
+        # suites that boot an App to release it on teardown, or for the profile to
+        # recycle the worker (workerIdleMemoryLimit). Revisit when the run
+        # approaches this bound again.
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: npm run test:integration
+
+  postgres-integration:
+    name: Postgres Integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: preston_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d preston_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/preston_test
+      DB_TYPE: postgres
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --no-audit
+      - name: Build
+        run: npm run build
+      - name: Transfer manifest drift gate
+        run: npm run db-transfer:manifest:check
+      - name: Run postgres integration suite
+        run: npm run test:integration:postgres
+
+  # Real-Redis proof for the batch queue subsystem (#1102 activation).
+  #
+  # Separate from the `integration` job on purpose. That profile is hermetic —
+  # tests/integration/setupEnv.ts sets DISABLE_REDIS=1 for every file it runs —
+  # so a real-Redis test placed there would silently exercise the DISABLED path
+  # while claiming to prove the enabled one. This job is the only place the
+  # wiring claim is actually tested end to end: enqueue -> worker completion ->
+  # shutdown, with close() asserted positively.
+  #
+  # Advisory by branch protection (KStratMD's call, 2026-08-05: required checks
+  # stay limited to the production-image smoke) but MANDATORY by process — do
+  # not merge on a red or missing result here.
+  batch-processing-redis:
+    name: Batch processing (real Redis)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      redis:
+        image: redis:7.4-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Explicitly enabled. '0' is the value that used to be misparsed as
+      # "disabled" before the flag was normalized, so this doubles as a live
+      # guard against that regression returning.
+      DISABLE_REDIS: '0'
+      REDIS_URL: redis://127.0.0.1:6379
+      JWT_SECRET: 'ci-redis-lifecycle-secret-123456789012345678901234567890'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --no-audit
+      - name: Run real-Redis batch lifecycle suite
+        run: npm run test:integration:redis
+
+  e2e-smoke:
+    name: E2E Smoke
+    runs-on: ubuntu-latest
+    # Browsers and their OS dependencies ship preinstalled in the pinned
+    # Playwright image: three 2026-08-19 runs (32270298316 attempts 1-2,
+    # 32273718287) lost the entire job budget inside `playwright install
+    # --with-deps` when azure.archive.ubuntu.com stalled, so the tests never
+    # executed. The image version must match @playwright/test in
+    # package-lock.json; tests/scripts/e2e-smoke-environment.test.sh enforces
+    # the pin, the version match, the budget, and the no-runtime-install rule.
+    # Digest for v1.62.0-noble resolved from MCR 2026-08-19.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.0-noble@sha256:baed2032d533817f3dbe6425de795788430ba345e819a1201337009ba17c9d07
+      options: --user 1001
+    timeout-minutes: 30
+    env:
+      DEMO_MODE: '1'
+      RATE_LIMIT_ENABLED: '0'
+      DISABLE_REDIS: '1'
+      DISABLE_OPENAI_EMBEDDINGS: '1'
+      # Deliberately low-entropy and self-describing. This workflow now ships in
+      # the reviewer mirror, so gitleaks scans it, and the previous CI-only
+      # value tripped its generic-api-key rule. 59 characters satisfies
+      # AUTH_CONSTANTS.JWT_SECRET_MIN_LENGTH (32); it secures nothing and is not
+      # used outside this ephemeral demo-mode job.
+      JWT_SECRET: 'ci-placeholder-ci-placeholder-ci-placeholder-ci-placeholder'
+      DEMO_READY_URL: 'http://127.0.0.1:3000/'
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --no-audit
+      - name: Build
+        run: npm run build
+      - name: Start demo server (detached)
+        run: npm run demo:start-detached
+      - name: Wait for /health
+        run: node scripts/wait-for-server.js --url http://127.0.0.1:3000/health --timeout 60000 --interval 1500
+      - name: Verify dashboard root is reachable
+        run: curl -fsS http://127.0.0.1:3000/ > /dev/null
+      - name: E2E smoke
+        run: npm run test:e2e:smoke:ci
+      - name: E2E smoke skip-contract guard
+        # Pins both the "skip" vs "fail" boundary in
+        # tests/e2e/dashboard.spec.ts and the band its navigation budget must
+        # stay inside. Lives here rather than beside the other
+        # tests/scripts harnesses because it needs Playwright browsers, which
+        # only this job's container ships. Uses its own ephemeral stub servers
+        # on OS-assigned ports, so it never touches the demo server on 3000.
+        run: bash tests/scripts/e2e-smoke-skip-contract.test.sh
+      - name: Stop demo server
+        if: always()
+        # Guarded so a cancelled setup cannot add a second misleading failure:
+        # stop-demo-detached.js exits 1 when logs/ holds no *.pid file.
+        run: |
+          if ls logs/*.pid >/dev/null 2>&1; then
+            npm run demo:stop-detached
+          else
+            echo "No demo server PID recorded; nothing to stop."
+          fi
+
+  security:
+    name: Security Audit (PR-blocking, allowlist-scoped)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --no-audit
+      - name: Audit (with GHSA allowlist)
+        run: node scripts/check-audit-allowed.mjs

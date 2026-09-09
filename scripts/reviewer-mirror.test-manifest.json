@@ -1,0 +1,42 @@
+{
+  "_comment": "Defensible-A item 2. Shared by the reproducibility gate (scripts/check-mirror-reproducibility.mjs) and the staged-mirror execution step in .github/workflows/reviewer-mirror.yml. The execution set is computed dynamically by `check-mirror-reproducibility.mjs --list` (every mirror-shipped test that reads files dynamically or via an external-dir literal), so there is no hand-maintained test list here. additionalProbes force extra tests into that set if the detector ever misses one; auditRecipes are the audit commands re-run from inside the staged snapshot.",
+  "additionalProbes": [
+    "tests/unit/__tests__/services/mcp/MCPAggregatorService.test.ts",
+    "tests/unit/database/migrations/048-create-reconciliation-center-tables.test.ts",
+    "tests/unit/database/migrations/049-create-lineage-events-table.test.ts",
+    "tests/unit/database/migrations/audit-logs-persistence.test.ts",
+    "tests/unit/flows/templates/FlowExecutor.test.ts",
+    "tests/unit/governance/sourceOfTruth/fieldLevelPayload.test.ts",
+    "tests/unit/middleware/syncErrorAssistWebhook.test.ts",
+    "tests/unit/routes/costTransparencyRoutes.test.ts",
+    "tests/unit/services/ConfigurationService.cardinalityGate.test.ts",
+    "tests/unit/services/ai/orchestrator/GovernanceService.commit2.test.ts",
+    "tests/unit/services/ai/providers/ProviderFactories.test.ts",
+    "tests/unit/services/financeCentral/FinanceCentralRepository.test.ts",
+    "tests/unit/services/security/DLPService.test.ts",
+    "tests/unit/services/workflowCentral/WorkflowCentralRepository.test.ts",
+    "tests/unit/services/workflowCentral/WorkflowPayloadRetentionJob.test.ts",
+    "tests/unit/utils/oauth1Helper.test.ts",
+    "tests/unit/fixtures/contractFixtures.shape.test.ts",
+    "tests/unit/scripts/referenceDetector.test.ts",
+    "tests/unit/scripts/generate-order-to-cash.test.ts"
+  ],
+  "auditRecipes": [
+    "node scripts/audit-status-claims.mjs --check-proof-cards --check-wired-connectors",
+    "npm run audit-proof-cards",
+    "node scripts/check-core-type-safety.mjs",
+    "node scripts/check-route-policy.mjs --forbid-system-identity-fallback",
+    "node scripts/check-mapping-contract-declarations.mjs",
+    "npm run audit-connector-retry-bypass",
+    "bash tests/scripts/check-connector-retry-bypass.test.sh",
+    "bash tests/scripts/check-terminology.test.sh",
+    "bash tests/scripts/blueprint-cli.test.sh",
+    "node scripts/check-no-loopback-self-fetch.mjs",
+    "node scripts/check-otel-graph.mjs",
+    "node scripts/audit-configuration-artifacts.mjs --root .",
+    "bash tests/scripts/e2e-smoke-environment.test.sh",
+    "npm run audit-static-payment-fields",
+    "npm run check:order-to-cash-fixtures",
+    "bash tests/scripts/check-order-to-cash-fixtures.test.sh"
+  ]
+}

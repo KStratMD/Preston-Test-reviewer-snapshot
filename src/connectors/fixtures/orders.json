@@ -1,0 +1,179 @@
+{
+  "squire": [
+    {
+      "id": "SQ_ORD_001",
+      "orderNumber": "PO-2024-0001",
+      "customerId": "SQ_CUST_001",
+      "customerName": "Acme Manufacturing Inc",
+      "orderDate": "2024-01-15T10:30:00Z",
+      "status": "Confirmed",
+      "totalAmount": 15750.00,
+      "currency": "USD",
+      "lineItems": [
+        {
+          "lineNumber": 1,
+          "productCode": "WIDGET-A100",
+          "description": "Industrial Widget Type A",
+          "quantity": 50,
+          "unitPrice": 125.00,
+          "totalPrice": 6250.00
+        }
+      ]
+    }
+  ],
+  "suiteCentral": [
+    {
+      "id": "SC_ORD_001",
+      "orderNumber": "SCO-2024-0001",
+      "customerId": "SC_CUST_001",
+      "customerName": "Enterprise Solutions Ltd",
+      "orderDate": "2024-01-16T11:00:00Z",
+      "status": "Processing",
+      "totalAmount": 24500.00,
+      "currency": "USD",
+      "lineItems": [
+        {
+          "lineNumber": 1,
+          "productCode": "SC-WIDGET-PRO",
+          "description": "Professional Widget Suite",
+          "quantity": 100,
+          "unitPrice": 225.00,
+          "totalPrice": 22500.00
+        },
+        {
+          "lineNumber": 2,
+          "productCode": "SC-SUPPORT",
+          "description": "Premium Support Package",
+          "quantity": 1,
+          "unitPrice": 2000.00,
+          "totalPrice": 2000.00
+        }
+      ]
+    }
+  ],
+  "quickbooks": [
+    {
+      "Id": "1001",
+      "DocNumber": "SO-1001",
+      "TxnDate": "2024-01-15",
+      "CustomerRef": {
+        "value": "1",
+        "name": "Acme Corporation"
+      },
+      "Line": [
+        {
+          "Amount": 6200.00,
+          "DetailType": "SalesItemLineDetail",
+          "SalesItemLineDetail": {
+            "ItemRef": { "value": "10", "name": "Consulting" },
+            "Qty": 40,
+            "UnitPrice": 155.00
+          }
+        }
+      ],
+      "TotalAmt": 6200.00,
+      "DueDate": "2024-02-14"
+    }
+  ],
+  "shopify": [
+    {
+      "id": 450789469,
+      "order_number": 1001,
+      "email": "customer@example.com",
+      "total_price": "199.99",
+      "currency": "USD",
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled",
+      "line_items": [
+        {
+          "id": 866550311766,
+          "title": "Premium Widget",
+          "quantity": 2,
+          "price": "79.99",
+          "sku": "WIDGET-PREM-001"
+        }
+      ]
+    }
+  ],
+  "woocommerce": [
+    {
+      "id": 726,
+      "number": "726",
+      "status": "processing",
+      "currency": "USD",
+      "date_created": "2024-01-15T10:30:00",
+      "customer_id": 25,
+      "billing": {
+        "first_name": "Robert",
+        "last_name": "Johnson",
+        "email": "robert@johnson.com",
+        "phone": "(555) 123-4567"
+      },
+      "total": "125.50",
+      "line_items": [
+        {
+          "id": 315,
+          "name": "WordPress Plugin - Premium",
+          "quantity": 1,
+          "total": "99.00",
+          "sku": "WP-PLUGIN-PREM"
+        }
+      ]
+    }
+  ],
+  "square": [
+    {
+      "id": "KnL5UM8wmGXB0xOnw7lRRxZPa",
+      "location_id": "LZVZ3XK0K0QJ5",
+      "line_items": [
+        {
+          "name": "Premium Coffee Beans",
+          "quantity": "2",
+          "base_price_money": { "amount": 1599, "currency": "USD" },
+          "total_money": { "amount": 3198, "currency": "USD" }
+        }
+      ],
+      "total_money": { "amount": 3470, "currency": "USD" },
+      "created_at": "2024-01-15T18:30:00.000Z",
+      "state": "COMPLETED"
+    }
+  ],
+  "salesforce": [
+    {
+      "Id": "0063h000004TpGAAA0",
+      "OrderNumber": "00001001",
+      "Status": "Draft",
+      "EffectiveDate": "2024-01-15",
+      "AccountId": "0013h00000BmiUGAAZ",
+      "TotalAmount": 125000.00,
+      "OrderItems": [
+        {
+          "Product2Id": "01t3h000002EpveAAC",
+          "Quantity": 500,
+          "UnitPrice": 250.00,
+          "TotalPrice": 125000.00
+        }
+      ]
+    }
+  ],
+  "businesscentral": [
+    {
+      "id": "5d115c9c-44e3-ea11-bb43-000d3a2feca1",
+      "number": "108001",
+      "orderDate": "2024-01-15",
+      "customerNumber": "10000",
+      "customerName": "Adatum Corporation",
+      "currencyCode": "USD",
+      "status": "Open",
+      "salesOrderLines": [
+        {
+          "description": "Office Chair Professional",
+          "quantity": 10,
+          "unitPrice": 450.00,
+          "netAmount": 4500.00
+        }
+      ],
+      "totalAmountIncludingTax": 4882.50
+    }
+  ]
+}

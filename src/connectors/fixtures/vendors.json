@@ -1,0 +1,70 @@
+{
+  "squire": [
+    {
+      "id": "SQ_VEND_001",
+      "vendorName": "Office Supply Experts",
+      "contactPerson": "Sarah Johnson",
+      "vendorEmail": "sarah@officesupplyexperts.com",
+      "businessPhone": "555-111-0001",
+      "businessAddress": "111 Supply Chain Ave, Denver, CO 80202",
+      "paymentTermsCode": "NET30",
+      "vendorCategory": "Office Equipment",
+      "approvalStatus": "Approved",
+      "federalTaxId": "12-3456789",
+      "vendorWebsite": "officesupplyexperts.com",
+      "qualityRating": 4.8,
+      "onboardingDate": "2022-11-05",
+      "lastEvaluation": "2024-01-01T00:00:00Z",
+      "squireVendorCode": "SV_001"
+    },
+    {
+      "id": "SQ_VEND_002",
+      "vendorName": "Tech Components Direct",
+      "contactPerson": "Michael Chen",
+      "vendorEmail": "michael@techcomponents.com",
+      "businessPhone": "555-222-0002",
+      "businessAddress": "222 Component Way, Phoenix, AZ 85001",
+      "paymentTermsCode": "NET15",
+      "vendorCategory": "Technology Hardware",
+      "approvalStatus": "Approved",
+      "federalTaxId": "98-7654321",
+      "vendorWebsite": "techcomponents.com",
+      "qualityRating": 4.6,
+      "onboardingDate": "2023-01-20",
+      "lastEvaluation": "2024-01-01T00:00:00Z",
+      "squireVendorCode": "SV_002"
+    }
+  ],
+  "suiteCentral": [
+    {
+      "id": "VEND_001",
+      "name": "Superior Supplies Co",
+      "email": "vendor@superiorsupplies.com",
+      "phone": "+1-555-1111",
+      "address": "111 Warehouse Road, Denver, CO 80202",
+      "paymentTerms": "Net 30",
+      "category": "Office Supplies",
+      "status": "Approved",
+      "taxId": "12-3456789",
+      "website": "https://superiorsupplies.com",
+      "performanceRating": 4.8,
+      "createdDate": "2022-11-05T00:00:00Z",
+      "lastModified": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "VEND_002",
+      "name": "TechPart Distributors",
+      "email": "sales@techpart.com",
+      "phone": "+1-555-2222",
+      "address": "222 Distribution Center, Phoenix, AZ 85001",
+      "paymentTerms": "Net 15",
+      "category": "Technology Components",
+      "status": "Approved",
+      "taxId": "98-7654321",
+      "website": "https://techpart.com",
+      "performanceRating": 4.6,
+      "createdDate": "2023-01-20T00:00:00Z",
+      "lastModified": "2024-01-01T00:00:00Z"
+    }
+  ]
+}

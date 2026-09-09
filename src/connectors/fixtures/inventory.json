@@ -1,0 +1,348 @@
+{
+  "squire": [
+    {
+      "id": "SQ_INV_ITEM_001",
+      "sku": "WIDGET-A100",
+      "productName": "Industrial Widget Type A",
+      "category": "Manufacturing Components",
+      "quantityOnHand": 1250,
+      "quantityAvailable": 1180,
+      "quantityReserved": 70,
+      "quantityOnOrder": 500,
+      "reorderPoint": 200,
+      "reorderQuantity": 500,
+      "unitCost": 85.00,
+      "unitPrice": 125.00,
+      "location": "Warehouse A - Aisle 3",
+      "binLocation": "A3-15-C",
+      "lastRestockDate": "2024-01-10T14:30:00Z",
+      "nextRestockDate": "2024-02-15T00:00:00Z",
+      "supplierName": "Industrial Parts Co",
+      "supplierId": "SUP_001"
+    },
+    {
+      "id": "SQ_INV_ITEM_002",
+      "sku": "SERVICE-INST",
+      "productName": "Installation Services",
+      "category": "Services",
+      "quantityOnHand": 0,
+      "quantityAvailable": 0,
+      "quantityReserved": 0,
+      "quantityOnOrder": 0,
+      "reorderPoint": 0,
+      "reorderQuantity": 0,
+      "unitCost": 100.00,
+      "unitPrice": 150.00,
+      "location": "N/A - Service Item",
+      "binLocation": null,
+      "lastRestockDate": null,
+      "nextRestockDate": null,
+      "supplierName": null,
+      "supplierId": null
+    }
+  ],
+  "quickbooks": [
+    {
+      "Id": "5001",
+      "Name": "Premium Office Chair",
+      "Sku": "CHAIR-PRO-001",
+      "Type": "Inventory",
+      "QtyOnHand": 45,
+      "ReorderPoint": 10,
+      "QuantityOnSalesOrder": 8,
+      "QuantityOnPurchaseOrder": 20,
+      "AssetAccountRef": {
+        "value": "1200",
+        "name": "Inventory Asset"
+      },
+      "IncomeAccountRef": {
+        "value": "4010",
+        "name": "Sales - Product Income"
+      },
+      "ExpenseAccountRef": {
+        "value": "5010",
+        "name": "Cost of Goods Sold"
+      },
+      "PurchaseCost": 275.00,
+      "UnitPrice": 450.00,
+      "Active": true,
+      "TrackQtyOnHand": true,
+      "InvStartDate": "2023-01-01"
+    },
+    {
+      "Id": "5002",
+      "Name": "Standing Desk Electric",
+      "Sku": "DESK-STAND-001",
+      "Type": "Inventory",
+      "QtyOnHand": 12,
+      "ReorderPoint": 5,
+      "QuantityOnSalesOrder": 3,
+      "QuantityOnPurchaseOrder": 10,
+      "AssetAccountRef": {
+        "value": "1200",
+        "name": "Inventory Asset"
+      },
+      "IncomeAccountRef": {
+        "value": "4010",
+        "name": "Sales - Product Income"
+      },
+      "ExpenseAccountRef": {
+        "value": "5010",
+        "name": "Cost of Goods Sold"
+      },
+      "PurchaseCost": 550.00,
+      "UnitPrice": 850.00,
+      "Active": true,
+      "TrackQtyOnHand": true,
+      "InvStartDate": "2023-06-15"
+    }
+  ],
+  "shopify": [
+    {
+      "id": 632910392,
+      "product_id": 788032119,
+      "title": "Premium Widget",
+      "sku": "WIDGET-PREM-001",
+      "inventory_quantity": 250,
+      "old_inventory_quantity": 250,
+      "inventory_management": "shopify",
+      "inventory_policy": "deny",
+      "price": "79.99",
+      "compare_at_price": "99.99",
+      "weight": 2.5,
+      "weight_unit": "lb",
+      "requires_shipping": true,
+      "fulfillment_service": "manual",
+      "inventory_item_id": 49148385,
+      "tracked": true,
+      "created_at": "2023-05-15T10:30:00Z",
+      "updated_at": "2024-01-18T14:22:00Z"
+    },
+    {
+      "id": 632910393,
+      "product_id": 788032120,
+      "title": "Deluxe Widget Bundle",
+      "sku": "WIDGET-DLX-BUNDLE",
+      "inventory_quantity": 89,
+      "old_inventory_quantity": 95,
+      "inventory_management": "shopify",
+      "inventory_policy": "continue",
+      "price": "149.99",
+      "compare_at_price": "199.99",
+      "weight": 5.0,
+      "weight_unit": "lb",
+      "requires_shipping": true,
+      "fulfillment_service": "manual",
+      "inventory_item_id": 49148386,
+      "tracked": true,
+      "created_at": "2023-08-20T11:00:00Z",
+      "updated_at": "2024-01-19T09:15:00Z"
+    }
+  ],
+  "woocommerce": [
+    {
+      "id": 1501,
+      "name": "WordPress Plugin - Premium",
+      "sku": "WP-PLUGIN-PREM",
+      "type": "simple",
+      "status": "publish",
+      "manage_stock": true,
+      "stock_quantity": 9999,
+      "stock_status": "instock",
+      "backorders": "no",
+      "backorders_allowed": false,
+      "backordered": false,
+      "low_stock_amount": 100,
+      "price": "99.00",
+      "regular_price": "99.00",
+      "sale_price": "",
+      "weight": "0",
+      "dimensions": {
+        "length": "",
+        "width": "",
+        "height": ""
+      },
+      "virtual": true,
+      "downloadable": true,
+      "download_limit": -1,
+      "download_expiry": -1
+    },
+    {
+      "id": 1502,
+      "name": "WooCommerce Extension - Pro",
+      "sku": "WC-EXT-PRO",
+      "type": "simple",
+      "status": "publish",
+      "manage_stock": true,
+      "stock_quantity": 9999,
+      "stock_status": "instock",
+      "backorders": "notify",
+      "backorders_allowed": true,
+      "backordered": false,
+      "low_stock_amount": 50,
+      "price": "149.00",
+      "regular_price": "179.00",
+      "sale_price": "149.00",
+      "weight": "0",
+      "dimensions": {
+        "length": "",
+        "width": "",
+        "height": ""
+      },
+      "virtual": true,
+      "downloadable": true,
+      "download_limit": 5,
+      "download_expiry": 365
+    }
+  ],
+  "netsuite": [
+    {
+      "internalId": "3001",
+      "itemId": "CLOUD-STORAGE-PREM",
+      "displayName": "Cloud Storage - Premium",
+      "type": {
+        "internalId": "InvtPart",
+        "name": "Inventory Item"
+      },
+      "quantityOnHand": 1000,
+      "quantityAvailable": 920,
+      "quantityOnOrder": 500,
+      "quantityCommitted": 80,
+      "reorderPoint": 200,
+      "preferredStockLevel": 1500,
+      "cost": 250.00,
+      "averageCost": 248.50,
+      "lastPurchasePrice": 255.00,
+      "purchaseDescription": "Premium cloud storage units",
+      "saleDescription": "Premium cloud storage subscription units",
+      "salesPrice": 350.00,
+      "preferredVendor": {
+        "internalId": "456",
+        "name": "Cloud Services Inc"
+      },
+      "location": [
+        {
+          "locationId": "1",
+          "locationName": "Main Warehouse",
+          "quantityOnHand": 750,
+          "quantityAvailable": 690,
+          "quantityOnOrder": 300
+        },
+        {
+          "locationId": "2",
+          "locationName": "East Coast DC",
+          "quantityOnHand": 250,
+          "quantityAvailable": 230,
+          "quantityOnOrder": 200
+        }
+      ],
+      "isInactive": false
+    }
+  ],
+  "businesscentral": [
+    {
+      "id": "9a447d9d-66g5-fb33-dd65-111e4b4gfdb3",
+      "number": "CHAIR-PRO-001",
+      "displayName": "Office Chair Professional",
+      "type": "Inventory",
+      "inventory": 85.00,
+      "unitCost": 275.00,
+      "unitPrice": 450.00,
+      "taxable": true,
+      "blocked": false,
+      "baseUnitOfMeasure": {
+        "code": "PCS",
+        "displayName": "Piece"
+      },
+      "itemCategory": {
+        "id": "FURNITURE",
+        "code": "FURNITURE",
+        "displayName": "Office Furniture"
+      },
+      "inventoryPostingGroup": {
+        "id": "FINISHED",
+        "code": "FINISHED"
+      },
+      "lastDateModified": "2024-01-15T10:30:00Z",
+      "netWeight": 15.5,
+      "replenishmentSystem": "Purchase",
+      "reorderPoint": 20.00,
+      "reorderQuantity": 50.00,
+      "safetyStockQuantity": 10.00,
+      "leadTimeCalculation": "7D"
+    },
+    {
+      "id": "9a447d9d-66g5-fb33-dd65-111e4b4gfdb4",
+      "number": "DESK-STAND-001",
+      "displayName": "Standing Desk Electric",
+      "type": "Inventory",
+      "inventory": 28.00,
+      "unitCost": 550.00,
+      "unitPrice": 850.00,
+      "taxable": true,
+      "blocked": false,
+      "baseUnitOfMeasure": {
+        "code": "PCS",
+        "displayName": "Piece"
+      },
+      "itemCategory": {
+        "id": "FURNITURE",
+        "code": "FURNITURE",
+        "displayName": "Office Furniture"
+      },
+      "inventoryPostingGroup": {
+        "id": "FINISHED",
+        "code": "FINISHED"
+      },
+      "lastDateModified": "2024-01-18T14:20:00Z",
+      "netWeight": 45.0,
+      "replenishmentSystem": "Purchase",
+      "reorderPoint": 10.00,
+      "reorderQuantity": 25.00,
+      "safetyStockQuantity": 5.00,
+      "leadTimeCalculation": "14D"
+    }
+  ],
+  "square": [
+    {
+      "id": "AAAA1111BBBB2222",
+      "type": "ITEM_VARIATION",
+      "item_variation_data": {
+        "item_id": "ZZZZ9999YYYY8888",
+        "name": "Premium Coffee Beans - Regular",
+        "sku": "COFFEE-PREM-REG",
+        "pricing_type": "FIXED_PRICING",
+        "price_money": {
+          "amount": 1599,
+          "currency": "USD"
+        },
+        "track_inventory": true,
+        "inventory_alert_type": "LOW_QUANTITY",
+        "inventory_alert_threshold": 20
+      },
+      "present_at_location_ids": ["LZVZ3XK0K0QJ5"],
+      "version": 1674234567000,
+      "updated_at": "2024-01-20T15:30:00.000Z"
+    },
+    {
+      "id": "CCCC3333DDDD4444",
+      "type": "ITEM_VARIATION",
+      "item_variation_data": {
+        "item_id": "XXXX7777WWWW6666",
+        "name": "Artisan Espresso Blend",
+        "sku": "COFFEE-ESP-ART",
+        "pricing_type": "FIXED_PRICING",
+        "price_money": {
+          "amount": 1899,
+          "currency": "USD"
+        },
+        "track_inventory": true,
+        "inventory_alert_type": "LOW_QUANTITY",
+        "inventory_alert_threshold": 15
+      },
+      "present_at_location_ids": ["LZVZ3XK0K0QJ5"],
+      "version": 1674234890000,
+      "updated_at": "2024-01-19T11:45:00.000Z"
+    }
+  ]
+}

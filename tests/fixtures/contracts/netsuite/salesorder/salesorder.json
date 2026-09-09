@@ -1,0 +1,44 @@
+{
+  "links": [
+    {
+      "rel": "self",
+      "href": "https://1234567-sb1.suitetalk.api.netsuite.com/services/rest/record/v1/salesorder/4401"
+    }
+  ],
+  "id": "4401",
+  "tranId": "SO-1001",
+  "externalId": "shopify:#1001",
+  "tranDate": "2026-08-15",
+  "entity": {
+    "links": [],
+    "id": "2201",
+    "refName": "buyer-501@example.test"
+  },
+  "currency": {
+    "id": "1",
+    "refName": "USD"
+  },
+  "subtotal": 105,
+  "taxTotal": 8.75,
+  "shippingCost": 5,
+  "total": 118.75,
+  "orderStatus": {
+    "id": "B",
+    "refName": "Pending Fulfillment"
+  },
+  "item": {
+    "links": [],
+    "items": [
+      {
+        "line": 1,
+        "item": {
+          "id": "3301",
+          "refName": "SKU-RED-M"
+        },
+        "quantity": 3,
+        "rate": 35,
+        "amount": 105
+      }
+    ]
+  }
+}

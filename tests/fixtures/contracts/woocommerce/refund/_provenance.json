@@ -1,0 +1,10 @@
+{
+  "vendor": "woocommerce",
+  "entity": "refund",
+  "sourceUrl": "https://raw.githubusercontent.com/woocommerce/woocommerce/11.0.1/plugins/woocommerce/includes/rest-api/Controllers/Version3/class-wc-rest-order-refunds-controller.php",
+  "docVersion": "wc/v3 (11.0.1)",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "4b902a03ece09973ecd938d4d801dd22c728f4078cddab06823c99039f6f6892",
+  "notes": "Synthetic selected fields. Official 11.0.1 controller declares wc/v3 and inherits the Version2 schema; the legacy v3.html docs are not used. Supplemental field reference: https://raw.githubusercontent.com/woocommerce/woocommerce/11.0.1/plugins/woocommerce/includes/rest-api/Controllers/Version2/class-wc-rest-order-refunds-v2-controller.php; SHA-256 f1d29d4973ca68c876f2699702af6f150cdd9eafef27afd0143094749ce747b6. Separate refund example for a later state of the paid order; order.json remains the pre-refund state."
+}

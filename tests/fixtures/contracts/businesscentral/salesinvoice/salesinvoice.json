@@ -1,0 +1,39 @@
+{
+  "@odata.etag": "W/\"synthetic-1\"",
+  "id": "00000000-0000-4000-8000-000000004501",
+  "number": "INV-1001",
+  "customerId": "00000000-0000-4000-8000-000000000501",
+  "customerNumber": "CUST-501",
+  "currencyCode": "USD",
+  "totalAmountExcludingTax": 110,
+  "totalTaxAmount": 8.75,
+  "totalAmountIncludingTax": 118.75,
+  "salesInvoiceLines": [
+    {
+      "id": "00000000-0000-4000-8000-000000009001",
+      "sequence": 10000,
+      "lineType": "Item",
+      "lineObjectNumber": "ITEM-RED-M",
+      "description": "SKU-RED-M",
+      "quantity": 3,
+      "unitPrice": 35,
+      "amountExcludingTax": 105,
+      "taxPercent": 8.33333,
+      "totalTaxAmount": 8.75,
+      "amountIncludingTax": 113.75
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000009002",
+      "sequence": 20000,
+      "lineType": "Account",
+      "lineObjectNumber": "SHIP",
+      "description": "Shipping",
+      "quantity": 1,
+      "unitPrice": 5,
+      "amountExcludingTax": 5,
+      "taxPercent": 0,
+      "totalTaxAmount": 0,
+      "amountIncludingTax": 5
+    }
+  ]
+}

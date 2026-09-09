@@ -1,0 +1,134 @@
+[
+  {
+    "orderKey": "#1001",
+    "type": "missing_in_target"
+  },
+  {
+    "orderKey": "#1002",
+    "type": "duplicate_key"
+  },
+  {
+    "orderKey": "#1003",
+    "type": "sku_mismatch"
+  },
+  {
+    "orderKey": "#1004",
+    "type": "customer_mismatch"
+  },
+  {
+    "orderKey": "#1005",
+    "type": "tax_mismatch"
+  },
+  {
+    "orderKey": "#1005",
+    "type": "amount_mismatch"
+  },
+  {
+    "orderKey": "#1006",
+    "type": "currency_mismatch"
+  },
+  {
+    "orderKey": "#1007",
+    "type": "fulfillment_mismatch"
+  },
+  {
+    "orderKey": "#1008",
+    "type": "refund_mismatch"
+  },
+  {
+    "orderKey": "#1008",
+    "type": "amount_mismatch"
+  },
+  {
+    "orderKey": "#1009",
+    "type": "amount_mismatch"
+  },
+  {
+    "orderKey": "#1010",
+    "type": "missing_payout"
+  },
+  {
+    "orderKey": "#1012",
+    "type": "missing_payout"
+  },
+  {
+    "orderKey": "#1013",
+    "type": "sku_mismatch"
+  },
+  {
+    "orderKey": "#1025",
+    "type": "customer_mismatch"
+  },
+  {
+    "orderKey": "#1039",
+    "type": "fulfillment_mismatch"
+  },
+  {
+    "orderKey": "#1042",
+    "type": "missing_payout"
+  },
+  {
+    "orderKey": "#1061",
+    "type": "duplicate_key"
+  },
+  {
+    "orderKey": "#1063",
+    "type": "fulfillment_mismatch"
+  },
+  {
+    "orderKey": "#1073",
+    "type": "refund_mismatch"
+  },
+  {
+    "orderKey": "#1073",
+    "type": "amount_mismatch"
+  },
+  {
+    "orderKey": "#1091",
+    "type": "duplicate_key"
+  },
+  {
+    "orderKey": "#1123",
+    "type": "refund_mismatch"
+  },
+  {
+    "orderKey": "#1123",
+    "type": "amount_mismatch"
+  },
+  {
+    "orderKey": "#1126",
+    "type": "currency_mismatch"
+  },
+  {
+    "orderKey": "#1134",
+    "type": "currency_mismatch"
+  },
+  {
+    "orderKey": "#1149",
+    "type": "missing_payout"
+  },
+  {
+    "orderKey": "#1160",
+    "type": "currency_mismatch"
+  },
+  {
+    "orderKey": "#1164",
+    "type": "missing_payout"
+  },
+  {
+    "orderKey": "#1172",
+    "type": "fulfillment_mismatch"
+  },
+  {
+    "orderKey": "#1174",
+    "type": "tax_mismatch"
+  },
+  {
+    "orderKey": "#1174",
+    "type": "amount_mismatch"
+  },
+  {
+    "orderKey": "#1189",
+    "type": "fulfillment_mismatch"
+  }
+]

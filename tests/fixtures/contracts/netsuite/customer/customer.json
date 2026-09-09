@@ -1,0 +1,13 @@
+{
+  "links": [
+    {
+      "rel": "self",
+      "href": "https://1234567-sb1.suitetalk.api.netsuite.com/services/rest/record/v1/customer/2201"
+    }
+  ],
+  "id": "2201",
+  "entityId": "CUST-501",
+  "email": "buyer-501@example.test",
+  "companyName": "Example Buyer",
+  "isPerson": false
+}

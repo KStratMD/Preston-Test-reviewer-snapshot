@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync AI Error Assist — Operator Queue | Integration Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/erp-theme.css">
+    <link rel="stylesheet" href="/css/integration-hub-shell.css">
+    <script src="/js/platform-detector.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .sea-confidence-bar {
+            height: 6px;
+            background: var(--erp-bg-secondary, #e5e7eb);
+            border-radius: 3px;
+            overflow: hidden;
+            width: 80px;
+        }
+        .sea-confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #10b981 100%);
+            transition: width 0.3s;
+        }
+        .sea-trace-step {
+            border-left: 3px solid var(--erp-accent, #3b82f6);
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--erp-bg-info, #eff6ff);
+        }
+        .sea-trace-step-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+        .sea-trace-step-evidence {
+            font-size: 0.85rem;
+            color: var(--erp-text-secondary, #4b5563);
+            font-family: monospace;
+        }
+        .sea-prompt-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.4;
+            overflow-x: auto;
+        }
+        .sea-redacted {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.15);
+            padding: 0 0.25rem;
+            border-radius: 2px;
+        }
+        .sea-audit-event {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--erp-border, #e5e7eb);
+        }
+        .sea-audit-icon {
+            width: 1.5rem;
+            text-align: center;
+            color: var(--erp-success, #10b981);
+        }
+    </style>
+</head>
+
+<body class="erp-body ih-shell" data-shell-section="build" x-data="syncErrorAssistDashboard()" x-init="initialize()">
+
+    <!-- Integration Hub top module rail (inline layout: this page does not load Tailwind) -->
+    <header class="ih-shell-top-rail">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2rem;">
+            <nav style="display:flex;align-items:center;gap:0.5rem;" aria-label="Primary modules">
+                <a class="ih-shell-top-tab" href="/" data-shell-tab="build"><i class="fas fa-tools"></i>Build</a>
+                <a class="ih-shell-top-tab" href="/review-hub.html" data-shell-tab="review"><i class="fas fa-shield-alt"></i>Review</a>
+                <a class="ih-shell-top-tab" href="/squire-v2-media-demo/index.html" data-shell-tab="demo"><i class="fas fa-play"></i>Demo</a>
+                <a class="ih-shell-top-tab" href="/wiki/" data-shell-tab="wiki"><i class="fas fa-book"></i>Wiki</a>
+                <a class="ih-shell-top-tab" href="/docs/INDEX.md" data-shell-tab="docs"><i class="fas fa-file-alt"></i>Docs</a>
+            </nav>
+            <a href="/" style="border:1px solid #b9d8ff;border-radius:0.5rem;padding:0.5rem 1rem;color:#1d4ed8;font-weight:700;text-decoration:none;background:#fff;">
+                Back to Hub
+            </a>
+        </div>
+    </header>
+
+    <header class="erp-header">
+        <div class="erp-flex erp-flex-center erp-gap-md">
+            <button onclick="history.length > 1 ? history.back() : window.location.href = '/'" class="erp-btn erp-btn-ghost" style="color: var(--erp-header-text-muted);">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div>
+                <h1 class="erp-header-title">
+                    <i class="fas fa-shield-halved"></i> Sync AI Error Assist
+                </h1>
+                <p class="erp-header-subtitle">Operator Approval Queue — NetSuite Sync Errors</p>
+            </div>
+            <span class="erp-header-badge">BETA</span>
+        </div>
+        <div class="erp-header-actions">
+            <span class="erp-badge erp-badge-info" title="This page shows static demo data. The live operator queue is gated behind embedded-session authentication and not reachable from a static demo page.">
+                <i class="fas fa-flask"></i> DEMO DATA
+            </span>
+            <button class="erp-btn erp-btn-secondary" @click="refreshData()" :disabled="loading">
+                <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
+                Reset
+            </button>
+        </div>
+    </header>
+
+    <div class="erp-content">
+
+        <!-- Wave 2 framing banner -->
+        <div class="erp-card erp-mb-lg" style="border-left: 4px solid var(--erp-accent); background: var(--erp-bg-info, #eff6ff);">
+            <div class="erp-flex erp-gap-md" style="align-items: flex-start;">
+                <i class="fas fa-quote-left" style="color: var(--erp-accent); font-size: 1.25rem; margin-top: 0.25rem;"></i>
+                <div>
+                    <div style="font-style: italic; margin-bottom: 0.5rem; font-size: 1.05rem;">
+                        Task 17 turns NetSuite sync errors from "a backlog someone has to read" into "a queue someone has to approve."
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--erp-text-secondary);">
+                        Webhook-ingested. AI-diagnosed. DLP-redacted before inference. Reasoning-traced. Cost-tracked. Audit-logged. Operator approval persists in a durable state machine — no in-memory queues. <strong>This page renders static demo data only</strong> — the live operator queue is at <code>GET /api/sync-error-assist/suggestions</code> behind embedded-session authentication. Full Wave 2 catalog: <a href="/Squire-Executive-Package-v2/29-WHAT-CHANGED-MAY-2026.md" target="_blank" rel="noopener noreferrer">29-WHAT-CHANGED-MAY-2026.md</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="erp-card erp-mb-lg" style="border-left: 4px solid var(--erp-success, #10b981);">
+            <div class="erp-flex erp-flex-between erp-gap-md" style="align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h2 class="erp-section-title" style="margin-bottom: 0.35rem;"><i class="fas fa-video"></i> Watch the Sync Error AI Assist proof clip</h2>
+                    <p style="margin: 0; color: var(--erp-text-secondary); font-size: 0.9rem;">
+                        The 4:39 video explains the Enhance path wedge: manual sync-error triage, AI diagnosis, DLP/reasoning trace, operator approval, and audit evidence.
+                    </p>
+                </div>
+                <a class="erp-btn erp-btn-primary" href="/squire-v2-media-demo/watch/videos/player.html?video=sync-error-assist" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-play"></i>
+                    Open Video
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI strip (illustrative — derived from the four demo records) -->
+        <div class="erp-grid erp-grid-4 erp-mb-lg">
+            <div class="erp-card">
+                <div class="erp-kpi">
+                    <div class="erp-kpi-value" style="color: var(--erp-accent);" x-text="stats.pendingCount">0</div>
+                    <div class="erp-kpi-label">Pending Approval</div>
+                    <div class="erp-kpi-trend" style="color: var(--erp-text-muted);">awaiting operator</div>
+                </div>
+            </div>
+            <div class="erp-card">
+                <div class="erp-kpi">
+                    <div class="erp-kpi-value erp-text-success" x-text="(stats.avgConfidence * 100).toFixed(0) + '%'">0%</div>
+                    <div class="erp-kpi-label">Avg AI Confidence</div>
+                    <div class="erp-kpi-trend up"><i class="fas fa-arrow-up"></i> across demo queue</div>
+                </div>
+            </div>
+            <div class="erp-card">
+                <div class="erp-kpi">
+                    <div class="erp-kpi-value erp-text-info" x-text="stats.resolvedToday">0</div>
+                    <div class="erp-kpi-label">Resolved Today</div>
+                    <div class="erp-kpi-trend" style="color: var(--erp-text-muted);">illustrative — sample value</div>
+                </div>
+            </div>
+            <div class="erp-card">
+                <div class="erp-kpi">
+                    <div class="erp-kpi-value erp-text-warning" x-text="'$' + stats.weekCost.toFixed(2)">$0.00</div>
+                    <div class="erp-kpi-label">AI Cost This Week</div>
+                    <div class="erp-kpi-trend" style="color: var(--erp-text-muted);">illustrative — sample value</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading state -->
+        <div x-show="loading" class="erp-card" style="text-align: center; padding: 3rem;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--erp-accent);"></i>
+            <p style="margin-top: 1rem;">Loading sync-error queue...</p>
+        </div>
+
+        <!-- Queue + detail panel -->
+        <div x-show="!loading" x-cloak>
+            <div class="erp-grid" style="grid-template-columns: 1.4fr 1fr; gap: 1rem;">
+
+                <!-- Queue table -->
+                <div class="erp-card">
+                    <h3 class="erp-section-title"><i class="fas fa-inbox"></i> Approval Queue</h3>
+                    <template x-if="queue.length === 0">
+                        <p style="color: var(--erp-text-muted);">No pending sync errors.</p>
+                    </template>
+                    <template x-for="record in queue" :key="record.id">
+                        <div class="erp-list-item" :class="{ 'sea-selected': selectedId === record.id }" @click="selectRecord(record.id)" style="cursor: pointer; border-left: 3px solid transparent;" :style="selectedId === record.id ? 'border-left-color: var(--erp-accent); background: var(--erp-bg-info, #eff6ff);' : ''">
+                            <div class="erp-list-item-content" style="flex: 1;">
+                                <div class="erp-flex erp-flex-between" style="margin-bottom: 0.25rem;">
+                                    <strong x-text="record.netsuiteRecordType + ' #' + record.netsuiteId"></strong>
+                                    <span class="erp-badge" :class="priorityBadgeClass(record.priority)" x-text="record.priority"></span>
+                                </div>
+                                <div style="font-size: 0.85rem; color: var(--erp-text-secondary); margin-bottom: 0.35rem;" x-text="record.aiSuggestion.summary"></div>
+                                <div class="erp-flex erp-gap-md" style="font-size: 0.8rem;">
+                                    <div class="erp-flex erp-flex-center" style="gap: 0.4rem;">
+                                        <div class="sea-confidence-bar"><div class="sea-confidence-fill" :style="'width: ' + (record.aiSuggestion.confidence * 100) + '%'"></div></div>
+                                        <span x-text="(record.aiSuggestion.confidence * 100).toFixed(0) + '%'"></span>
+                                    </div>
+                                    <span style="color: var(--erp-text-muted);"><i class="fas fa-clock"></i> <span x-text="record.ageMinutes + ' min ago'"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Detail panel — always rendered so the placeholder is visible when the queue is empty or nothing is selected -->
+                <div class="erp-card">
+                    <h3 class="erp-section-title">
+                        <i class="fas fa-microscope"></i> <span x-text="selectedRecord ? 'Diagnosis · ' + selectedRecord.netsuiteRecordType + ' #' + selectedRecord.netsuiteId : 'Diagnosis'"></span>
+                    </h3>
+
+                    <template x-if="selectedRecord">
+                        <div>
+                            <!-- Original error -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; font-size: 0.85rem; color: var(--erp-text-muted); margin-bottom: 0.25rem;">NETSUITE ERROR</div>
+                                <code style="background: #fee2e2; color: #991b1b; padding: 0.5rem; display: block; border-radius: 3px; font-size: 0.85rem;" x-text="selectedRecord.errorMessage"></code>
+                            </div>
+
+                            <!-- AI proposed fix -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; font-size: 0.85rem; color: var(--erp-text-muted); margin-bottom: 0.25rem;">AI PROPOSED FIX <span style="color: var(--erp-accent);" x-text="'· ' + (selectedRecord.aiSuggestion.confidence * 100).toFixed(0) + '% confidence'"></span></div>
+                                <div style="background: var(--erp-bg-success, #d1fae5); padding: 0.5rem; border-radius: 3px; font-size: 0.9rem;" x-text="selectedRecord.aiSuggestion.proposedFix"></div>
+                            </div>
+
+                            <!-- Reasoning trace -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; font-size: 0.85rem; color: var(--erp-text-muted); margin-bottom: 0.5rem;">REASONING TRACE (persisted)</div>
+                                <template x-for="step in selectedRecord.reasoningTrace" :key="step.label">
+                                    <div class="sea-trace-step">
+                                        <div class="sea-trace-step-label" x-text="step.label"></div>
+                                        <div class="sea-trace-step-evidence" x-text="step.evidence"></div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- DLP-redacted prompt — rendered from a parts array via x-text (no x-html, no XSS surface) -->
+                            <details style="margin-bottom: 1rem;">
+                                <summary style="font-weight: 600; font-size: 0.85rem; color: var(--erp-text-muted); cursor: pointer;">DLP-REDACTED PROMPT (sent to provider) <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i></summary>
+                                <div class="sea-prompt-block" style="margin-top: 0.5rem;"><template x-for="(part, idx) in selectedRecord.redactedPrompt" :key="idx"><span :class="part.redacted ? 'sea-redacted' : ''" x-text="part.text"></span></template></div>
+                            </details>
+
+                            <!-- Cost + audit -->
+                            <div class="erp-grid erp-grid-2" style="gap: 0.5rem; margin-bottom: 1rem;">
+                                <div style="background: var(--erp-bg-warning, #fef3c7); padding: 0.5rem; border-radius: 3px;">
+                                    <div style="font-size: 0.75rem; color: var(--erp-text-muted);">AI COST</div>
+                                    <div style="font-weight: 600;" x-text="'$' + selectedRecord.cost.toFixed(4) + ' · ' + selectedRecord.provider"></div>
+                                </div>
+                                <div style="background: var(--erp-bg-secondary, #f3f4f6); padding: 0.5rem; border-radius: 3px;">
+                                    <div style="font-size: 0.75rem; color: var(--erp-text-muted);">CORRELATION ID</div>
+                                    <div style="font-weight: 600; font-family: monospace; font-size: 0.75rem;" x-text="selectedRecord.correlationId"></div>
+                                </div>
+                            </div>
+
+                            <!-- Audit timeline -->
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; font-size: 0.85rem; color: var(--erp-text-muted); margin-bottom: 0.25rem;">AUDIT TIMELINE</div>
+                                <template x-for="event in selectedRecord.auditTimeline" :key="event.action">
+                                    <div class="sea-audit-event">
+                                        <span class="sea-audit-icon"><i class="fas fa-check-circle"></i></span>
+                                        <span style="flex: 1;" x-text="event.action"></span>
+                                        <span style="color: var(--erp-text-muted); font-size: 0.75rem;" x-text="event.tenantId + ' · ' + event.timestamp"></span>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Operator actions -->
+                            <div class="erp-flex erp-gap-md">
+                                <button class="erp-btn erp-btn-success" @click="acceptRecord(selectedRecord.id)" :disabled="busy">
+                                    <i class="fas fa-check"></i> Approve & write back
+                                </button>
+                                <button class="erp-btn erp-btn-secondary" @click="rejectRecord(selectedRecord.id)" :disabled="busy">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                                <button class="erp-btn erp-btn-ghost" @click="escalateRecord(selectedRecord.id)" :disabled="busy">
+                                    <i class="fas fa-flag"></i> Escalate
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+
+                    <p x-show="!selectedRecord" style="color: var(--erp-text-muted);">Select a record from the queue to view AI diagnosis, reasoning trace, and audit timeline.</p>
+                </div>
+            </div>
+
+            <!-- Footer references -->
+            <div class="erp-card erp-mt-lg" style="background: var(--erp-bg-secondary, #f9fafb); font-size: 0.85rem;">
+                <strong>Verify any claim on this page:</strong>
+                <ul style="margin: 0.5rem 0 0 1rem;">
+                    <li>Source-of-truth proof card: <a href="https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/review/proof-cards/sync-error-assist.md" target="_blank" rel="noopener noreferrer">docs/review/proof-cards/sync-error-assist.md</a></li>
+                    <li>SuiteScript runbook for production NetSuite instrumentation: <a href="https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/operations/SYNC-ERROR-ASSIST-WEBHOOK-SUITESCRIPT.md" target="_blank" rel="noopener noreferrer">SYNC-ERROR-ASSIST-WEBHOOK-SUITESCRIPT.md</a></li>
+                    <li>Wave 2 catalog: <a href="/Squire-Executive-Package-v2/29-WHAT-CHANGED-MAY-2026.md" target="_blank" rel="noopener noreferrer">29-WHAT-CHANGED-MAY-2026.md</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function syncErrorAssistDashboard() {
+            return {
+                loading: true,
+                busy: false,
+                queue: [],
+                selectedId: null,
+                stats: { pendingCount: 0, avgConfidence: 0, resolvedToday: 0, weekCost: 0 },
+
+                get selectedRecord() {
+                    return this.queue.find(r => r.id === this.selectedId) || null;
+                },
+
+                initialize() {
+                    console.log('[SyncErrorAssist] Initializing demo operator queue (static data only — no API calls)');
+                    this.loadDemoData();
+                    this.loading = false;
+                    if (this.queue.length > 0 && !this.selectedId) {
+                        this.selectedId = this.queue[0].id;
+                    }
+                },
+
+                loadDemoData() {
+                    this.queue = [
+                        {
+                            id: 'rec-001',
+                            netsuiteRecordType: 'salesorder',
+                            netsuiteId: 'SO-48291',
+                            priority: 'high',
+                            ageMinutes: 4,
+                            errorMessage: 'INVALID_TAX_CODE: Tax code "CA-SF" not found on subsidiary "US West"',
+                            aiSuggestion: {
+                                summary: 'Re-map tax code from "CA-SF" to "CA-SF-SUB02" on subsidiary US-West',
+                                proposedFix: 'Update salesorder line items where taxCode="CA-SF" → taxCode="CA-SF-SUB02". Subsidiary mapping was changed in NetSuite on May 8 but downstream integration kept stale code.',
+                                confidence: 0.92
+                            },
+                            reasoningTrace: [
+                                { label: '1. Identified error class', evidence: 'INVALID_TAX_CODE — known NetSuite UE error (code 16)' },
+                                { label: '2. Cross-referenced subsidiary catalog', evidence: 'Subsidiary "US West" → 14 active tax codes; "CA-SF" not in list; "CA-SF-SUB02" added 2026-05-08' },
+                                { label: '3. Matched canonical replacement', evidence: 'Edit distance + token similarity score 0.94 between "CA-SF" and "CA-SF-SUB02"' },
+                                { label: '4. Confidence weighting', evidence: '0.92 = 0.6 × class-match + 0.32 × replacement-similarity' }
+                            ],
+                            redactedPrompt: [
+                                { text: 'NetSuite sync error on ' },
+                                { text: 'salesorder #[REDACTED-PII:internalid]', redacted: true },
+                                { text: ':\n  errorCode: INVALID_TAX_CODE\n  errorMessage: Tax code "CA-SF" not found on subsidiary "US West"\n  customer: ' },
+                                { text: '[REDACTED-PII:name]', redacted: true },
+                                { text: '\n  amount: $48,291.00\n\nAvailable tax codes on subsidiary "US West":\n  CA-SF-SUB02, CA-LA-SUB02, CA-SD-SUB02, ...\n\nProposed fix?' }
+                            ],
+                            cost: 0.0034,
+                            provider: 'Claude Haiku 4.5',
+                            correlationId: 'corr-7af3...e9c1',
+                            auditTimeline: [
+                                { action: 'DLP scan completed', tenantId: 'squire-pilot-01', timestamp: '11:42:18' },
+                                { action: 'AI inference completed', tenantId: 'squire-pilot-01', timestamp: '11:42:19' },
+                                { action: 'Reasoning trace persisted', tenantId: 'squire-pilot-01', timestamp: '11:42:19' },
+                                { action: 'Suggestion → pending', tenantId: 'squire-pilot-01', timestamp: '11:42:19' }
+                            ]
+                        },
+                        {
+                            id: 'rec-002',
+                            netsuiteRecordType: 'invoice',
+                            netsuiteId: 'INV-9921',
+                            priority: 'medium',
+                            ageMinutes: 11,
+                            errorMessage: 'MISSING_REQUIRED_FIELD: department on invoice line 3',
+                            aiSuggestion: {
+                                summary: 'Auto-fill department "Engineering" based on item category + customer mapping',
+                                proposedFix: 'Set department="Engineering" on invoice line 3. Item "SVC-DEV-HRS-SR" maps unambiguously to dept Engineering for customer "Acme Corp" via 47 prior invoice precedents.',
+                                confidence: 0.88
+                            },
+                            reasoningTrace: [
+                                { label: '1. Identified missing field', evidence: 'NetSuite required field check: department not present on invoice line 3' },
+                                { label: '2. Item category lookup', evidence: 'Item "SVC-DEV-HRS-SR" → category "Professional Services / Engineering"' },
+                                { label: '3. Customer precedent', evidence: '47 prior invoices for customer "Acme Corp" with this item: 47 used dept Engineering (100%)' },
+                                { label: '4. Confidence weighting', evidence: '0.88 = 0.55 × item-category-match + 0.33 × customer-precedent' }
+                            ],
+                            redactedPrompt: [
+                                { text: 'NetSuite sync error on ' },
+                                { text: 'invoice #[REDACTED-PII:internalid]', redacted: true },
+                                { text: ':\n  errorCode: MISSING_REQUIRED_FIELD\n  field: department\n  line: 3\n  itemCode: SVC-DEV-HRS-SR\n  customer: ' },
+                                { text: '[REDACTED-PII:name]', redacted: true },
+                                { text: '\n\nDepartment options: Engineering, Sales, Marketing, Operations, Admin\n\nProposed fix?' }
+                            ],
+                            cost: 0.0028,
+                            provider: 'Claude Haiku 4.5',
+                            correlationId: 'corr-8b14...f2d0',
+                            auditTimeline: [
+                                { action: 'DLP scan completed', tenantId: 'squire-pilot-01', timestamp: '11:35:42' },
+                                { action: 'AI inference completed', tenantId: 'squire-pilot-01', timestamp: '11:35:43' },
+                                { action: 'Reasoning trace persisted', tenantId: 'squire-pilot-01', timestamp: '11:35:43' },
+                                { action: 'Suggestion → pending', tenantId: 'squire-pilot-01', timestamp: '11:35:43' }
+                            ]
+                        },
+                        {
+                            id: 'rec-003',
+                            netsuiteRecordType: 'customer',
+                            netsuiteId: 'CUST-3402',
+                            priority: 'low',
+                            ageMinutes: 22,
+                            errorMessage: 'DUPLICATE_RECORD: customer email already exists on internal ID 2891',
+                            aiSuggestion: {
+                                summary: 'Suggest merge into existing customer 2891 — same email, same legal name, address differs only in suite number',
+                                proposedFix: 'Merge new record CUST-3402 into existing 2891. Preserve newer address. Retain 2891 as canonical (older account, 14 active orders).',
+                                confidence: 0.78
+                            },
+                            reasoningTrace: [
+                                { label: '1. Detected duplicate signal', evidence: 'Email match: both records use "ap@northwind-ltd.com"' },
+                                { label: '2. Legal name comparison', evidence: 'Levenshtein distance 0 — exact match "Northwind Industries Ltd"' },
+                                { label: '3. Address comparison', evidence: 'Street/city/state/zip identical; only "Suite 410" → "Suite 415" differs' },
+                                { label: '4. Activity scoring', evidence: '2891: 14 active orders, last active 2026-05-12. New: 0 orders.' },
+                                { label: '5. Confidence weighting', evidence: '0.78 = 0.45 × email-match + 0.25 × name-match + 0.08 × addr-similarity. Lowered for human review due to address discrepancy.' }
+                            ],
+                            redactedPrompt: [
+                                { text: 'NetSuite sync error on ' },
+                                { text: 'customer #[REDACTED-PII:internalid]', redacted: true },
+                                { text: ':\n  errorCode: DUPLICATE_RECORD\n  conflictingId: 2891\n  email: ' },
+                                { text: '[REDACTED-PII:email]', redacted: true },
+                                { text: '\n  legalName: ' },
+                                { text: '[REDACTED-PII:name]', redacted: true },
+                                { text: '\n  address: ' },
+                                { text: '[REDACTED-PII:address]', redacted: true },
+                                { text: '\n\nExisting record 2891:\n  email: ' },
+                                { text: '[REDACTED-PII:email]', redacted: true },
+                                { text: ' (match)\n  legalName: ' },
+                                { text: '[REDACTED-PII:name]', redacted: true },
+                                { text: ' (match)\n  address: ' },
+                                { text: '[REDACTED-PII:address]', redacted: true },
+                                { text: ' (1 token difference)\n  activeOrders: 14\n\nProposed fix?' }
+                            ],
+                            cost: 0.0041,
+                            provider: 'Claude Haiku 4.5',
+                            correlationId: 'corr-9d77...c4e2',
+                            auditTimeline: [
+                                { action: 'DLP scan completed (6 fields redacted)', tenantId: 'squire-pilot-01', timestamp: '11:24:08' },
+                                { action: 'AI inference completed', tenantId: 'squire-pilot-01', timestamp: '11:24:09' },
+                                { action: 'Reasoning trace persisted', tenantId: 'squire-pilot-01', timestamp: '11:24:09' },
+                                { action: 'Suggestion → pending', tenantId: 'squire-pilot-01', timestamp: '11:24:09' }
+                            ]
+                        },
+                        {
+                            id: 'rec-004',
+                            netsuiteRecordType: 'vendorbill',
+                            netsuiteId: 'VB-7755',
+                            priority: 'urgent',
+                            ageMinutes: 1,
+                            errorMessage: 'CURRENCY_MISMATCH: bill currency EUR does not match vendor default USD',
+                            aiSuggestion: {
+                                summary: 'Update vendor default currency to EUR (vendor has 22 EUR bills in last 90 days, 0 USD)',
+                                proposedFix: 'Set vendor "Berlin Logistik GmbH" default currency to EUR. The USD default appears to be a stale onboarding value.',
+                                confidence: 0.95
+                            },
+                            reasoningTrace: [
+                                { label: '1. Identified mismatch', evidence: 'Bill currency EUR ≠ vendor default USD' },
+                                { label: '2. Historical pattern', evidence: '22 vendor bills in last 90 days, 22 in EUR, 0 in USD' },
+                                { label: '3. Vendor metadata', evidence: 'Vendor address: Berlin, DE. EUR is the local currency.' },
+                                { label: '4. Confidence weighting', evidence: '0.95 = 0.60 × historical-pattern + 0.35 × geographic-signal' }
+                            ],
+                            redactedPrompt: [
+                                { text: 'NetSuite sync error on ' },
+                                { text: 'vendorbill #[REDACTED-PII:internalid]', redacted: true },
+                                { text: ':\n  errorCode: CURRENCY_MISMATCH\n  billCurrency: EUR\n  vendorDefault: USD\n  vendor: Berlin Logistik GmbH\n  amount: 12,840.00\n\nVendor history (last 90 days): 22 bills, all in EUR.\n\nProposed fix?' }
+                            ],
+                            cost: 0.0019,
+                            provider: 'Claude Haiku 4.5',
+                            correlationId: 'corr-a1b2...f3e4',
+                            auditTimeline: [
+                                { action: 'DLP scan completed', tenantId: 'squire-pilot-01', timestamp: '11:46:55' },
+                                { action: 'AI inference completed', tenantId: 'squire-pilot-01', timestamp: '11:46:56' },
+                                { action: 'Reasoning trace persisted', tenantId: 'squire-pilot-01', timestamp: '11:46:56' },
+                                { action: 'Suggestion → pending', tenantId: 'squire-pilot-01', timestamp: '11:46:56' }
+                            ]
+                        }
+                    ];
+                    this.computeStats();
+                },
+
+                computeStats() {
+                    this.stats.pendingCount = this.queue.length;
+                    this.stats.avgConfidence = this.queue.length === 0
+                        ? 0
+                        : this.queue.reduce((sum, r) => sum + r.aiSuggestion.confidence, 0) / this.queue.length;
+                    this.stats.resolvedToday = 37;
+                    this.stats.weekCost = 4.82;
+                },
+
+                refreshData() {
+                    // "Reset" — re-seeds the demo queue. No network call.
+                    this.loading = true;
+                    this.loadDemoData();
+                    this.selectedId = this.queue.length > 0 ? this.queue[0].id : null;
+                    this.loading = false;
+                },
+
+                selectRecord(id) {
+                    this.selectedId = id;
+                },
+
+                priorityBadgeClass(priority) {
+                    return {
+                        urgent: 'erp-badge-danger',
+                        high: 'erp-badge-warning',
+                        medium: 'erp-badge-info',
+                        low: 'erp-badge-success'
+                    }[priority] || 'erp-badge-info';
+                },
+
+                // Demo-only operator actions: simulate the latency of the real
+                // approve/reject/escalate routes and remove the record from the
+                // local queue. The real routes (GET .../suggestions and the
+                // accept/reject/escalate POSTs) require an embedded session +
+                // operator role and are not reachable from this static page.
+                async acceptRecord(id) {
+                    this.busy = true;
+                    await new Promise(r => setTimeout(r, 600));
+                    this.removeRecord(id, 'approved');
+                    this.busy = false;
+                },
+
+                async rejectRecord(id) {
+                    const reason = window.prompt('Reject reason (required):');
+                    if (!reason) return;
+                    this.busy = true;
+                    await new Promise(r => setTimeout(r, 400));
+                    this.removeRecord(id, 'rejected');
+                    this.busy = false;
+                },
+
+                async escalateRecord(id) {
+                    const note = window.prompt('Escalation note (required):');
+                    if (!note) return;
+                    this.busy = true;
+                    await new Promise(r => setTimeout(r, 400));
+                    this.removeRecord(id, 'escalated');
+                    this.busy = false;
+                },
+
+                removeRecord(id, _outcome) {
+                    this.queue = this.queue.filter(r => r.id !== id);
+                    if (this.selectedId === id) {
+                        this.selectedId = this.queue.length > 0 ? this.queue[0].id : null;
+                    }
+                    this.computeStats();
+                }
+            };
+        }
+    </script>
+    <script src="/js/integration-hub-shell.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+{
+  "id": 7001,
+  "number": "1001",
+  "status": "processing",
+  "currency": "USD",
+  "date_created": "2026-08-15T14:03:00",
+  "total": "118.75",
+  "total_tax": "8.75",
+  "shipping_total": "5.00",
+  "shipping_tax": "0.00",
+  "customer_id": 501,
+  "billing": {
+    "email": "buyer-501@example.test"
+  },
+  "line_items": [
+    {
+      "id": 9001,
+      "name": "Red medium",
+      "sku": "SKU-RED-M",
+      "quantity": 3,
+      "subtotal": "105.00",
+      "total": "105.00",
+      "total_tax": "8.75"
+    }
+  ],
+  "tax_lines": [
+    {
+      "id": 9101,
+      "rate_code": "STATE-TAX",
+      "rate_id": 1,
+      "label": "State Tax",
+      "compound": false,
+      "tax_total": "8.75",
+      "shipping_tax_total": "0.00"
+    }
+  ],
+  "shipping_lines": [
+    {
+      "id": 9201,
+      "method_title": "Standard",
+      "method_id": "flat_rate",
+      "total": "5.00",
+      "total_tax": "0.00"
+    }
+  ],
+  "refunds": []
+}

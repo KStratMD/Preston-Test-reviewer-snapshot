@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest", "node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "isolatedModules": true
+  },
+  "include": [
+    "src/**/*.test.ts",
+    "src/**/__tests__/*.ts",
+    "tests/**/*"
+  ]
+}

@@ -1,0 +1,5 @@
+# EMPTY IS THE F6 EXIT CRITERION. Do not add entries.
+# A new route file calling extractIdentityContext must be migrated, not
+# re-stamped. CI runs --forbid-system-identity-fallback, which fails while
+# this file has any non-comment line.
+# NOTE: `--write` REGENERATES this file and will erase these comments.
