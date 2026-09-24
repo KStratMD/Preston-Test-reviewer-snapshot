@@ -1,0 +1,232 @@
+{
+  "paypal": [
+    {
+      "id": "PAY-1ABC2DEF3GHI4JKL",
+      "intent": "sale",
+      "state": "approved",
+      "cart": "CART-001",
+      "create_time": "2025-10-15T10:30:00Z",
+      "update_time": "2025-10-15T10:31:00Z",
+      "payer": {
+        "payment_method": "paypal",
+        "status": "VERIFIED",
+        "payer_info": {
+          "email": "buyer1@demo.com",
+          "first_name": "John",
+          "last_name": "Buyer",
+          "payer_id": "PAYERID001",
+          "phone": "5551234567",
+          "country_code": "US"
+        }
+      },
+      "transactions": [
+        {
+          "amount": {
+            "total": "125.00",
+            "currency": "USD",
+            "details": {
+              "subtotal": "115.00",
+              "tax": "10.00",
+              "shipping": "0.00"
+            }
+          },
+          "payee": {
+            "merchant_id": "MERCHANT001",
+            "email": "seller@demo.com"
+          },
+          "description": "Demo PayPal payment #1",
+          "invoice_number": "INV-PP-001",
+          "item_list": {
+            "items": [
+              {
+                "name": "Demo Product A",
+                "sku": "DEMO-A-001",
+                "price": "115.00",
+                "currency": "USD",
+                "quantity": "1"
+              }
+            ]
+          },
+          "related_resources": [
+            {
+              "sale": {
+                "id": "SALE-1ABC2DEF",
+                "state": "completed",
+                "amount": {
+                  "total": "125.00",
+                  "currency": "USD"
+                },
+                "payment_mode": "INSTANT_TRANSFER",
+                "protection_eligibility": "ELIGIBLE",
+                "protection_eligibility_type": "ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE",
+                "transaction_fee": {
+                  "value": "3.95",
+                  "currency": "USD"
+                },
+                "parent_payment": "PAY-1ABC2DEF3GHI4JKL",
+                "create_time": "2025-10-15T10:31:00Z",
+                "update_time": "2025-10-15T10:31:00Z"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAY-2MNO3PQR4STU5VWX",
+      "intent": "sale",
+      "state": "approved",
+      "cart": "CART-002",
+      "create_time": "2025-10-16T14:20:00Z",
+      "update_time": "2025-10-16T14:21:00Z",
+      "payer": {
+        "payment_method": "paypal",
+        "status": "VERIFIED",
+        "payer_info": {
+          "email": "buyer2@demo.com",
+          "first_name": "Jane",
+          "last_name": "Customer",
+          "payer_id": "PAYERID002",
+          "country_code": "US"
+        }
+      },
+      "transactions": [
+        {
+          "amount": {
+            "total": "89.99",
+            "currency": "USD",
+            "details": {
+              "subtotal": "79.99",
+              "tax": "6.00",
+              "shipping": "4.00"
+            }
+          },
+          "payee": {
+            "merchant_id": "MERCHANT001",
+            "email": "seller@demo.com"
+          },
+          "description": "Demo PayPal payment #2",
+          "invoice_number": "INV-PP-002",
+          "item_list": {
+            "items": [
+              {
+                "name": "Demo Product B",
+                "sku": "DEMO-B-002",
+                "price": "79.99",
+                "currency": "USD",
+                "quantity": "1"
+              }
+            ]
+          },
+          "related_resources": [
+            {
+              "sale": {
+                "id": "SALE-2MNO3PQR",
+                "state": "completed",
+                "amount": {
+                  "total": "89.99",
+                  "currency": "USD"
+                },
+                "payment_mode": "INSTANT_TRANSFER",
+                "protection_eligibility": "ELIGIBLE",
+                "protection_eligibility_type": "ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE",
+                "transaction_fee": {
+                  "value": "2.91",
+                  "currency": "USD"
+                },
+                "parent_payment": "PAY-2MNO3PQR4STU5VWX",
+                "create_time": "2025-10-16T14:21:00Z",
+                "update_time": "2025-10-16T14:21:00Z"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAY-3YZA4BCD5EFG6HIJ",
+      "intent": "sale",
+      "state": "approved",
+      "cart": "CART-003",
+      "create_time": "2025-10-17T09:15:00Z",
+      "update_time": "2025-10-17T09:18:00Z",
+      "payer": {
+        "payment_method": "paypal",
+        "status": "VERIFIED",
+        "payer_info": {
+          "email": "buyer3@demo.com",
+          "first_name": "Bob",
+          "last_name": "Shopper",
+          "payer_id": "PAYERID003",
+          "country_code": "US"
+        }
+      },
+      "transactions": [
+        {
+          "amount": {
+            "total": "250.00",
+            "currency": "USD",
+            "details": {
+              "subtotal": "225.00",
+              "tax": "20.00",
+              "shipping": "5.00"
+            }
+          },
+          "payee": {
+            "merchant_id": "MERCHANT001",
+            "email": "seller@demo.com"
+          },
+          "description": "Demo PayPal payment #3 (partially refunded)",
+          "invoice_number": "INV-PP-003",
+          "item_list": {
+            "items": [
+              {
+                "name": "Demo Product C",
+                "sku": "DEMO-C-003",
+                "price": "225.00",
+                "currency": "USD",
+                "quantity": "1"
+              }
+            ]
+          },
+          "related_resources": [
+            {
+              "sale": {
+                "id": "SALE-3YZA4BCD",
+                "state": "partially_refunded",
+                "amount": {
+                  "total": "250.00",
+                  "currency": "USD"
+                },
+                "payment_mode": "INSTANT_TRANSFER",
+                "protection_eligibility": "ELIGIBLE",
+                "protection_eligibility_type": "ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE",
+                "transaction_fee": {
+                  "value": "7.55",
+                  "currency": "USD"
+                },
+                "parent_payment": "PAY-3YZA4BCD5EFG6HIJ",
+                "create_time": "2025-10-17T09:16:00Z",
+                "update_time": "2025-10-17T09:18:00Z"
+              }
+            },
+            {
+              "refund": {
+                "id": "REFUND-1XYZ",
+                "state": "completed",
+                "amount": {
+                  "total": "50.00",
+                  "currency": "USD"
+                },
+                "parent_payment": "PAY-3YZA4BCD5EFG6HIJ",
+                "sale_id": "SALE-3YZA4BCD",
+                "create_time": "2025-10-17T09:18:00Z",
+                "update_time": "2025-10-17T09:18:00Z"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

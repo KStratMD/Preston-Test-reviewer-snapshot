@@ -1,0 +1,104 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "Working-Branch"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    assignees:
+      - "KStratMD"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "automated"
+    ignore:
+      # Ignore major version updates for these packages
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+      # Node 26 typings require a runtime floor beyond the project Node 22 support.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # p-limit went ESM-only at v4; this project compiles to CommonJS.
+      # Stay on 3.x until the project moves to ESM emit. See PR #613.
+      - dependency-name: "p-limit"
+        update-types: ["version-update:semver-major"]
+    groups:
+      # Group ESLint related updates
+      eslint:
+        patterns:
+          - "eslint*"
+          - "@typescript-eslint/*"
+        update-types: ["minor", "patch"]
+      # Group Jest related updates  
+      jest:
+        patterns:
+          - "jest*"
+          - "@jest/*"
+          - "@types/jest"
+          - "ts-jest"
+        update-types: ["minor", "patch"]
+      # Group Docker related updates
+      docker:
+        patterns:
+          - "*docker*"
+        update-types: ["minor", "patch"]
+      # Group AWS SDK updates
+      aws:
+        patterns:
+          - "@aws-sdk/*"
+        update-types: ["minor", "patch"]
+      # Group Azure SDK updates
+      azure:
+        patterns:
+          - "@azure/*"
+        update-types: ["minor", "patch"]
+      # @playwright/test and playwright must move together with the e2e-smoke
+      # image pin (tests/scripts/e2e-smoke-environment.test.sh); #1325 split them.
+      # Majors stay out of the group: they are separate migrations with an image move.
+      playwright:
+        patterns:
+          - "playwright"
+          - "@playwright/*"
+        update-types: ["minor", "patch"]
+      # Keep telemetry instrumentation releases coherent for one assessment.
+      otel-coordinated:
+        patterns:
+          - "@opentelemetry/*"
+        update-types: ["minor", "patch"]
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "Working-Branch"
+    schedule:
+      interval: "weekly"
+      day: "tuesday" 
+      time: "06:00"
+    commit-message:
+      prefix: "docker"
+    labels:
+      - "docker"
+      - "dependencies"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows/"
+    target-branch: "Working-Branch"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "06:00"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "github-actions"
+      - "dependencies"

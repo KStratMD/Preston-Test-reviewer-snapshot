@@ -1,0 +1,10 @@
+{
+  "vendor": "businesscentral",
+  "entity": "salesinvoice",
+  "sourceUrl": "https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/resources/dynamics_salesinvoice",
+  "docVersion": "v2.0",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "038535de0eba67644f09f27034f2319e945672d27d0cd764de2f5009feb75eb5",
+  "notes": "Synthetic selected fields with expanded lines; ITEM-RED-M represents SKU-RED-M, and an Account line represents shipping. API version pinned in URL; documentation content can change. Supplemental field reference: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/resources/dynamics_salesinvoiceline; SHA-256 af0004aa28f2bdabd904f3af269a8988bb6710c18b7928530d102c8ae2d67941."
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.NAV">
+      <EntityType Name="customers">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="displayName" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="number" Type="Edm.String" MaxLength="20"/>
+        <Property Name="email" Type="Edm.String" MaxLength="80"/>
+        <Property Name="phoneNumber" Type="Edm.String" MaxLength="30"/>
+        <Property Name="website" Type="Edm.String" MaxLength="255"/>
+        <Property Name="taxLiable" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="taxAreaId" Type="Edm.Guid"/>
+        <Property Name="taxAreaDisplayName" Type="Edm.String" MaxLength="100"/>
+        <Property Name="taxRegistrationNumber" Type="Edm.String" MaxLength="50"/>
+        <Property Name="currencyCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="paymentTermsId" Type="Edm.Guid"/>
+        <Property Name="shipmentMethodId" Type="Edm.Guid"/>
+        <Property Name="paymentMethodId" Type="Edm.Guid"/>
+        <Property Name="blocked" Type="Edm.String" MaxLength="10"/>
+        <Property Name="balance" Type="Edm.Decimal" Precision="19" Scale="4"/>
+        <Property Name="overdueAmount" Type="Edm.Decimal" Precision="19" Scale="4"/>
+        <Property Name="totalSalesExcludingTax" Type="Edm.Decimal" Precision="19" Scale="4"/>
+        <Property Name="lastModifiedDateTime" Type="Edm.DateTimeOffset"/>
+        <NavigationProperty Name="picture" Type="Collection(Microsoft.NAV.picture)"/>
+        <NavigationProperty Name="defaultDimensions" Type="Collection(Microsoft.NAV.defaultDimensions)"/>
+        <NavigationProperty Name="currency" Type="Microsoft.NAV.currency"/>
+        <NavigationProperty Name="paymentTerm" Type="Microsoft.NAV.paymentTerm"/>
+        <NavigationProperty Name="shipmentMethod" Type="Microsoft.NAV.shipmentMethod"/>
+        <NavigationProperty Name="paymentMethod" Type="Microsoft.NAV.paymentMethod"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

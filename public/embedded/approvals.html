@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Governance Approvals</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/erp-theme.css">
+  <script src="/js/platform-detector.js"></script>
+  <style>
+    /* Page-specific styles on top of erp-theme (style-src allows inline). */
+    .approval-list { max-width: 1080px; margin: var(--erp-spacing-lg) auto; padding: 0 var(--erp-spacing-md); }
+    .page-intro { color: var(--erp-text-muted); margin-top: 0; }
+    .approval-card { background: var(--erp-bg-card); border: 1px solid var(--erp-border); border-radius: var(--erp-radius); padding: var(--erp-spacing-md); margin-bottom: var(--erp-spacing-md); box-shadow: var(--erp-shadow); }
+    .approval-card[data-risk="high"] { border-left: 4px solid var(--erp-error); }
+    .approval-card[data-risk="medium"] { border-left: 4px solid var(--erp-warning); }
+    .approval-card[data-risk="low"] { border-left: 4px solid var(--erp-success); }
+    .meta { color: var(--erp-text-muted); font-size: var(--erp-font-size-sm); margin: var(--erp-spacing-sm) 0; }
+    .findings { margin: var(--erp-spacing-sm) 0; }
+    .findings .erp-badge { margin-right: 4px; }
+    .actions { margin-top: var(--erp-spacing-sm); display: flex; flex-wrap: wrap; gap: var(--erp-spacing-sm); }
+    .inline-form { display: none; margin-top: var(--erp-spacing-sm); padding: var(--erp-spacing-md); background: var(--erp-bg); border: 1px solid var(--erp-border); border-radius: var(--erp-radius); }
+    .inline-form.expanded { display: block; }
+    .inline-form label { display: block; margin: var(--erp-spacing-sm) 0 4px; font-weight: 500; font-size: var(--erp-font-size-sm); }
+    .inline-form textarea { width: 100%; padding: 6px; box-sizing: border-box; border: 1px solid var(--erp-border); border-radius: var(--erp-radius); font-family: inherit; font-size: var(--erp-font-size-sm); min-height: 3em; }
+    .inline-form .erp-btn { margin-top: var(--erp-spacing-sm); }
+    .pre-context { background: var(--erp-bg); padding: var(--erp-spacing-sm); border-radius: var(--erp-radius); font-family: monospace; font-size: var(--erp-font-size-xs); white-space: pre-wrap; word-break: break-word; max-height: 16em; overflow-y: auto; }
+    .empty-state { text-align: center; color: var(--erp-text-muted); padding: var(--erp-spacing-xl); }
+    #error { color: var(--erp-error); padding: var(--erp-spacing-sm) var(--erp-spacing-md); border: 1px solid var(--erp-error); border-radius: var(--erp-radius); margin: var(--erp-spacing-md) 0; background: var(--erp-error-bg); }
+    #list { list-style: none; padding: 0; margin: 0; }
+    .refresh-info { text-align: right; color: var(--erp-text-muted); font-size: var(--erp-font-size-sm); margin: var(--erp-spacing-sm) 0; display: flex; justify-content: flex-end; align-items: center; gap: var(--erp-spacing-sm); }
+    .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--erp-border); margin: var(--erp-spacing-md) 0 0; overflow-x: auto; }
+    .tabs button { background: transparent; border: none; border-bottom: 2px solid transparent; padding: var(--erp-spacing-sm) var(--erp-spacing-md); cursor: pointer; color: var(--erp-text-muted); font-size: var(--erp-font-size-base); font-family: inherit; white-space: nowrap; }
+    .tabs button[aria-selected="true"] { color: var(--erp-accent); border-bottom-color: var(--erp-accent); font-weight: 500; }
+    .tab-count { font-size: var(--erp-font-size-xs); color: var(--erp-text-muted); margin-left: 4px; }
+    .tabs button[aria-selected="true"] .tab-count { color: var(--erp-accent); }
+    .embedded-outcome { justify-content: space-between; }
+    .embedded-outcome-detail { font-size: var(--erp-font-size-xs); margin-top: 4px; opacity: 0.85; }
+    .embedded-outcome-controls { display: flex; gap: 4px; flex-shrink: 0; }
+    .embedded-no-session { max-width: 640px; margin: var(--erp-spacing-xl) auto; padding: var(--erp-spacing-lg); }
+    .embedded-no-session-hint { color: var(--erp-text-muted); font-size: var(--erp-font-size-sm); }
+    @media (max-width: 600px) {
+      .approval-list { padding: 0 var(--erp-spacing-sm); }
+      .actions { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body class="erp-body">
+  <header class="erp-header">
+    <div>
+      <h1 class="erp-header-title">Governance Approvals</h1>
+      <p class="erp-header-subtitle">High-risk outbound operations awaiting an operator decision</p>
+    </div>
+    <div class="erp-header-actions">
+      <!-- Cross-link to the governance-operations dashboard (PR 4, Phase D).
+           Plain anchor, no inline JS — the embedded CSP (script-src 'self'
+           + pinned hashes) stays untouched; approvals.js (external, CSP-safe)
+           appends the embeddedContextId so the dashboard opens in LIVE mode.
+           Opens in a new tab so the iframe session view isn't navigated
+           away. -->
+      <a id="govops-link" href="/governance-operations.html" target="_blank" rel="noopener" class="erp-btn erp-btn-ghost erp-btn-sm">Governance Operations &rarr;</a>
+    </div>
+  </header>
+  <main class="approval-list" id="main">
+    <p class="page-intro">Payloads are pre-redacted server-side — what you see is the form the AI provider or connector was/will be called with. Every decision is audit-logged.</p>
+    <div class="tabs" role="tablist" aria-label="Approval status">
+      <button type="button" role="tab" id="tab-pending" data-tab="pending" aria-selected="true" tabindex="0" aria-controls="tabpanel-approvals">Pending <span class="tab-count" data-count="pending"></span></button>
+      <button type="button" role="tab" id="tab-approved" data-tab="approved" aria-selected="false" tabindex="-1" aria-controls="tabpanel-approvals">Approved <span class="tab-count" data-count="approved"></span></button>
+      <button type="button" role="tab" id="tab-rejected" data-tab="rejected" aria-selected="false" tabindex="-1" aria-controls="tabpanel-approvals">Rejected <span class="tab-count" data-count="rejected"></span></button>
+    </div>
+    <div class="refresh-info"><span id="lastRefresh"></span> <button type="button" id="refreshBtn" class="erp-btn erp-btn-ghost erp-btn-sm">Refresh now</button></div>
+    <div id="notices" aria-live="polite"></div>
+    <!--
+      Single tabpanel shared by all three tabs. The list renders per the
+      active tab; each tab's aria-controls points here, and aria-labelledby
+      tracks the active tab so screen readers announce which view they're
+      reading. Copilot R1 on PR #826 asked for the complete WAI-ARIA tabs
+      pattern; this is the minimum that satisfies it.
+    -->
+    <div id="tabpanel-approvals" role="tabpanel" aria-labelledby="tab-pending" tabindex="0">
+      <div id="loading">Loading&hellip;</div>
+      <div id="empty" class="empty-state" hidden></div>
+      <div id="error" hidden role="alert"></div>
+      <ol id="list" hidden></ol>
+    </div>
+  </main>
+  <script src="/embedded/guest-bootstrap.js"></script>
+  <script src="/embedded/embedded-ui.js"></script>
+  <script src="/embedded/findings-display.js"></script>
+  <script src="/embedded/approvals.js"></script>
+</body>
+</html>

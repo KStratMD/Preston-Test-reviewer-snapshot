@@ -1,0 +1,77 @@
+name: Blueprint verification
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pull:
+        description: Pull request number
+        required: true
+        type: number
+
+permissions: {}
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      base_sha: ${{ steps.pull.outputs.base_sha }}
+      head_sha: ${{ steps.pull.outputs.head_sha }}
+      head_repo: ${{ steps.pull.outputs.head_repo }}
+      pull_number: ${{ steps.pull.outputs.pull_number }}
+    steps:
+      - id: pull
+        name: Resolve one pair of base and head commits
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_NUMBER: ${{ github.event.pull_request.number || inputs.pull }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$PULL_NUMBER" =~ ^[1-9][0-9]*$ ]]
+          pull=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PULL_NUMBER")
+          base=$(jq -er '.base.sha' <<< "$pull")
+          head=$(jq -er '.head.sha' <<< "$pull")
+          repository=$(jq -er '.head.repo.full_name' <<< "$pull")
+          [[ "$base" =~ ^[0-9a-f]{40}$ && "$head" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$repository" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]
+          printf 'base_sha=%s\nhead_sha=%s\nhead_repo=%s\npull_number=%s\n' "$base" "$head" "$repository" "$PULL_NUMBER" >> "$GITHUB_OUTPUT"
+  verify:
+    needs: resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+      statuses: write
+    env:
+      NODE_ENV: test
+    steps:
+      - name: Checkout trusted verifier at recorded base SHA
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.resolve.outputs.base_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install trusted dependencies
+        run: npm ci --no-audit
+      - name: Checkout PR head as data only
+        if: ${{ needs.resolve.outputs.head_repo == github.repository }}
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ needs.resolve.outputs.head_repo }}
+          ref: ${{ needs.resolve.outputs.head_sha }}
+          path: pr
+          persist-credentials: false
+      - name: Derive approvals, validate and publish on the same head
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_NUMBER: ${{ needs.resolve.outputs.pull_number }}
+          HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
+        run: npm run blueprint:verify-and-validate -- --pull "$PULL_NUMBER" --head "$HEAD_SHA"

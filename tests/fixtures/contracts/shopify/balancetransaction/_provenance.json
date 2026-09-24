@@ -1,0 +1,10 @@
+{
+  "vendor": "shopify",
+  "entity": "balancetransaction",
+  "sourceUrl": "https://shopify.dev/docs/api/admin-graphql/2026-07/objects/ShopifyPaymentsBalanceTransaction",
+  "docVersion": "2026-07",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "0fe25a3ba8eed1e1c7cd698da78c746bb4958d57fb768086339b56fd779e5f6e",
+  "notes": "Selected GraphQL fields, synthetic values. Requested 2026-07 URL redirects to /latest/; fetched page displays 2026-07 latest on capture date. Hash is fetched UTF-8 HTML, not a live response. One charge includes its fee; net ties to the paid-order payout. Supplemental nested-type references (same capture date and version-alias behavior): https://shopify.dev/docs/api/admin-graphql/2026-07/objects/MoneyV2; SHA-256 1175df52282837712cbaebcb231708ca1f66116bd325fbac364124e125effd4c."
+}

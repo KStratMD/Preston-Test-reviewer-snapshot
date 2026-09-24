@@ -1,0 +1,491 @@
+# Golden Set Test Cases: Salesforce to NetSuite Customers
+#
+# Data-leakage guard: NONE of the (sourceField, targetField) pairs below may
+# appear in src/services/ai/prompts/FieldMappingPrompts.ts COMMON_MAPPING_EXAMPLES.
+# Enforced by tests/unit/scripts/run-ai-accuracy-benchmark.dataLeakage.test.ts.
+#
+# Coverage philosophy: 22 testCases / 61 labeled mappings across the field
+# families a real SFDC→NS customer sync touches in production (identity,
+# address, contact, financial, tax, currency, ownership, audit, contact
+# person, marketing attribution, lifecycle, pricing/ops — the last four added
+# in Phase B widening). Each testCase exercises a small group of related
+# fields rather than a single pair, so labeled-mapping count is the
+# load-bearing unit of coverage that the data-leakage drift test pins
+# against. Targets are NetSuite Customer record field names per SuiteScript
+# record schema.
+
+testSuite:
+  name: "SFDC Account to NetSuite Customer Mapping"
+  sourceSystem: "salesforce"
+  targetSystem: "netsuite"
+  entityType: "customers"
+
+testCases:
+  - name: "Core Identity Fields"
+    sourceFields:
+      - name: "Account.Name"
+        type: "string"
+        sample: "Acme Corporation"
+      - name: "Account.Website"
+        type: "string"
+        sample: "www.acme.com"
+      - name: "Account.Phone"
+        type: "phone"
+        sample: "+1-555-0100"
+    expectedMappings:
+      - source: "Account.Name"
+        target: "companyName"
+        confidence: 0.95
+      - source: "Account.Website"
+        target: "url"
+        confidence: 0.90
+      - source: "Account.Phone"
+        target: "phone"
+        confidence: 0.95
+
+  - name: "Billing Address Fields"
+    sourceFields:
+      - name: "Account.BillingStreet"
+        type: "string"
+        sample: "123 Main St"
+      - name: "Account.BillingCity"
+        type: "string"
+        sample: "San Francisco"
+      - name: "Account.BillingState"
+        type: "string"
+        sample: "CA"
+      - name: "Account.BillingPostalCode"
+        type: "string"
+        sample: "94105"
+      - name: "Account.BillingCountry"
+        type: "string"
+        sample: "USA"
+    expectedMappings:
+      - source: "Account.BillingStreet"
+        target: "billAddr1"
+        confidence: 0.90
+      - source: "Account.BillingCity"
+        target: "billCity"
+        confidence: 0.95
+      - source: "Account.BillingState"
+        target: "billState"
+        confidence: 0.95
+      - source: "Account.BillingPostalCode"
+        target: "billZip"
+        confidence: 0.90
+      - source: "Account.BillingCountry"
+        target: "billCountry"
+        confidence: 0.95
+
+  - name: "Shipping Address Fields"
+    sourceFields:
+      - name: "Account.ShippingStreet"
+        type: "string"
+        sample: "456 Oak Ave"
+      - name: "Account.ShippingCity"
+        type: "string"
+        sample: "Boston"
+      - name: "Account.ShippingState"
+        type: "string"
+        sample: "MA"
+      - name: "Account.ShippingPostalCode"
+        type: "string"
+        sample: "02108"
+      - name: "Account.ShippingCountry"
+        type: "string"
+        sample: "USA"
+    expectedMappings:
+      - source: "Account.ShippingStreet"
+        target: "shipAddr1"
+        confidence: 0.90
+      - source: "Account.ShippingCity"
+        target: "shipCity"
+        confidence: 0.95
+      - source: "Account.ShippingState"
+        target: "shipState"
+        confidence: 0.95
+      - source: "Account.ShippingPostalCode"
+        target: "shipZip"
+        confidence: 0.90
+      - source: "Account.ShippingCountry"
+        target: "shipCountry"
+        confidence: 0.95
+
+  - name: "Financial and Sizing Fields"
+    sourceFields:
+      - name: "Account.AccountNumber"
+        type: "string"
+        sample: "ACC-12345"
+      - name: "Account.AnnualRevenue"
+        type: "currency"
+        sample: "5000000"
+      - name: "Account.NumberOfEmployees"
+        type: "number"
+        sample: "250"
+    expectedMappings:
+      - source: "Account.AccountNumber"
+        target: "entityId"
+        confidence: 0.85
+      - source: "Account.AnnualRevenue"
+        target: "annualRevenue"
+        confidence: 0.90
+      - source: "Account.NumberOfEmployees"
+        target: "numberOfEmployees"
+        confidence: 0.95
+
+  - name: "Communication Channels"
+    sourceFields:
+      - name: "Account.Owner.Email"
+        type: "email"
+        sample: "sales@acme.com"
+      - name: "Account.Fax"
+        type: "phone"
+        sample: "+1-555-0199"
+    expectedMappings:
+      - source: "Account.Owner.Email"
+        target: "email"
+        confidence: 0.90
+      - source: "Account.Fax"
+        target: "fax"
+        confidence: 0.95
+
+  - name: "Currency and Localization"
+    sourceFields:
+      - name: "Account.CurrencyIsoCode"
+        type: "string"
+        sample: "USD"
+      - name: "Account.Language__c"
+        type: "string"
+        sample: "en_US"
+    expectedMappings:
+      - source: "Account.CurrencyIsoCode"
+        target: "currency"
+        confidence: 0.90
+      - source: "Account.Language__c"
+        target: "language"
+        confidence: 0.85
+
+  - name: "Tax Registration"
+    sourceFields:
+      - name: "Account.TaxId__c"
+        type: "string"
+        sample: "12-3456789"
+      - name: "Account.VAT_Number__c"
+        type: "string"
+        sample: "GB123456789"
+    expectedMappings:
+      - source: "Account.TaxId__c"
+        target: "taxIdNum"
+        confidence: 0.90
+      - source: "Account.VAT_Number__c"
+        target: "vatRegNumber"
+        confidence: 0.90
+
+  - name: "Account Classification"
+    sourceFields:
+      - name: "Account.Industry"
+        type: "string"
+        sample: "Manufacturing"
+      - name: "Account.Type"
+        type: "string"
+        sample: "Customer - Direct"
+      - name: "Account.Rating"
+        type: "string"
+        sample: "Hot"
+    expectedMappings:
+      - source: "Account.Industry"
+        target: "industry"
+        confidence: 0.95
+      - source: "Account.Type"
+        target: "category"
+        confidence: 0.80
+      - source: "Account.Rating"
+        target: "salesRating"
+        confidence: 0.75
+
+  - name: "Audit Trail"
+    sourceFields:
+      - name: "Account.CreatedDate"
+        type: "datetime"
+        sample: "2024-01-15T10:30:00Z"
+      - name: "Account.LastModifiedDate"
+        type: "datetime"
+        sample: "2024-06-20T14:45:00Z"
+    expectedMappings:
+      - source: "Account.CreatedDate"
+        target: "dateCreated"
+        confidence: 0.90
+      - source: "Account.LastModifiedDate"
+        target: "lastModifiedDate"
+        confidence: 0.95
+
+  - name: "Account Status"
+    sourceFields:
+      - name: "Account.IsActive__c"
+        type: "boolean"
+        sample: "true"
+      - name: "Account.Description"
+        type: "string"
+        sample: "Strategic enterprise account"
+    expectedMappings:
+      - source: "Account.IsActive__c"
+        target: "isInactive"
+        confidence: 0.75
+      - source: "Account.Description"
+        target: "comments"
+        confidence: 0.80
+
+  - name: "Sales Ownership"
+    sourceFields:
+      - name: "Account.Owner.Id"
+        type: "string"
+        sample: "0051x000003BkH4AAK"
+      - name: "Account.Owner.Name"
+        type: "string"
+        sample: "Jane Smith"
+    expectedMappings:
+      - source: "Account.Owner.Id"
+        target: "salesRep"
+        confidence: 0.80
+      - source: "Account.Owner.Name"
+        target: "salesRepName"
+        confidence: 0.80
+
+  - name: "Account Hierarchy"
+    sourceFields:
+      - name: "Account.ParentId"
+        type: "string"
+        sample: "0011x00000ABcDeAAK"
+      - name: "Account.Parent.Name"
+        type: "string"
+        sample: "Acme Holdings"
+    expectedMappings:
+      - source: "Account.ParentId"
+        target: "parent"
+        confidence: 0.85
+      - source: "Account.Parent.Name"
+        target: "parentName"
+        confidence: 0.80
+
+  - name: "Credit Management"
+    sourceFields:
+      - name: "Account.CreditLimit__c"
+        type: "currency"
+        sample: "250000"
+      - name: "Account.PaymentTerms__c"
+        type: "string"
+        sample: "Net 30"
+    expectedMappings:
+      - source: "Account.CreditLimit__c"
+        target: "creditLimit"
+        confidence: 0.95
+      - source: "Account.PaymentTerms__c"
+        target: "terms"
+        confidence: 0.85
+
+  - name: "Subsidiary Routing"
+    sourceFields:
+      - name: "Account.Subsidiary__c"
+        type: "string"
+        sample: "Acme US"
+      - name: "Account.Region__c"
+        type: "string"
+        sample: "Americas"
+    expectedMappings:
+      - source: "Account.Subsidiary__c"
+        target: "subsidiary"
+        confidence: 0.95
+      - source: "Account.Region__c"
+        target: "territory"
+        confidence: 0.75
+
+  # ---------------------------------------------------------------------
+  # Phase B widening (cases 15-22): contact person, marketing attribution,
+  # lifecycle, pricing/ops. Person-name fields use SFDC Person Account
+  # standard fields (Account.FirstName etc.); per-person phone/title use
+  # standard Contact fields (relationship-prefixed paths follow the
+  # Account.Owner.* precedent above).
+  # ---------------------------------------------------------------------
+
+  - name: "Person Account Identity"
+    sourceFields:
+      - name: "Account.Salutation"
+        type: "string"
+        sample: "Mr."
+      - name: "Account.FirstName"
+        type: "string"
+        sample: "Robert"
+      - name: "Account.MiddleName"
+        type: "string"
+        sample: "James"
+      - name: "Account.LastName"
+        type: "string"
+        sample: "Castellano"
+    expectedMappings:
+      - source: "Account.Salutation"
+        target: "salutation"
+        confidence: 0.90
+      - source: "Account.FirstName"
+        target: "firstName"
+        confidence: 0.95
+      - source: "Account.MiddleName"
+        target: "middleName"
+        confidence: 0.95
+      - source: "Account.LastName"
+        target: "lastName"
+        confidence: 0.95
+
+  - name: "Contact Person Details"
+    sourceFields:
+      - name: "Contact.Title"
+        type: "string"
+        sample: "VP of Operations"
+      - name: "Contact.MobilePhone"
+        type: "phone"
+        sample: "+1-555-0142"
+      - name: "Contact.HomePhone"
+        type: "phone"
+        sample: "+1-555-0177"
+    expectedMappings:
+      - source: "Contact.Title"
+        target: "title"
+        confidence: 0.90
+      - source: "Contact.MobilePhone"
+        target: "mobilePhone"
+        confidence: 0.95
+      - source: "Contact.HomePhone"
+        target: "homePhone"
+        confidence: 0.95
+
+  - name: "Marketing Attribution"
+    sourceFields:
+      - name: "Account.AccountSource"
+        type: "string"
+        sample: "Trade Show"
+      - name: "Account.Campaign_Category__c"
+        type: "string"
+        sample: "Q3 Manufacturing Webinar Series"
+      - name: "Account.Web_Lead__c"
+        type: "boolean"
+        sample: "true"
+      - name: "Account.Site_Visit_Count__c"
+        type: "number"
+        sample: "47"
+    expectedMappings:
+      - source: "Account.AccountSource"
+        target: "leadSource"
+        confidence: 0.85
+      - source: "Account.Campaign_Category__c"
+        target: "campaignCategory"
+        confidence: 0.85
+      - source: "Account.Web_Lead__c"
+        target: "webLead"
+        confidence: 0.80
+      - source: "Account.Site_Visit_Count__c"
+        target: "visits"
+        confidence: 0.75
+
+  - name: "Customer Lifecycle Status"
+    sourceFields:
+      - name: "Account.Customer_Status__c"
+        type: "string"
+        sample: "CUSTOMER-Closed Won"
+      - name: "Account.Lead_Created_Date__c"
+        type: "date"
+        sample: "2023-02-11"
+    expectedMappings:
+      - source: "Account.Customer_Status__c"
+        target: "entityStatus"
+        confidence: 0.80
+      - source: "Account.Lead_Created_Date__c"
+        target: "leadDate"
+        confidence: 0.85
+
+  - name: "Relationship Dates"
+    sourceFields:
+      - name: "Account.Prospect_Date__c"
+        type: "date"
+        sample: "2023-05-04"
+      - name: "Account.Contract_Start_Date__c"
+        type: "date"
+        sample: "2024-01-01"
+      - name: "Account.Contract_End_Date__c"
+        type: "date"
+        sample: "2026-12-31"
+    expectedMappings:
+      - source: "Account.Prospect_Date__c"
+        target: "prospectDate"
+        confidence: 0.90
+      - source: "Account.Contract_Start_Date__c"
+        target: "startDate"
+        confidence: 0.80
+      - source: "Account.Contract_End_Date__c"
+        target: "endDate"
+        confidence: 0.80
+
+  - name: "Pricing Configuration"
+    sourceFields:
+      - name: "Account.Price_Level__c"
+        type: "string"
+        sample: "Wholesale Tier 2"
+      - name: "Account.Pricing_Group__c"
+        type: "string"
+        sample: "Midwest Distributors"
+    expectedMappings:
+      - source: "Account.Price_Level__c"
+        target: "priceLevel"
+        confidence: 0.90
+      - source: "Account.Pricing_Group__c"
+        target: "pricingGroup"
+        confidence: 0.90
+
+  - name: "Fulfillment Preferences"
+    sourceFields:
+      - name: "Account.Preferred_Carrier__c"
+        type: "string"
+        sample: "FedEx Ground"
+      - name: "Account.Ship_Complete__c"
+        type: "boolean"
+        sample: "true"
+    expectedMappings:
+      - source: "Account.Preferred_Carrier__c"
+        target: "shippingCarrier"
+        confidence: 0.85
+      - source: "Account.Ship_Complete__c"
+        target: "shipComplete"
+        confidence: 0.85
+
+  # Hard case: Account.Id is the SFDC record's own identifier. The taught
+  # COMMON_MAPPING_EXAMPLES pattern is account_id → entityId, but in a real
+  # SFDC→NS sync the Salesforce record Id is stored as the NetSuite
+  # externalId (the cross-system correlation key), while entityId comes from
+  # AccountNumber (see "Financial and Sizing Fields" above). Tests whether
+  # the model discriminates the integration-key role from the display-ID
+  # role. IsPersonAccount → isPerson rounds out the person/company split.
+  - name: "Integration Keys and Payee"
+    sourceFields:
+      - name: "Account.Id"
+        type: "string"
+        sample: "0011x00000GVfPzAAL"
+      - name: "Account.IsPersonAccount"
+        type: "boolean"
+        sample: "false"
+      - name: "Account.Check_Payee_Name__c"
+        type: "string"
+        sample: "Acme Corp Holdings LLC"
+      - name: "Account.Resale_License_Number__c"
+        type: "string"
+        sample: "SR-CA-445812"
+    expectedMappings:
+      - source: "Account.Id"
+        target: "externalId"
+        confidence: 0.75
+      - source: "Account.IsPersonAccount"
+        target: "isPerson"
+        confidence: 0.90
+      - source: "Account.Check_Payee_Name__c"
+        target: "printOnCheckAs"
+        confidence: 0.80
+      - source: "Account.Resale_License_Number__c"
+        target: "resaleNumber"
+        confidence: 0.85

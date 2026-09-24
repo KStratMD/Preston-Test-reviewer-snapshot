@@ -1,0 +1,110 @@
+{
+  "id": "gid://shopify/Order/7001",
+  "name": "#1001",
+  "createdAt": "2026-08-15T14:03:00Z",
+  "displayFinancialStatus": "PAID",
+  "displayFulfillmentStatus": "UNFULFILLED",
+  "currencyCode": "USD",
+  "presentmentCurrencyCode": "USD",
+  "totalPriceSet": {
+    "shopMoney": {
+      "amount": "118.75",
+      "currencyCode": "USD"
+    },
+    "presentmentMoney": {
+      "amount": "118.75",
+      "currencyCode": "USD"
+    }
+  },
+  "subtotalPriceSet": {
+    "shopMoney": {
+      "amount": "105.00",
+      "currencyCode": "USD"
+    }
+  },
+  "totalTaxSet": {
+    "shopMoney": {
+      "amount": "8.75",
+      "currencyCode": "USD"
+    }
+  },
+  "totalShippingPriceSet": {
+    "shopMoney": {
+      "amount": "5.00",
+      "currencyCode": "USD"
+    }
+  },
+  "totalDiscountsSet": {
+    "shopMoney": {
+      "amount": "0.00",
+      "currencyCode": "USD"
+    }
+  },
+  "customer": {
+    "id": "gid://shopify/Customer/501",
+    "email": "buyer-501@example.test"
+  },
+  "lineItems": {
+    "nodes": [
+      {
+        "id": "gid://shopify/LineItem/9001",
+        "sku": "SKU-RED-M",
+        "quantity": 3,
+        "originalUnitPriceSet": {
+          "shopMoney": {
+            "amount": "35.00",
+            "currencyCode": "USD"
+          }
+        }
+      }
+    ]
+  },
+  "taxLines": [
+    {
+      "title": "State Tax",
+      "rate": 0.0833,
+      "priceSet": {
+        "shopMoney": {
+          "amount": "8.75",
+          "currencyCode": "USD"
+        }
+      }
+    }
+  ],
+  "shippingLines": {
+    "nodes": [
+      {
+        "title": "Standard",
+        "originalPriceSet": {
+          "shopMoney": {
+            "amount": "5.00",
+            "currencyCode": "USD"
+          }
+        }
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "id": "gid://shopify/OrderTransaction/8001",
+      "kind": "SALE",
+      "status": "SUCCESS",
+      "gateway": "shopify_payments",
+      "amountSet": {
+        "shopMoney": {
+          "amount": "118.75",
+          "currencyCode": "USD"
+        }
+      }
+    }
+  ],
+  "refunds": [],
+  "fulfillmentOrders": {
+    "nodes": [
+      {
+        "id": "gid://shopify/FulfillmentOrder/6001",
+        "status": "OPEN"
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.NAV">
+      <EntityType Name="companies">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="systemVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="name" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="displayName" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="businessProfileId" Type="Edm.String" MaxLength="20"/>
+        <Property Name="systemCreatedAt" Type="Edm.DateTimeOffset"/>
+        <Property Name="systemCreatedBy" Type="Edm.Guid"/>
+        <Property Name="systemModifiedAt" Type="Edm.DateTimeOffset"/>
+        <Property Name="systemModifiedBy" Type="Edm.Guid"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

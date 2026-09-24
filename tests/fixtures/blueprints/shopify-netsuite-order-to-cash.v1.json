@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "metadata": {
+    "id": "bp_shopify_netsuite_o2c",
+    "name": "Shopify to NetSuite order-to-cash assurance",
+    "version": "0.1.0",
+    "customerRef": "customer-fixture-001",
+    "author": "consultant-fixture",
+    "createdAt": "2026-09-02",
+    "evidenceLevel": "discovery"
+  },
+  "goals": [
+    {
+      "id": "g1",
+      "statement": "Every Shopify order paid in a period is invoiced or cash-saled in NetSuite within 24h",
+      "successCriteria": [
+        "orders_missing_in_erp == 0 at period close"
+      ],
+      "measurable": true
+    }
+  ],
+  "systems": [
+    {
+      "id": "shopify",
+      "role": "commerce",
+      "vendor": "Shopify",
+      "edition": "Advanced",
+      "apiVersion": "2026-07",
+      "authModel": "oauth_token_exchange",
+      "evidenceLevel": 1
+    },
+    {
+      "id": "netsuite",
+      "role": "erp",
+      "vendor": "Oracle NetSuite",
+      "edition": "Standard",
+      "apiVersion": "2026.1",
+      "authModel": "oauth2_m2m",
+      "evidenceLevel": 1
+    },
+    {
+      "id": "shopify_payments",
+      "role": "payments",
+      "vendor": "Shopify Payments",
+      "apiVersion": "2026-07",
+      "authModel": "inherits:shopify",
+      "evidenceLevel": 1
+    }
+  ],
+  "integrationPaths": [
+    {
+      "id": "p1",
+      "from": "shopify",
+      "to": "netsuite",
+      "owner": "existing_vendor_connector",
+      "product": "Oracle NetSuite Connector (Shopify App Store)",
+      "squireRole": "observe_and_propose"
+    }
+  ],
+  "objects": [
+    {
+      "id": "order",
+      "system": "shopify",
+      "apiObject": "Order",
+      "keyFields": [
+        "id",
+        "name"
+      ]
+    },
+    {
+      "id": "salesorder",
+      "system": "netsuite",
+      "apiObject": "salesorder",
+      "keyFields": [
+        "externalId",
+        "tranId"
+      ]
+    }
+  ],
+  "ownership": [
+    {
+      "entity": "order",
+      "owner": "shopify",
+      "consumers": [
+        "netsuite"
+      ],
+      "conflictPolicy": "source_wins",
+      "fieldOverrides": []
+    },
+    {
+      "entity": "salesorder",
+      "owner": "netsuite",
+      "consumers": [
+        "shopify"
+      ],
+      "conflictPolicy": "source_wins",
+      "fieldOverrides": []
+    }
+  ],
+  "mappings": [
+    {
+      "id": "m_order_to_salesorder",
+      "sourceObject": "order",
+      "targetObject": "salesorder",
+      "fieldMappings": [
+        {
+          "sourceField": "name",
+          "targetField": "externalId",
+          "transformationType": "direct",
+          "isRequired": true
+        },
+        {
+          "sourceField": "totalPriceSet.shopMoney.amount",
+          "targetField": "total",
+          "transformationType": "direct",
+          "isRequired": true
+        },
+        {
+          "sourceField": "customer.email",
+          "targetField": "entity.email",
+          "transformationType": "direct",
+          "isRequired": true
+        }
+      ],
+      "goldenCases": [
+        {
+          "name": "paid order maps totals and customer",
+          "input": {
+            "id": "1",
+            "externalId": "1",
+            "fields": {
+              "name": "#1001",
+              "totalPriceSet": {
+                "shopMoney": {
+                  "amount": "118.75"
+                }
+              },
+              "customer": {
+                "email": "buyer-501@example.test"
+              }
+            },
+            "metadata": {}
+          },
+          "expected": {
+            "fields": {
+              "externalId": "#1001",
+              "total": "118.75",
+              "entity": {
+                "email": "buyer-501@example.test"
+              }
+            }
+          }
+        },
+        {
+          "name": "missing required field fails",
+          "input": {
+            "id": "2",
+            "externalId": "2",
+            "fields": {
+              "name": "#1002"
+            },
+            "metadata": {}
+          },
+          "expected": {
+            "error": "Required"
+          }
+        }
+      ]
+    }
+  ],
+  "transformations": [],
+  "exceptions": [
+    {
+      "id": "x_missing",
+      "type": "missing_in_target",
+      "description": "Paid Shopify order with no NetSuite salesorder after 24h",
+      "severity": "high",
+      "disposition": "propose_create"
+    },
+    {
+      "id": "x_total",
+      "type": "amount_mismatch",
+      "description": "Order total differs from salesorder total in minor units",
+      "severity": "medium",
+      "disposition": "propose_correction"
+    }
+  ],
+  "approvals": {
+    "separationOfDuties": true,
+    "requiredApprovers": 1,
+    "roles": [
+      "approver"
+    ]
+  },
+  "dlp": {
+    "posture": "autoRedact",
+    "sensitiveFields": [
+      "customer.email"
+    ],
+    "allowPII": false
+  },
+  "testPlan": {
+    "fixtureSets": [],
+    "goldenRecords": [],
+    "acceptance": [
+      "all injected discrepancies surfaced exactly once"
+    ],
+    "tolerances": {
+      "amountMinorUnits": 0
+    }
+  },
+  "adapterRequirements": [
+    {
+      "system": "shopify",
+      "capabilities": [
+        "orders.read",
+        "payouts.read",
+        "webhooks.orders"
+      ]
+    }
+  ],
+  "architecture": {
+    "summary": "Squire observes via Shopify webhooks and NetSuite SuiteQL polling; exceptions land in the Reconciliation Center; corrections proposed through guardedWrite",
+    "diagramMermaid": "flowchart LR; S[Shopify]-->C[Vendor connector]-->N[NetSuite]; S-.observe.->Q[Squire]; N-.observe.->Q; Q-->E[Exception queue]"
+  },
+  "backlog": [
+    {
+      "id": "b1",
+      "title": "Contract fixtures for Shopify Order and NetSuite salesorder",
+      "phase": "prototype",
+      "estimateDays": 2
+    }
+  ],
+  "risks": [
+    {
+      "id": "r1",
+      "statement": "Shopify protected customer data Level 2 approval needed for names/addresses",
+      "mitigation": "Design on Level 1 first",
+      "severity": "medium"
+    }
+  ],
+  "blockers": [],
+  "openQuestions": [
+    "Which NetSuite tier governs concurrency?"
+  ],
+  "exclusions": [
+    "Returns and exchanges (phase 2)"
+  ],
+  "proposalInputs": {
+    "phases": [
+      "discovery",
+      "prototype",
+      "pilot"
+    ],
+    "pricingPlaceholder": "platform fee per governed integration scope",
+    "sowSections": [
+      "scope",
+      "gates",
+      "exclusions"
+    ]
+  },
+  "outcomes": [
+    {
+      "id": "o1",
+      "unit": "orders reconciled through cash",
+      "verification": "next period run shows no reopened exception",
+      "attributionRule": "platform-attributed only via guardedWrite"
+    }
+  ]
+}

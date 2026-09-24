@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Embedded ERP Surface — reference host (dev only)</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 1rem;
+      }
+      header {
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+      }
+      input[type="text"] {
+        width: 100%;
+        max-width: 480px;
+        padding: 0.4rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+      }
+      button {
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid #2563eb;
+        background: #2563eb;
+        color: #ffffff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      iframe#embedded-frame {
+        width: 100%;
+        height: 720px;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+      }
+      .note {
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: #b45309;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Embedded ERP Surface — reference host</h1>
+      <p class="note">
+        Dev-only host. The `/api/embedded/host-bootstrap` browser-bearer flow
+        is gated by NODE_ENV !== 'production' on the server. Production
+        embedding goes through a NetSuite Suitelet or BC AL Extension that
+        calls host-bootstrap server-side (PR 10b).
+      </p>
+      <label for="bearer">Bearer token</label>
+      <input id="bearer" type="text" placeholder="sct_..." autocomplete="off" />
+      <label for="account" style="margin-top: 0.5rem;">platformAccountId</label>
+      <input id="account" type="text" placeholder="acct_dev_001" />
+      <label for="module" style="margin-top: 0.5rem;">Embedded module path</label>
+      <input id="module" type="text" value="/compliance-dashboard.html" />
+      <br />
+      <button id="boot">Bootstrap embedded session</button>
+    </header>
+    <iframe id="embedded-frame" title="Embedded module" sandbox="allow-scripts allow-same-origin"></iframe>
+    <script>
+      (function () {
+        var bootBtn = document.getElementById('boot');
+        var bearer = document.getElementById('bearer');
+        var account = document.getElementById('account');
+        var modulePath = document.getElementById('module');
+        var frame = document.getElementById('embedded-frame');
+        bootBtn.addEventListener('click', function () {
+          var token = (bearer.value || '').trim();
+          var accountId = (account.value || '').trim();
+          if (!token) {
+            alert('Enter a bearer token first.');
+            return;
+          }
+          if (!accountId) {
+            alert('Enter platformAccountId first (must match the standalone token row provisioned via npm run rotate-embedded-service-token).');
+            return;
+          }
+          fetch('/api/embedded/host-bootstrap', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              Authorization: 'Bearer ' + token,
+              'Content-Type': 'application/json',
+              'X-Embedded-Platform': 'standalone'
+            },
+            body: JSON.stringify({
+              platformAccountId: accountId,
+              modulePath: modulePath.value || '/compliance-dashboard.html'
+            })
+          })
+            .then(function (response) {
+              if (!response.ok) {
+                throw new Error('host-bootstrap failed: ' + response.status);
+              }
+              return response.json();
+            })
+            .then(function (payload) {
+              frame.src = payload.embedSrc;
+            })
+            .catch(function (err) {
+              alert('Bootstrap error: ' + err.message);
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

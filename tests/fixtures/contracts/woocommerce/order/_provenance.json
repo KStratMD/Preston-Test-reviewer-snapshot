@@ -1,0 +1,10 @@
+{
+  "vendor": "woocommerce",
+  "entity": "order",
+  "sourceUrl": "https://raw.githubusercontent.com/woocommerce/woocommerce/11.0.1/plugins/woocommerce/includes/rest-api/Controllers/Version3/class-wc-rest-orders-controller.php",
+  "docVersion": "wc/v3 (11.0.1)",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "a849ae45a8792aecfbe381bd56a973c1f75ff3bc4cba5a25f80935afc4969d62",
+  "notes": "Synthetic selected fields. Official 11.0.1 controller declares wc/v3 and inherits the Version2 schema; the legacy v3.html docs are not used. Supplemental field reference: https://raw.githubusercontent.com/woocommerce/woocommerce/11.0.1/plugins/woocommerce/includes/rest-api/Controllers/Version2/class-wc-rest-orders-v2-controller.php; SHA-256 dff21aca886d015612402cbf486a7a8f5a000f5ef5ebfbded06a8a6666924961."
+}

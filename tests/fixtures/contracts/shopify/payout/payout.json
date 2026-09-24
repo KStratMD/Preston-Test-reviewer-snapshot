@@ -1,0 +1,10 @@
+{
+  "id": "gid://shopify/ShopifyPaymentsPayout/7201",
+  "issuedAt": "2026-08-17T00:00:00Z",
+  "net": {
+    "amount": "115.31",
+    "currencyCode": "USD"
+  },
+  "status": "PAID",
+  "transactionType": "DEPOSIT"
+}

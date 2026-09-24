@@ -1,0 +1,10 @@
+{
+  "vendor": "netsuite",
+  "entity": "customer",
+  "sourceUrl": "https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/chapter_1540391670.html",
+  "docVersion": "2026.1",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "9fdf55e91f816533b2d0c09ef4ca545ea25d8ea4d9ee0229ee760281646b437b",
+  "notes": "Synthetic REST record field selection. Primary source is the mutable REST overview, identified by capture hash. 2026.1 is the plan target, not an independently verified versioned schema snapshot. Supplemental REST example (not a complete field schema): https://docs.oracle.com/en/cloud/saas/netsuite/ns-online-help/section_1545141395.html; SHA-256 40beb6d4aa688ae0806b90afc7bb851ef845875ee4db9a649ef54f9ebd911cc1."
+}

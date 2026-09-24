@@ -1,0 +1,10 @@
+{
+  "vendor": "shopify",
+  "entity": "order",
+  "sourceUrl": "https://shopify.dev/docs/api/admin-graphql/2026-07/objects/Order",
+  "docVersion": "2026-07",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "c9d5c6e86cc36f7a4cd0e150e0d571f4d0241952bc0dce61adaf4a9de451109d",
+  "notes": "Selected GraphQL fields, synthetic values. Requested 2026-07 URL redirects to /latest/; fetched page displays 2026-07 latest on capture date. Hash is fetched UTF-8 HTML, not a live response. Supplemental nested-type references (same capture date and version-alias behavior): https://shopify.dev/docs/api/admin-graphql/2026-07/objects/MoneyBag; SHA-256 20f75abb836e6dfbf3ca1b06e64a7e0d12961653f51073bfdb870666de8918fa. https://shopify.dev/docs/api/admin-graphql/2026-07/objects/MoneyV2; SHA-256 1175df52282837712cbaebcb231708ca1f66116bd325fbac364124e125effd4c. https://shopify.dev/docs/api/admin-graphql/2026-07/objects/LineItem; SHA-256 d4d9f9ecc4a1491269097b30063bf117a8d431b92dc4e7390465708409a70005. https://shopify.dev/docs/api/admin-graphql/2026-07/objects/OrderTransaction; SHA-256 628e73401eeb1e40c21564df1ad25953f83c975b04cd08a9318842729ad21039. https://shopify.dev/docs/api/admin-graphql/2026-07/objects/TaxLine; SHA-256 5f91b912ec17872ec09eeb2f3e5920f01450091cb1462667239d9aef50f2714a. https://shopify.dev/docs/api/admin-graphql/2026-07/objects/Refund; SHA-256 78025cb70927aa2615a3eeebb9da55883e38c48703590cfc7457ecf78041972d. https://shopify.dev/docs/api/admin-graphql/2026-07/objects/ShippingLine; SHA-256 cc0b378e29dd1a915e1e2d5a8b3bbb6af076216b44994ebb9fba3ea0a8a6e43e. https://shopify.dev/docs/api/admin-graphql/2026-07/enums/OrderDisplayFinancialStatus; SHA-256 db732f77c59907752dcadd78267ab19e345c95f16081c072c641486dd65fb589."
+}
