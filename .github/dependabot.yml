@@ -1,0 +1,230 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "Working-Branch"
+    # Monthly + grouped keeps routine updates to a few PRs per run. Under the weekly
+    # schedule #1380 was closed unmerged, superseded by #1388 for the same package.
+    schedule:
+      interval: "monthly"
+      time: "06:00"
+    # Each limit in this file applies to its own ecosystem entry; it is not a
+    # repository-wide cap. Security updates are outside it.
+    open-pull-requests-limit: 3
+    cooldown:
+      # Wait a week after a release before proposing it; this reduces, but does not remove,
+      # the chance of bumping to a release that is later yanked or hotfixed.
+      default-days: 7
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "automated"
+    ignore:
+      # Ignore major version updates for these packages
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+      # Node 26 typings require a runtime floor beyond the project Node 22 support.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # p-limit went ESM-only at v4; this project compiles to CommonJS.
+      # Stay on 3.x until the project moves to ESM emit. See PR #613.
+      - dependency-name: "p-limit"
+        update-types: ["version-update:semver-major"]
+      # npm majors are deliberate migrations (see docs/operations/DEPENDENCY-MAINTENANCE.md),
+      # so routine version updates do not open them. Security updates are not governed by
+      # these ignores and are triaged separately on the default branch.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      # Group ESLint related updates
+      eslint:
+        patterns:
+          - "eslint*"
+          - "@eslint/*"
+          - "@typescript-eslint/*"
+          # The wrapper package matches none of the prefix patterns above; alone it opened #1380/#1388.
+          - "typescript-eslint"
+        update-types: ["minor", "patch"]
+      # Group Jest related updates  
+      jest:
+        patterns:
+          - "jest*"
+          - "@jest/*"
+          - "@types/jest"
+          - "ts-jest"
+        update-types: ["minor", "patch"]
+      # Group Docker related updates
+      docker:
+        patterns:
+          - "*docker*"
+        update-types: ["minor", "patch"]
+      # Group AWS SDK updates
+      aws:
+        patterns:
+          - "@aws-sdk/*"
+        update-types: ["minor", "patch"]
+        # Optional cloud secret client (services/SecretManager.ts) stays individual.
+        exclude-patterns:
+          - "@aws-sdk/client-secrets-manager"
+      # Group Azure SDK updates
+      azure:
+        patterns:
+          - "@azure/*"
+        update-types: ["minor", "patch"]
+        # Optional cloud secret clients (services/SecretManager.ts) stay individual.
+        exclude-patterns:
+          - "@azure/identity"
+          - "@azure/keyvault-secrets"
+      # @playwright/test and playwright must move together with the e2e-smoke
+      # image pin (tests/scripts/e2e-smoke-environment.test.sh); #1325 split them.
+      # Majors stay out of the group: they are separate migrations with an image move.
+      playwright:
+        patterns:
+          - "playwright"
+          - "@playwright/*"
+        update-types: ["minor", "patch"]
+      # Keep telemetry instrumentation releases coherent for one assessment.
+      otel-coordinated:
+        patterns:
+          - "@opentelemetry/*"
+        update-types: ["minor", "patch"]
+      # Catch-alls. This file does not rely on how Dependabot ranks overlapping groups (a
+      # patternless group can outrank a wildcard family group), so every
+      # coordinated-family pattern above is excluded explicitly from BOTH catch-alls and a
+      # catch-all cannot capture a coordinated family. (Family patterns may still overlap
+      # each other for a hypothetical name; tests check declared dependencies and covered
+      # exemplars for at most one group.) Remaining
+      # minor/patch updates are grouped by dependency type.
+      # Risk-category packages (auth, credentials and secrets, crypto, rate limiting,
+      # database, Redis, the HTTP security boundary, outbound authenticated clients,
+      # build/install hooks, vendored browser assets, runtime code declared as dev, 0.x
+      # outside a family) and their types are excluded by name, so each still gets its
+      # own routine PR; names also covered by a family pattern stay listed anyway. The
+      # optional secret SDKs are listed in both catch-alls because their dependency type
+      # is not documented. Exclude a new risk-category dependency here, and from any
+      # family group that matches it, in the same change that adds it; a new coordinated
+      # family is added to both catch-alls' family exclusions
+      # (docs/operations/DEPENDENCY-MAINTENANCE.md).
+      production-minor-patch:
+        dependency-type: "production"
+        update-types: ["minor", "patch"]
+        exclude-patterns:
+          # Coordinated-family patterns: keep catch-alls from capturing families.
+          - "eslint*"
+          - "@eslint/*"
+          - "@typescript-eslint/*"
+          - "typescript-eslint"
+          - "jest*"
+          - "@jest/*"
+          - "@types/jest"
+          - "ts-jest"
+          - "*docker*"
+          - "@aws-sdk/*"
+          - "@azure/*"
+          - "playwright"
+          - "@playwright/*"
+          - "@opentelemetry/*"
+          # Risk-category packages, enumerated by name.
+          - "jsonwebtoken"
+          - "bcryptjs"
+          - "express-rate-limit"
+          - "ipaddr.js"
+          - "better-sqlite3"
+          - "pg"
+          - "kysely"
+          - "ioredis"
+          - "bullmq"
+          - "express"
+          - "helmet"
+          - "cors"
+          - "sanitize-html"
+          - "multer"
+          - "@modelcontextprotocol/sdk"
+          - "axios"
+          - "dotenv"
+          - "cron"
+          - "json-bigint"
+          - "xml2js"
+          - "reflect-metadata"
+          - "swagger-ui-express"
+          - "@aws-sdk/client-secrets-manager"
+          - "@azure/identity"
+          - "@azure/keyvault-secrets"
+      development-minor-patch:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
+        exclude-patterns:
+          # Coordinated-family patterns: keep catch-alls from capturing families.
+          - "eslint*"
+          - "@eslint/*"
+          - "@typescript-eslint/*"
+          - "typescript-eslint"
+          - "jest*"
+          - "@jest/*"
+          - "@types/jest"
+          - "ts-jest"
+          - "*docker*"
+          - "@aws-sdk/*"
+          - "@azure/*"
+          - "playwright"
+          - "@playwright/*"
+          - "@opentelemetry/*"
+          # Risk-category packages, enumerated by name.
+          - "typescript"
+          - "ts-node"
+          - "tailwindcss"
+          - "ffmpeg-static"
+          - "@types/jsonwebtoken"
+          - "@types/bcryptjs"
+          - "@types/better-sqlite3"
+          - "@types/pg"
+          - "@types/express"
+          - "@types/cors"
+          - "@types/multer"
+          - "@types/sanitize-html"
+          - "chart.js"
+          - "alpinejs"
+          - "@fortawesome/fontawesome-free"
+          - "ajv"
+          - "ajv-formats"
+          - "markdownlint"
+          - "markdownlint-cli"
+          - "@types/xml2js"
+          - "@types/swagger-ui-express"
+          - "@aws-sdk/client-secrets-manager"
+          - "@azure/identity"
+          - "@azure/keyvault-secrets"
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "Working-Branch"
+    schedule:
+      interval: "quarterly"
+      time: "06:00"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "docker"
+    labels:
+      - "docker"
+      - "dependencies"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows/"
+    target-branch: "Working-Branch"
+    schedule:
+      interval: "quarterly"
+      time: "06:00"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "github-actions"
+      - "dependencies"

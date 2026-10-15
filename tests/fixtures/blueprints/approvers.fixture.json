@@ -1,0 +1,6 @@
+{
+  "approvers": [
+    { "id": "consultant-fixture", "githubLogin": "consultant-fixture-gh", "roles": ["requester"], "active": true },
+    { "id": "reviewer-fixture", "githubLogin": "reviewer-fixture-gh", "roles": ["approver"], "active": true }
+  ]
+}

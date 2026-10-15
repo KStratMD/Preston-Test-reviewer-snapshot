@@ -1,0 +1,6187 @@
+{
+  "format": "db-transfer-manifest/v1",
+  "migrationNames": [
+    "create_integration_jobs_table",
+    "create_integration_config_history_table",
+    "create_integration_execution_logs_table",
+    "create_data_quality_reports_table",
+    "create_webhook_deliveries_table",
+    "create_audit_logs_table",
+    "create_metrics_table",
+    "create_tenant_configurations_table",
+    "create_api_keys_table",
+    "create_circuit_breaker_states_table",
+    "create_dead_letter_records_table",
+    "create_ai_configurations_table",
+    "seed_ai_configurations_defaults",
+    "create_mcp_user_settings_table",
+    "add_mcp_gateway_user_settings_columns",
+    "create_mcp_tool_policies_table",
+    "create_sync_cursors_table",
+    "create_saga_executions_table",
+    "create_indexes",
+    "create_mdm_tables",
+    "create_mdm_indexes",
+    "create_mdm_survivorship_rules_table",
+    "create_mdm_survivorship_rules_indexes",
+    "seed_mdm_survivorship_rules_defaults",
+    "create_mdm_conflict_stats_table",
+    "create_mdm_conflict_history_table",
+    "create_mdm_conflict_indexes",
+    "create_ai_sessions_table",
+    "create_reasoning_traces_table",
+    "create_reasoning_traces_indexes",
+    "harden_audit_logs_for_persistence",
+    "create_embedded_sessions_table",
+    "create_embedded_service_token_versions_table",
+    "add_tenant_configurations_key_value_index",
+    "create_sync_error_assist_runs_table",
+    "create_sync_error_assist_processed_table",
+    "extend_sync_error_assist_processed",
+    "add_sync_error_assist_processed_error_last_modified",
+    "create_finance_central_approvals_table",
+    "create_tenants_and_status_audit_tables",
+    "create_workflow_central_tasks_table",
+    "create_workflow_central_instances_table",
+    "add_workflow_central_payload_column",
+    "create_workflow_central_activity_logs_table",
+    "create_governance_approvals_table",
+    "add_governance_approvals_decided_index",
+    "create_cost_rollup_tables",
+    "create_reconciliation_center_tables",
+    "create_lineage_events_table",
+    "add_write_descriptor_to_governance_approvals",
+    "add_apply_lifecycle_to_governance_approvals",
+    "add_handler_key_to_reconciliation_schedules",
+    "reconciliation_schedule_next_run_at_tztz",
+    "add_reconciliation_runs_stale_sweep_index",
+    "add_integration_config_id_to_reconciliation_schedules",
+    "reconciliation_schedules_integration_config_not_null",
+    "create_suitecentral_control_plane_tables",
+    "create_deferred_serialized_units_table",
+    "create_serialized_asset_sweep_cursors_table",
+    "redact_presanitizer_reasoning_trace_content",
+    "delete_system_tenant_demo_fixtures",
+    "add_governance_approval_request_fingerprint",
+    "create_serialized_asset_retry_operations_table",
+    "widen_transfer_float_columns",
+    "create_embedded_role_grants"
+  ],
+  "migrationManifestHash": "a711ad9a1739bc0b956171d607b5b4bfff2bafe998ad27e83ade55062790c394",
+  "tables": [
+    {
+      "name": "ai_config_audit_log",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "config_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "config_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "action",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "old_values",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "new_values",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ]
+    },
+    {
+      "name": "ai_provider_configs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "organization_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "provider_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "provider_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "encrypted_api_key",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "endpoint_url",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "is_active",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "is_default",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "configuration",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ],
+      "seed": {
+        "identityColumns": [
+          "id"
+        ],
+        "identities": [
+          [
+            "1"
+          ]
+        ],
+        "volatileColumns": [
+          "created_at",
+          "updated_at"
+        ],
+        "volatileJsonPaths": [
+          "configuration.seededAt"
+        ]
+      }
+    },
+    {
+      "name": "ai_sessions",
+      "primaryKey": [
+        "session_id"
+      ],
+      "sortColumns": [
+        "session_id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "session_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "workflow_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "started_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "completed_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "overall_confidence",
+          "sourceType": "REAL",
+          "targetType": "DOUBLE PRECISION",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "float64",
+          "floatWidth": 64
+        },
+        {
+          "name": "total_execution_time",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "metadata",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "ai_task_model_configs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [
+        "ai_provider_configs"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "organization_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "task_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "provider_config_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "model_version",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "model_parameters",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "is_active",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "priority",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ],
+      "seed": {
+        "identityColumns": [
+          "id"
+        ],
+        "identities": [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "4"
+          ]
+        ],
+        "volatileColumns": [
+          "created_at",
+          "updated_at"
+        ],
+        "volatileJsonPaths": [
+          "model_parameters.seededAt"
+        ]
+      }
+    },
+    {
+      "name": "ai_usage_logs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [
+        "ai_provider_configs",
+        "ai_task_model_configs"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "organization_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "provider_config_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "task_model_config_id",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "task_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "provider_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "model_version",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "prompt_tokens",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "completion_tokens",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "total_tokens",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "estimated_cost",
+          "sourceType": "REAL",
+          "targetType": "DECIMAL(10,6)",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "decimal",
+          "precision": 10,
+          "scale": 6
+        },
+        {
+          "name": "request_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "session_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "execution_time_ms",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "success",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "error_message",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "records_processed",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "fields_analyzed",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "cost_source",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ]
+    },
+    {
+      "name": "api_keys",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "key_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "key_hash",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "key_prefix",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "permissions",
+          "sourceType": "TEXT",
+          "targetType": "TEXT[]",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text_array"
+        },
+        {
+          "name": "rate_limit",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "expires_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "last_used_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "is_active",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "created_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "audit_logs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "action",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "resource_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "resource_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "old_values",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "new_values",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "details",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "result",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "error_message",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "duration_ms",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "ip_address",
+          "sourceType": "TEXT",
+          "targetType": "INET",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "inet"
+        },
+        {
+          "name": "user_agent",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "circuit_breaker_states",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "service_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "state",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "failure_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "success_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "last_failure_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "last_success_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "opened_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "next_attempt_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "cost_rollup_daily",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "provider",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "date_utc",
+          "sourceType": "TEXT",
+          "targetType": "DATE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "date"
+        },
+        {
+          "name": "total_cost_usd",
+          "sourceType": "REAL",
+          "targetType": "NUMERIC(18,6)",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "decimal",
+          "precision": 18,
+          "scale": 6
+        },
+        {
+          "name": "measured_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "estimated_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "cost_rollup_per_flow",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "flow_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "date_utc",
+          "sourceType": "TEXT",
+          "targetType": "DATE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "date"
+        },
+        {
+          "name": "total_cost_usd",
+          "sourceType": "REAL",
+          "targetType": "NUMERIC(18,6)",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "decimal",
+          "precision": 18,
+          "scale": 6
+        },
+        {
+          "name": "measured_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "estimated_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "data_quality_reports",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "integration_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "job_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "source_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "target_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "record_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "valid_records",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "invalid_records",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "duplicate_records",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "quality_score",
+          "sourceType": "REAL",
+          "targetType": "DECIMAL(5,2)",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "decimal",
+          "precision": 5,
+          "scale": 2
+        },
+        {
+          "name": "validation_rules",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "quality_metrics",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "dead_letter_records",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "original_queue",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "job_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "job_data",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "error",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "failure_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "last_attempt_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "retried_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "retry_queue",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "metadata",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "deferred_serialized_units",
+      "primaryKey": [
+        "tenant_id",
+        "configuration_id",
+        "inventory_number_id"
+      ],
+      "sortColumns": [
+        "tenant_id",
+        "configuration_id",
+        "inventory_number_id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "configuration_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "inventory_number_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "normalized_payload",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "reason",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "attempt_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "next_attempt_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "first_deferred_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "last_attempt_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "embedded_role_grants",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "platform",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "platform_account_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "role",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "granted_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "granted_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "expires_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "revoked_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "revoked_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "secret_enc",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "embedded_service_token_versions",
+      "primaryKey": [
+        "token_hash"
+      ],
+      "sortColumns": [
+        "token_hash"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "token_hash",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "platform",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "platform_account_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "valid_from",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "valid_until",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "retired_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "embedded_sessions",
+      "primaryKey": [
+        "session_id"
+      ],
+      "sortColumns": [
+        "session_id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "session_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "platform",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "platform_account_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "csrf_token",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "expected_host_origin",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "expires_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "last_rotation_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "erp_record_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "erp_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "erp_record_url",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "user_roles",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "user_identity",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "verified_grant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "embedded_user_assertion_nonces",
+      "primaryKey": [
+        "nonce"
+      ],
+      "sortColumns": [
+        "nonce"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "nonce",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "grant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "used_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "finance_central_approvals",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "approval_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "document_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "document_number",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "document_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "description",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "entity_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "employee_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "amount",
+          "sourceType": "REAL",
+          "targetType": "DECIMAL(15,2)",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "decimal",
+          "precision": 15,
+          "scale": 2
+        },
+        {
+          "name": "currency",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "submitted_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "submitted_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "current_approver",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "approval_level",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "priority",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "netsuite_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "operator_disposition",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "operator_disposition_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "operator_disposition_user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "applied_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "rejection_reason",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "approval_comments",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "governance_approvals",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "requester_user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "operation_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "resource_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "resource_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "risk_level",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "redacted_payload",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "policy_findings",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "expires_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "decided_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "decided_by_user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "decision_reason",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "apply_idempotency_key",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "write_descriptor",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "apply_status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "applied_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "apply_failed_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "apply_error",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "request_fingerprint",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "requester_provenance",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "requester_platform",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "requester_platform_account_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "integration_config_history",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "config_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "version",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "configuration",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "checksum",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "is_active",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "created_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "description",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "integration_execution_logs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "integration_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "job_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "level",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "message",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "metadata",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "trace_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "span_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "integration_jobs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "integration_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "queue_job_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "total_records",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "processed_records",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "failed_records",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "batch_size",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "priority",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "started_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "completed_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "error_message",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "metadata",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "lineage_events",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "chain_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "sequence",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "event_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "source_entity_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "source_entity_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "target_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "target_entity_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "target_entity_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "template_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "correlation_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "governance_result",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "payload_hash",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "metadata_json",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "occurred_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "mcp_tool_policies",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "system_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tool_pattern",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "action",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ]
+    },
+    {
+      "name": "mcp_user_settings",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "mcp_schema_enabled",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "mcp_ai_context_enabled",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "mcp_validation_enabled",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "mcp_gateway_enabled",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "mcp_bc_enabled",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ]
+    },
+    {
+      "name": "mdm_conflict_history",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "field_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_a",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_b",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "value_a",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "value_b",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "resolution",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ]
+    },
+    {
+      "name": "mdm_conflict_stats",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "field_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "target_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "conflict_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "resolution_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "auto_resolution_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "manual_resolution_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "last_conflict_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "common_issues",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ]
+    },
+    {
+      "name": "mdm_entity_sources",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [
+        "mdm_golden_records"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "golden_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_data",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "last_synced_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "sync_status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [
+        "id"
+      ]
+    },
+    {
+      "name": "mdm_golden_records",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "entity_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "data",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "confidence",
+          "sourceType": "REAL",
+          "targetType": "DOUBLE PRECISION",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "float64",
+          "floatWidth": 64
+        },
+        {
+          "name": "conflicts",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "conflict_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "approved_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "approved_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "mdm_survivorship_rules",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "entity_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "field_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "strategy",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "config",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "priority",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "is_default",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": [],
+      "seed": {
+        "identityColumns": [
+          "id"
+        ],
+        "identities": [
+          [
+            "v-name"
+          ],
+          [
+            "v-email"
+          ],
+          [
+            "v-phone"
+          ],
+          [
+            "v-address"
+          ],
+          [
+            "v-taxId"
+          ],
+          [
+            "c-name"
+          ],
+          [
+            "c-email"
+          ],
+          [
+            "c-phone"
+          ],
+          [
+            "c-creditLimit"
+          ],
+          [
+            "p-name"
+          ],
+          [
+            "p-sku"
+          ],
+          [
+            "p-price"
+          ],
+          [
+            "p-description"
+          ],
+          [
+            "default"
+          ]
+        ]
+      }
+    },
+    {
+      "name": "mdm_sync_requests",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [
+        "mdm_golden_records"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "golden_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "target_systems",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "requested_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "reviewed_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "reviewed_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "metrics",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "metric_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "metric_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "value",
+          "sourceType": "REAL",
+          "targetType": "DECIMAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "decimal"
+        },
+        {
+          "name": "labels",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "timestamp",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "reasoning_traces",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [
+        "ai_sessions"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "session_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "step_number",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "agent_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "action",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "input_summary",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "output_summary",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "confidence",
+          "sourceType": "REAL",
+          "targetType": "DOUBLE PRECISION",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "float64",
+          "floatWidth": 64
+        },
+        {
+          "name": "reasoning",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "timestamp",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "execution_time",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "metadata",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "reconciliation_exceptions",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "target_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "target_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "exception_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "severity",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "amount_delta",
+          "sourceType": "REAL",
+          "targetType": "NUMERIC(18,6)",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "decimal",
+          "precision": 18,
+          "scale": 6
+        },
+        {
+          "name": "currency",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "description",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "suggested_action",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "assigned_to",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "due_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "resolved_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "resolution_note",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "resolved_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "reconciliation_runs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "schedule_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "started_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "completed_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "exceptions_created",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "error_message",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "reconciliation_schedules",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "cadence",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "handler_key",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "active",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "boolean"
+        },
+        {
+          "name": "next_run_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "integration_config_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "saga_executions",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "idempotency_key",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "saga_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "current_step",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "steps_json",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "context_json",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "error",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "INTEGER",
+          "targetType": "BIGINT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "INTEGER",
+          "targetType": "BIGINT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "completed_at",
+          "sourceType": "INTEGER",
+          "targetType": "BIGINT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "serialized_asset_retry_operations",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "configuration_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "requester_user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "correlation_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "lease_owner",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "fencing_token",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "lease_expires_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "heartbeat_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "started_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "finished_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "units_read",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "units_upserted",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "units_deferred",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "units_quarantined",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "units_failed",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "error_code",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "error_class",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "serialized_asset_sweep_cursors",
+      "primaryKey": [
+        "tenant_id",
+        "configuration_id"
+      ],
+      "sortColumns": [
+        "tenant_id",
+        "configuration_id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "configuration_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "next_offset",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "last_swept_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "suitecentral_allowed_hosts",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "hostname",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "allowed_ports",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "justification",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "updated_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "suitecentral_credential_profiles",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [
+        "suitecentral_environments"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "environment_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "client_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "secret_ref",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "company_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "scopes",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "is_active",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "boolean"
+        },
+        {
+          "name": "rotated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "last_used_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "version",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "created_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "updated_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "suitecentral_environments",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "base_url",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "environment_tier",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "api_version",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "timeout_ms",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "retry_attempts",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "rate_limit_config",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "security_config",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "feature_config",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "version",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "created_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "updated_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "suitecentral_monitoring_configs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [
+        "suitecentral_environments"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "environment_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "enabled",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "boolean"
+        },
+        {
+          "name": "interval_ms",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "thresholds",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "version",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "created_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "updated_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "suitecentral_templates",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "description",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "source_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "target_entities",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "field_mappings",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "business_rules",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "sync_settings",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "version",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "created_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "updated_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "sync_cursors",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "flow_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "source_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "target_system",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "entity_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "last_sync_timestamp",
+          "sourceType": "INTEGER",
+          "targetType": "BIGINT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "last_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "checksum",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "records_processed",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "metadata",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "json"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "INTEGER",
+          "targetType": "BIGINT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "INTEGER",
+          "targetType": "BIGINT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "sync_error_assist_processed",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "error_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "attempts",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "suggestion_record_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "trace_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "provider",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "cost_estimate_usd_cents",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "failure_reason",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "reserved_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "completed_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "confidence",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "suggestion_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "suggestion_text",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "references_field",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "operator_disposition",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "operator_disposition_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "operator_disposition_user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "error_last_modified_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "sync_error_assist_runs",
+      "primaryKey": [
+        "tenant_id"
+      ],
+      "sortColumns": [
+        "tenant_id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "last_modified_at",
+          "sourceType": "INTEGER",
+          "targetType": "BIGINT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "tenant_configurations",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "setting_key",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "setting_value",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "is_encrypted",
+          "sourceType": "INTEGER",
+          "targetType": "BOOLEAN",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "boolean"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "tenant_status_audit",
+      "primaryKey": [
+        "seq"
+      ],
+      "sortColumns": [
+        "seq"
+      ],
+      "dependsOn": [
+        "tenants"
+      ],
+      "columns": [
+        {
+          "name": "seq",
+          "sourceType": "INTEGER",
+          "targetType": "SERIAL",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "previous_status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "new_status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "actor_user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "actor_source",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "reason",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "occurred_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": [
+        "seq"
+      ]
+    },
+    {
+      "name": "tenants",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status_changed_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "status_changed_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "status_reason",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "webhook_deliveries",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "UUID",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "uuid"
+        },
+        {
+          "name": "webhook_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "event_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "payload",
+          "sourceType": "TEXT",
+          "targetType": "JSONB",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "json"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "http_status",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "integer"
+        },
+        {
+          "name": "response_body",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "attempt_count",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "next_retry_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "delivered_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "DATETIME",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "workflow_central_activity_logs",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "instance_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "workflow_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "action",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "user_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "user_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "step_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "details",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "timestamp",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITH TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "instant_utc"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "workflow_central_instances",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "workflow_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "workflow_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "workflow_version",
+          "sourceType": "INTEGER",
+          "targetType": "INTEGER",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "integer"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "current_step_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "current_step_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "variables",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "step_history",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "started_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "started_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "completed_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "due_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "error",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "paused_from_status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "payload",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": []
+    },
+    {
+      "name": "workflow_central_tasks",
+      "primaryKey": [
+        "id"
+      ],
+      "sortColumns": [
+        "id"
+      ],
+      "dependsOn": [],
+      "columns": [
+        {
+          "name": "id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "tenant_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "instance_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "workflow_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "workflow_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "step_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "step_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "task_type",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "status",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "priority",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "assignee_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "assignee_name",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "description",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "due_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "data",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "actions",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "text"
+        },
+        {
+          "name": "created_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "updated_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": false,
+          "targetNullable": false,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "completed_at",
+          "sourceType": "TEXT",
+          "targetType": "TIMESTAMP WITHOUT TIME ZONE",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "naive_timestamp",
+          "timestampPolicy": "utc_z_to_naive"
+        },
+        {
+          "name": "completed_by",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "completion_action_id",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "completion_comment",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        },
+        {
+          "name": "payload",
+          "sourceType": "TEXT",
+          "targetType": "TEXT",
+          "sourceNullable": true,
+          "targetNullable": true,
+          "kind": "text"
+        }
+      ],
+      "sequenceColumns": []
+    }
+  ]
+}

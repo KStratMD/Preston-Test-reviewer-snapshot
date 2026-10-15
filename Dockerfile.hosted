@@ -1,0 +1,56 @@
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY scripts/write-node-modules-runtime.js ./scripts/write-node-modules-runtime.js
+COPY scripts/configure-husky-hooks.mjs ./scripts/configure-husky-hooks.mjs
+# Same native-module fallback as Dockerfile (PR #1161): better-sqlite3 installs
+# via `prebuild-install || node-gyp rebuild`, and this Alpine image has no
+# Python or toolchain, so a transient failure fetching the prebuilt binary
+# (observed as `socket hang up` on PR #1160's CI run) becomes a hard build
+# failure with no working fallback. apk never runs when the first install
+# succeeds. The build-directory cleanup matters MORE here than in Dockerfile:
+# the final stage copies node_modules from this stage verbatim, so source-build
+# intermediates (~15 MB measured) would ship in the production image. Only
+# build/Release/better_sqlite3.node is kept — the path better-sqlite3 resolves
+# through `bindings` at runtime. The cleanup is per-module (better-sqlite3
+# only); msgpackr-extract also declares a gypfile and is not covered.
+RUN npm ci \
+  || ( apk add --no-cache --virtual .native-build-deps python3 make g++ \
+       && npm ci \
+       && apk del .native-build-deps \
+       && rm -rf /root/.cache/node-gyp \
+       && mv /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /tmp/better_sqlite3.node \
+       && rm -rf /app/node_modules/better-sqlite3/build \
+       && mkdir -p /app/node_modules/better-sqlite3/build/Release \
+       && mv /tmp/better_sqlite3.node /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node )
+
+COPY . .
+RUN npm run build
+
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json .
+COPY --from=builder /app/docs/suiteapp ./docs/suiteapp
+COPY --from=builder /app/docs/research ./docs/research
+# Reviewer-evidence artifacts for /api/metrics/review (Phase 7). The hosted
+# image uses a narrow docs/ copy list rather than the whole tree, so both
+# metrics.json and docs/review/proof-cards/ need explicit COPY lines.
+COPY --from=builder /app/metrics.json ./metrics.json
+COPY --from=builder /app/docs/review ./docs/review
+
+ENV NODE_ENV=production
+ENV DEMO_MODE=1
+ENV HOSTED_DEMO=1
+ENV DISABLE_REDIS=1
+ENV BIND_HOST=0.0.0.0
+
+EXPOSE 3000
+
+CMD ["node", "dist/index.js"]

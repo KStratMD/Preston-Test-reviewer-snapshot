@@ -1,0 +1,10 @@
+{
+  "_comment": "PR 16 strategic claim cleanup — patterns and literals exempted from inline-classification requirement. See scripts/check-strategic-claims.mjs and docs/plans/2026-05-01-a-grade-remediation-plan-merged.md PR 16 section. Lower bar to extend; raise the bar to add inline tags on individual claims. The 'etc.' in the plan's 'year stamps, version numbers, etc.' covers genuinely-non-claim numeric tokens — section ordinals, HTTP status placeholders, PR/issue numbers, file-mode bits. Numbers with semantic meaning to the product narrative MUST be tagged.",
+  "patterns": [
+    { "regex": "^20[12]\\d$",                  "reason": "year stamps (2010-2029)" },
+    { "regex": "^20[12]\\d-\\d{2}-\\d{2}$",    "reason": "ISO date stamps" },
+    { "regex": "^v?\\d+\\.\\d+(?:\\.\\d+)?$",  "reason": "version numbers (v1.2 / 1.2.3 / 3.4.0)" },
+    { "regex": "^[1-5]xx$",                    "reason": "HTTP status placeholders (4xx, 5xx)" }
+  ],
+  "literals": []
+}
