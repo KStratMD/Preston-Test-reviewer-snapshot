@@ -1,0 +1,5 @@
+{
+  "approvers": [
+    { "id": "kerry", "githubLogin": "KStratMD", "roles": ["approver", "admin"], "active": true }
+  ]
+}

@@ -1,0 +1,4 @@
+# Reserved for PR 10b platform adapters (NetSuite SuiteApp + BC Extension).
+# Files dropped here MUST have a matching named test in
+# tests/playwright/embedded/adapter-conformance.spec.ts — enforced by
+# scripts/check-adapter-conformance.mjs.

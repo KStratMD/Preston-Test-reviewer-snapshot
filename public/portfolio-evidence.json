@@ -1,0 +1,90 @@
+{
+  "generatedFrom": "docs/review/squire-product-cards/",
+  "cardCount": 6,
+  "cards": [
+    {
+      "slug": "customercentral",
+      "productName": "CustomerCentral",
+      "owner": "TBD (not identified in 2026-05-04 Preston interview)",
+      "status": "Sold to clients",
+      "lastReviewed": {
+        "date": "2026-06-01",
+        "sha": "b26e862c2"
+      },
+      "whatItDoesToday": "CustomerCentral is Squire's customer portal into NetSuite, deployed inside the customer's NetSuite instance. Sold to active clients. Per-product behavior beyond this paragraph is not yet captured in the canonical Squire reference; cite the underlying source before adding behavior claims.",
+      "recommendedPath": "**Insufficient evidence for a CustomerCentral-specific pilot.** The DLP/governance integrate path is real but indistinguishable from a SyncCentral pilot at the egress layer. Recommend deferring CustomerCentral-specific evaluation until the SyncCentral pilot validates the overlay approach.",
+      "sourcePath": "docs/review/squire-product-cards/customercentral.md",
+      "reviewerMirrorUrl": "https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/review/squire-product-cards/customercentral.md"
+    },
+    {
+      "slug": "elasticsuite",
+      "productName": "Elastic Suite",
+      "owner": "Connor Bailey (current; originally Dave; later Preston for a stretch)",
+      "status": "Sold to clients (deployment location TBD per Preston interview)",
+      "lastReviewed": {
+        "date": "2026-06-01",
+        "sha": "b26e862c2"
+      },
+      "whatItDoesToday": "Elastic Suite is Squire's NetSuite ↔ Elasticsearch 2-way integration. Where it lives architecturally is TBD per the 2026-05-04 Preston interview. Per-product behavior beyond this paragraph is not yet captured in the canonical Squire reference; cite the underlying source before adding behavior claims.",
+      "recommendedPath": "**Insufficient evidence.** Elastic Suite is the thinnest match between this repo and a Squire product.",
+      "sourcePath": "docs/review/squire-product-cards/elasticsuite.md",
+      "reviewerMirrorUrl": "https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/review/squire-product-cards/elasticsuite.md"
+    },
+    {
+      "slug": "paymentcentral",
+      "productName": "PaymentCentral",
+      "owner": "Preston Stratford / Andy Nelson / Dave (co-originals)",
+      "status": "Sold to clients",
+      "lastReviewed": {
+        "date": "2026-06-01",
+        "sha": "b26e862c2"
+      },
+      "whatItDoesToday": "PaymentCentral is Squire's Stripe ↔ NetSuite integration plus a customer payment portal, deployed inside the customer's NetSuite instance. Sold to active clients. Naming convention: any \"*Central\" product is an integration between systems. Per-product behavior beyond this paragraph is not yet captured in the canonical Squire reference; cite the underlying source before adding behavior claims.",
+      "recommendedPath": "**Integrate** — DLP + audit overlay is the cleanest first slice.",
+      "sourcePath": "docs/review/squire-product-cards/paymentcentral.md",
+      "reviewerMirrorUrl": "https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/review/squire-product-cards/paymentcentral.md"
+    },
+    {
+      "slug": "payoutrec",
+      "productName": "Payout Rec",
+      "owner": "Sam Dean (current; originally Andy / Danny / Tyler)",
+      "status": "Built first; oldest",
+      "lastReviewed": {
+        "date": "2026-06-01",
+        "sha": "b26e862c2"
+      },
+      "whatItDoesToday": "Payout Rec is Squire's merchant reconciliation tool. Architecturally distinct from the other five products: it lives in **Celigo + Azure**, NOT inside NetSuite. Reconciles payment-processor payouts against merchant transactions, surfacing mismatches for resolution. The oldest of the six products by build date.",
+      "recommendedPath": "**Insufficient evidence.** Payout Rec's Celigo + Azure architecture and reconciliation domain don't intersect cleanly with this repo's current surface. Out-of-scope for the first pilot.",
+      "sourcePath": "docs/review/squire-product-cards/payoutrec.md",
+      "reviewerMirrorUrl": "https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/review/squire-product-cards/payoutrec.md"
+    },
+    {
+      "slug": "synccentral",
+      "productName": "SyncCentral",
+      "owner": "Preston Stratford",
+      "status": "~40+ deployments (largest by deployment count of the six products)",
+      "lastReviewed": {
+        "date": "2026-06-02",
+        "sha": "f5114da"
+      },
+      "whatItDoesToday": "SyncCentral is Squire's generic ERP integration platform — \"connect anything to NetSuite.\" Architecture: NetSuite scripts call Azure every 15 minutes; Azure calls the external system, transforms the payload, and returns it to NetSuite, which then attempts to create or update the record. **Azure is pass-through transformation only — never stores data** (a hard architectural constraint after a prior incident with Azure Data Factory holding data). Failed payloads are stored as error records inside NetSuite, not in Azure. ~90% of customer setup happens in NetSuite (custom bundle install + connection record config); only a small but important part runs in Azure. Currently active in 3PL deployments (ShipStation and others) and Macy's as a commerce channel.",
+      "recommendedPath": "**Enhance** — pilot AI Field Mapping + Sync Error AI Assist on one production SyncCentral deployment.",
+      "sourcePath": "docs/review/squire-product-cards/synccentral.md",
+      "reviewerMirrorUrl": "https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/review/squire-product-cards/synccentral.md"
+    },
+    {
+      "slug": "vendorcentral",
+      "productName": "VendorCentral",
+      "owner": "Lee",
+      "status": "Sold to clients (formerly named SupplierCentral)",
+      "lastReviewed": {
+        "date": "2026-06-01",
+        "sha": "b26e862c2"
+      },
+      "whatItDoesToday": "VendorCentral is Squire's vendor portal into NetSuite, deployed inside the customer's NetSuite instance. Sold to active clients. Originally named SupplierCentral. Per-product behavior beyond this paragraph is not yet captured in the canonical Squire reference; cite the underlying source before adding behavior claims.",
+      "recommendedPath": "**Insufficient evidence for a VendorCentral-specific pilot.** Vendor Onboarding AI Flow's deferral means the AI-assisted vendor flow is not on the near-term roadmap. The integrate path (DLP/audit overlay at the NetSuite egress layer) is structurally indistinguishable from a SyncCentral pilot at the same layer; recommend deferring VendorCentral-specific evaluation until SyncCentral pilot validates the overlay approach.",
+      "sourcePath": "docs/review/squire-product-cards/vendorcentral.md",
+      "reviewerMirrorUrl": "https://github.com/KStratMD/Preston-Test-reviewer-snapshot/blob/main/docs/review/squire-product-cards/vendorcentral.md"
+    }
+  ]
+}
