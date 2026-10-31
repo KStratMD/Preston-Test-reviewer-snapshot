@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Canonical Order",
+  "description": "Universal order schema for B2B translation",
+  "type": "object",
+  "required": ["orderId", "orderDate", "customer", "lineItems"],
+  "properties": {
+    "orderId": {
+      "type": "string",
+      "description": "Unique order identifier"
+    },
+    "orderDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 date-time when order was placed"
+    },
+    "customer": {
+      "type": "object",
+      "required": ["customerId", "name"],
+      "properties": {
+        "customerId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "billTo": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "addressLine1": { "type": "string" },
+        "addressLine2": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "postalCode": { "type": "string" },
+        "country": { "type": "string" }
+      }
+    },
+    "shipTo": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "addressLine1": { "type": "string" },
+        "addressLine2": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "postalCode": { "type": "string" },
+        "country": { "type": "string" }
+      }
+    },
+    "lineItems": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["itemId", "quantity", "unitPrice"],
+        "properties": {
+          "lineNumber": { "type": "number" },
+          "itemId": { "type": "string" },
+          "description": { "type": "string" },
+          "quantity": { "type": "number", "minimum": 0 },
+          "unitPrice": { "type": "number", "minimum": 0 },
+          "totalPrice": { "type": "number", "minimum": 0 },
+          "uom": { "type": "string", "description": "Unit of measure" }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "subtotal": { "type": "number" },
+        "tax": { "type": "number" },
+        "shipping": { "type": "number" },
+        "total": { "type": "number" }
+      }
+    }
+  }
+}

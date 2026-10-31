@@ -1,0 +1,10 @@
+{
+  "vendor": "businesscentral",
+  "entity": "customer",
+  "sourceUrl": "https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/resources/dynamics_customer",
+  "docVersion": "v2.0",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "6109731bc34c5a6095a478c612af8e0c02822b196220cddba6ee2cf987453bd0",
+  "notes": "Synthetic selected fields; API version pinned in URL, documentation content can change."
+}

@@ -1,0 +1,47 @@
+{
+  "id": "netsuite-salesforce-customers",
+  "tenantId": "tenant-a",
+  "name": "NetSuite to Salesforce Customer Sync",
+  "description": "Hosted-custody-safe sample definition for a NetSuite to Salesforce customer flow.",
+  "sourceSystem": {
+    "type": "NetSuite",
+    "credentialSource": "environment"
+  },
+  "targetSystem": {
+    "type": "Salesforce",
+    "credentialSource": "environment"
+  },
+  "sourceEntity": "Customer",
+  "targetEntity": "Account",
+  "syncDirection": "source_to_target",
+  "syncMode": "batch",
+  "isActive": false,
+  "fieldMappings": [
+    {
+      "sourceField": "entityid",
+      "targetField": "AccountNumber",
+      "transformationType": "direct",
+      "isRequired": true
+    },
+    {
+      "sourceField": "companyname",
+      "targetField": "Name",
+      "transformationType": "direct",
+      "isRequired": true
+    },
+    {
+      "sourceField": "email",
+      "targetField": "PersonEmail",
+      "transformationType": "direct",
+      "isRequired": false
+    },
+    {
+      "sourceField": "phone",
+      "targetField": "Phone",
+      "transformationType": "direct",
+      "isRequired": false
+    }
+  ],
+  "transformationRules": [],
+  "batchSize": 100
+}

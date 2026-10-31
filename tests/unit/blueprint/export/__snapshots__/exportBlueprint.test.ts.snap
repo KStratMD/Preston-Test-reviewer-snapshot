@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`exports five artifacts and a strict round-trippable envelope 1`] = `
+"# Shopify to NetSuite order-to-cash assurance
+
+Version 0.1.0 · schema 1 · evidence discovery
+
+## Executable: no
+- evidence level is discovery
+- system shopify evidence rung 1 is below 2
+- system netsuite evidence rung 1 is below 2
+- system shopify&#95;payments evidence rung 1 is below 2
+- attestations not verified against GitHub
+- requires 1 distinct verified attestation(s), found 0
+
+## Goals
+- Every Shopify order paid in a period is invoiced or cash-saled in NetSuite within 24h (criteria: orders&#95;missing&#95;in&#95;erp == 0 at period close)
+
+## Systems and integration paths
+| System | Role | Vendor | API version | Auth | Evidence rung |
+|---|---|---|---|---|---|
+| shopify | commerce | Shopify | 2026-07 | oauth&#95;token&#95;exchange | 1 |
+| netsuite | erp | Oracle NetSuite | 2026.1 | oauth2&#95;m2m | 1 |
+| shopify&#95;payments | payments | Shopify Payments | 2026-07 | inherits:shopify | 1 |
+
+| Path | From | To | Owner | Squire role |
+|---|---|---|---|---|
+| p1 | shopify | netsuite | existing&#95;vendor&#95;connector | observe&#95;and&#95;propose |
+
+## Ownership
+| Entity | Owner | Consumers | Conflict policy |
+|---|---|---|---|
+| order | shopify | netsuite | source&#95;wins |
+| salesorder | netsuite | shopify | source&#95;wins |
+
+## Approval and separation-of-duty requirements
+Required distinct approvers: 1. Roles: approver. Separation of duties: true.
+
+A governed write requested by a host-asserted principal is blocked at runtime until a Squire-verified requester re-submits it; executability of this document does not admit such a request.
+
+## Exceptions in scope
+| Type | Severity | Disposition | Description |
+|---|---|---|---|
+| missing&#95;in&#95;target | high | propose&#95;create | Paid Shopify order with no NetSuite salesorder after 24h |
+| amount&#95;mismatch | medium | propose&#95;correction | Order total differs from salesorder total in minor units |
+
+## Architecture
+Squire observes via Shopify webhooks and NetSuite SuiteQL polling; exceptions land in the Reconciliation Center; corrections proposed through guardedWrite
+
+\`\`\`mermaid
+flowchart LR; S[Shopify]-->C[Vendor connector]-->N[NetSuite]; S-.observe.->Q[Squire]; N-.observe.->Q; Q-->E[Exception queue]
+\`\`\`
+
+## Phases and gates
+- discovery
+- prototype
+- pilot
+
+## Exclusions
+- Returns and exchanges (phase 2)
+
+## Open questions
+- Which NetSuite tier governs concurrency?
+
+## Risks
+| Risk | Severity | Mitigation |
+|---|---|---|
+| Shopify protected customer data Level 2 approval needed for names/addresses | medium | Design on Level 1 first |
+
+## Measurable outcomes
+| Unit | Verification | Attribution rule |
+|---|---|---|
+| orders reconciled through cash | next period run shows no reopened exception | platform-attributed only via guardedWrite |
+
+## Pricing
+platform fee per governed integration scope
+"
+`;

@@ -1,0 +1,21 @@
+[
+  {
+    "id": "gid://shopify/ShopifyPaymentsBalanceTransaction/7301",
+    "type": "CHARGE",
+    "transactionDate": "2026-08-15T14:03:00Z",
+    "amount": {
+      "amount": "118.75",
+      "currencyCode": "USD"
+    },
+    "fee": {
+      "amount": "3.44",
+      "currencyCode": "USD"
+    },
+    "net": {
+      "amount": "115.31",
+      "currencyCode": "USD"
+    },
+    "sourceOrderTransactionId": "8001",
+    "test": true
+  }
+]

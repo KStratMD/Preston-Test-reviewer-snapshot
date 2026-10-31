@@ -1,0 +1,21 @@
+name: Dispatch Blueprint review verification
+
+on:
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions: {}
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Request verification from the base branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PULL_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh workflow run blueprint-verify.yml --ref "$BASE_REF" -f "pull=$PULL_NUMBER"
