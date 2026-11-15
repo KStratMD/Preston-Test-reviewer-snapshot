@@ -1,0 +1,424 @@
+openapi: 3.0.3
+info:
+  title: Preston Integration Hub AI & Orchestrator API (Full Spec)
+  version: 0.1.0
+  description: |
+    Full fidelity OpenAPI specification including security schemes, reusable error components,
+    and required path parameters. This spec may include constructs disallowed by stricter
+    linters applied to the primary openapi.yaml.
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string }
+            details:
+              oneOf:
+                - { type: array, items: { type: object } }
+                - { type: 'null' }
+            requestId: { type: string, example: 123e4567-e89b-12d3-a456-426614174000 }
+    RateLimitError:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              properties:
+                code: { type: string, example: RATE_LIMITED }
+                retryAfterSeconds: { type: integer }
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            error:
+              properties:
+                code: { type: string, example: UNAUTHORIZED }
+    CapabilitySupports:
+      type: object
+      properties:
+        vision: { type: boolean }
+        jsonMode: { type: boolean }
+        toolUse: { type: boolean }
+        streaming: { type: boolean }
+        reasoning: { type: boolean }
+    ModelCapability:
+      type: object
+      properties:
+        contextWindow:
+          type: integer
+          nullable: true
+        supports:
+          $ref: '#/components/schemas/CapabilitySupports'
+    ProviderModel:
+      type: object
+      properties:
+        id: { type: string }
+        supports:
+          type: array
+          items: { type: string }
+        contextWindow:
+          type: integer
+          nullable: true
+    ProviderEntry:
+      type: object
+      properties:
+        models:
+          type: array
+          items: { $ref: '#/components/schemas/ProviderModel' }
+        activeModel:
+          type: string
+          nullable: true
+        lastSwitch:
+          type: string
+          format: date-time
+          nullable: true
+        fallbackUsed: { type: boolean }
+        cacheAgeMs:
+          type: integer
+          nullable: true
+        capabilities:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ModelCapability'
+    AggregateCatalog:
+      type: object
+      properties:
+        success: { type: boolean }
+        generatedAt: { type: string, format: date-time }
+        active:
+          type: object
+          properties:
+            provider: { type: string }
+            model:
+              type: string
+              nullable: true
+            lastSwitch:
+              type: string
+              format: date-time
+              nullable: true
+        activeModels:
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+        providers:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ProviderEntry'
+    WorkflowRequest:
+      type: object
+      required: [agents]
+      properties:
+        agents:
+          type: array
+          items:
+            type: string
+            enum: [field-mapping, data-quality, process-optimization, integration-strategy, business-intelligence]
+        parallel: { type: boolean }
+        failureMode:
+          type: string
+          enum: [stop, continue]
+        timeout: { type: integer }
+        context: { type: object }
+    AgentResult:
+      type: object
+      properties:
+        agent: { type: string }
+        status: { type: string }
+        output: { type: object }
+        error:
+          type: string
+          nullable: true
+    WorkflowResult:
+      type: object
+      properties:
+        success: { type: boolean }
+        startedAt: { type: string, format: date-time }
+        completedAt: { type: string, format: date-time }
+        durationMs: { type: integer }
+        results:
+          type: object
+          additionalProperties: { $ref: '#/components/schemas/AgentResult' }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              agent: { type: string }
+              message: { type: string }
+    AgentExecutionRequest:
+      type: object
+      properties:
+        context: { type: object }
+        options: { type: object }
+    AgentExecutionResult:
+      type: object
+      properties:
+        agent: { type: string }
+        success: { type: boolean }
+        startedAt: { type: string, format: date-time }
+        completedAt: { type: string, format: date-time }
+        durationMs: { type: integer }
+        output: { type: object }
+        error:
+          type: string
+          nullable: true
+    CostMetrics:
+      type: object
+      properties:
+        generatedAt: { type: string, format: date-time }
+        providers:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              totalCostUsd: { type: number }
+              modelBreakdown:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    invocations: { type: integer }
+                    estCostUsd: { type: number }
+                    lastInvocation: { type: string, format: date-time }
+        session:
+          type: object
+          properties:
+            totalCostUsd: { type: number }
+            maxSessionCost: { type: number }
+            alertThreshold: { type: number }
+            hardLimit: { type: number }
+    TelemetryEvent:
+      type: object
+      properties:
+        type: { type: string }
+        timestamp: { type: string, format: date-time }
+        provider: { type: string }
+        modelId:
+          type: string
+          nullable: true
+        metadata: { type: object }
+  responses:
+    ErrorResponse:
+      description: Error response envelope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: API key missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+    RateLimited:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema: { type: integer }
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RateLimitError'
+paths:
+  /api/ai/proxy/models:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: Aggregate model catalog across AI providers
+      parameters:
+        - in: query
+          name: refresh
+          required: false
+          schema: { type: boolean }
+        - in: query
+          name: dynamic
+          required: false
+          schema: { type: boolean }
+      responses:
+        '200':
+          description: Aggregate catalog
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AggregateCatalog'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/ai/proxy/models/active:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: Active model snapshot
+      responses:
+        '200': { description: Active models across providers }
+  /api/ai/proxy/models/{provider}:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: List models for a specific provider
+      parameters:
+        - in: path
+          name: provider
+          required: true
+          schema:
+            type: string
+            enum: [openai, anthropic, gemini, grok, lmstudio]
+        - in: query
+          name: refresh
+          required: false
+          schema: { type: boolean }
+        - in: query
+          name: search
+          required: false
+          schema: { type: string }
+      responses:
+        '200': { description: Provider model list }
+        '400': { $ref: '#/components/responses/ErrorResponse' }
+  /api/ai/proxy/models/{provider}/capabilities:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: Capability metadata for provider models
+      parameters:
+        - in: path
+          name: provider
+          required: true
+          schema:
+            type: string
+            enum: [openai, anthropic, gemini, grok, lmstudio]
+      responses:
+        '200': { description: Capability metadata }
+  /api/ai/proxy/models/{provider}/select:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Switch active model for a provider
+      parameters:
+        - in: path
+          name: provider
+          required: true
+          schema:
+            type: string
+            enum: [openai, anthropic, gemini, grok, lmstudio]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [modelId]
+              properties:
+                modelId: { type: string }
+                test: { type: boolean }
+      responses:
+        '200': { description: Model switched }
+        '400': { $ref: '#/components/responses/ErrorResponse' }
+  /api/ai/proxy/orchestrate:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Execute multi-agent workflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowRequest'
+      responses:
+        '200':
+          description: Workflow execution result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResult'
+        '400': { $ref: '#/components/responses/ErrorResponse' }
+  /api/ai/proxy/agents/{agentType}:
+    post:
+      security:
+        - ApiKeyAuth: []
+      summary: Execute a single agent
+      parameters:
+        - in: path
+          name: agentType
+          required: true
+          schema:
+            type: string
+            enum: [field-mapping, data-quality, process-optimization, integration-strategy]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentExecutionRequest'
+      responses:
+        '200':
+          description: Agent execution result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentExecutionResult'
+        '400': { $ref: '#/components/responses/ErrorResponse' }
+  /api/ai/proxy/telemetry/costs:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: Retrieve aggregated cost metrics per provider/model
+      responses:
+        '200':
+          description: Cost metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostMetrics'
+  /api/ai/proxy/telemetry/events:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: Recent AI telemetry events
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Telemetry events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TelemetryEvent'
+  /api/ai/proxy/telemetry/statistics:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: Retrieve telemetry statistics
+      responses:
+        '200': { description: Telemetry statistics }
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200': { description: OK }
+security:
+  - ApiKeyAuth: []

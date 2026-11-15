@@ -1,0 +1,4737 @@
+[
+  {
+    "key": "#1001",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 39889,
+    "taxMinor": 3323,
+    "shippingMinor": 500,
+    "totalMinor": 43712,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 7126
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 3795
+      }
+    ],
+    "customerEmail": "buyer-525@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1002",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 43269,
+    "taxMinor": 3604,
+    "shippingMinor": 0,
+    "totalMinor": 46873,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 3157
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 6629
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 8534
+      }
+    ],
+    "customerEmail": "buyer-128@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1003",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 23820,
+    "taxMinor": 1984,
+    "shippingMinor": 0,
+    "totalMinor": 25804,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 5955
+      }
+    ],
+    "customerEmail": "buyer-858@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1004",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 32947,
+    "taxMinor": 2744,
+    "shippingMinor": 0,
+    "totalMinor": 35691,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 1814
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 6513
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 3260
+      }
+    ],
+    "customerEmail": "buyer-872@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1005",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 4254,
+    "taxMinor": 354,
+    "shippingMinor": 500,
+    "totalMinor": 5108,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 2127
+      }
+    ],
+    "customerEmail": "buyer-723@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1006",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 18832,
+    "taxMinor": 1569,
+    "shippingMinor": 0,
+    "totalMinor": 20401,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 9416
+      }
+    ],
+    "customerEmail": "buyer-114@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1007",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 23952,
+    "taxMinor": 1995,
+    "shippingMinor": 999,
+    "totalMinor": 26946,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 2151
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 3837
+      }
+    ],
+    "customerEmail": "buyer-568@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1008",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 27588,
+    "taxMinor": 2298,
+    "shippingMinor": 500,
+    "totalMinor": 30386,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 9196
+      }
+    ],
+    "customerEmail": "buyer-403@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1009",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 10556,
+    "taxMinor": 879,
+    "shippingMinor": 999,
+    "totalMinor": 12434,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 5278
+      }
+    ],
+    "customerEmail": "buyer-994@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1010",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 20898,
+    "taxMinor": 1741,
+    "shippingMinor": 999,
+    "totalMinor": 18413,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 2347
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 8102
+      }
+    ],
+    "customerEmail": "buyer-527@example.test",
+    "refundsMinor": 5225,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1011",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 7459,
+    "taxMinor": 621,
+    "shippingMinor": 999,
+    "totalMinor": 9079,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 7459
+      }
+    ],
+    "customerEmail": "buyer-471@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1012",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 16964,
+    "taxMinor": 1413,
+    "shippingMinor": 999,
+    "totalMinor": 19376,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 4241
+      }
+    ],
+    "customerEmail": "buyer-218@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1013",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 60773,
+    "taxMinor": 5062,
+    "shippingMinor": 999,
+    "totalMinor": 66834,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 9129
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 5610
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 7427
+      }
+    ],
+    "customerEmail": "buyer-347@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1014",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 33403,
+    "taxMinor": 2782,
+    "shippingMinor": 999,
+    "totalMinor": 37184,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 2876
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 3957
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 5014
+      }
+    ],
+    "customerEmail": "buyer-402@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1015",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 18817,
+    "taxMinor": 1567,
+    "shippingMinor": 999,
+    "totalMinor": 21383,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 3477
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 4193
+      }
+    ],
+    "customerEmail": "buyer-252@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1016",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 9732,
+    "taxMinor": 811,
+    "shippingMinor": 500,
+    "totalMinor": 11043,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 3244
+      }
+    ],
+    "customerEmail": "buyer-740@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1017",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 25677,
+    "taxMinor": 2139,
+    "shippingMinor": 999,
+    "totalMinor": 28815,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 8559
+      }
+    ],
+    "customerEmail": "buyer-231@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1018",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 53520,
+    "taxMinor": 4458,
+    "shippingMinor": 0,
+    "totalMinor": 44598,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 5633
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 7747
+      }
+    ],
+    "customerEmail": "buyer-252@example.test",
+    "refundsMinor": 13380,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1019",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 67820,
+    "taxMinor": 5649,
+    "shippingMinor": 500,
+    "totalMinor": 73969,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 8531
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 4449
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 7220
+      }
+    ],
+    "customerEmail": "buyer-663@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1020",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 42492,
+    "taxMinor": 3540,
+    "shippingMinor": 500,
+    "totalMinor": 46532,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 6940
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 8888
+      }
+    ],
+    "customerEmail": "buyer-230@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1021",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 22554,
+    "taxMinor": 1879,
+    "shippingMinor": 999,
+    "totalMinor": 25432,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 7518
+      }
+    ],
+    "customerEmail": "buyer-276@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1022",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 14315,
+    "taxMinor": 1192,
+    "shippingMinor": 0,
+    "totalMinor": 15507,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 4288
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 5739
+      }
+    ],
+    "customerEmail": "buyer-593@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1023",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 8328,
+    "taxMinor": 694,
+    "shippingMinor": 999,
+    "totalMinor": 10021,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 2082
+      }
+    ],
+    "customerEmail": "buyer-552@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1024",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 49918,
+    "taxMinor": 4158,
+    "shippingMinor": 500,
+    "totalMinor": 54576,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 6238
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 7801
+      }
+    ],
+    "customerEmail": "buyer-593@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1025",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 3707,
+    "taxMinor": 309,
+    "shippingMinor": 999,
+    "totalMinor": 5015,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 3707
+      }
+    ],
+    "customerEmail": "buyer-604@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1026",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 62024,
+    "taxMinor": 5167,
+    "shippingMinor": 0,
+    "totalMinor": 67191,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 6008
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 9498
+      }
+    ],
+    "customerEmail": "buyer-874@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1027",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 73148,
+    "taxMinor": 6093,
+    "shippingMinor": 999,
+    "totalMinor": 80240,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 7802
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 6156
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 9769
+      }
+    ],
+    "customerEmail": "buyer-668@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1028",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 74707,
+    "taxMinor": 6223,
+    "shippingMinor": 0,
+    "totalMinor": 80930,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 4971
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 8529
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 7309
+      }
+    ],
+    "customerEmail": "buyer-965@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1029",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 39186,
+    "taxMinor": 3264,
+    "shippingMinor": 999,
+    "totalMinor": 43449,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 3061
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 6076
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 5699
+      }
+    ],
+    "customerEmail": "buyer-479@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1030",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 19233,
+    "taxMinor": 1602,
+    "shippingMinor": 999,
+    "totalMinor": 21834,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 2319
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 8457
+      }
+    ],
+    "customerEmail": "buyer-176@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1031",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 27408,
+    "taxMinor": 2283,
+    "shippingMinor": 999,
+    "totalMinor": 30690,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 9136
+      }
+    ],
+    "customerEmail": "buyer-189@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1032",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 17580,
+    "taxMinor": 1464,
+    "shippingMinor": 500,
+    "totalMinor": 19544,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 5860
+      }
+    ],
+    "customerEmail": "buyer-198@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1033",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 4360,
+    "taxMinor": 363,
+    "shippingMinor": 0,
+    "totalMinor": 4723,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 4360
+      }
+    ],
+    "customerEmail": "buyer-991@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1034",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 32725,
+    "taxMinor": 2726,
+    "shippingMinor": 500,
+    "totalMinor": 35951,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 8209
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 8098
+      }
+    ],
+    "customerEmail": "buyer-174@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1035",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 47501,
+    "taxMinor": 3957,
+    "shippingMinor": 0,
+    "totalMinor": 51458,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 2973
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 7167
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 3527
+      }
+    ],
+    "customerEmail": "buyer-642@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1036",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 13334,
+    "taxMinor": 1111,
+    "shippingMinor": 0,
+    "totalMinor": 14445,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 9544
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 1895
+      }
+    ],
+    "customerEmail": "buyer-784@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1037",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 9246,
+    "taxMinor": 770,
+    "shippingMinor": 999,
+    "totalMinor": 8703,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 3082
+      }
+    ],
+    "customerEmail": "buyer-222@example.test",
+    "refundsMinor": 2312,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1038",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 48192,
+    "taxMinor": 4014,
+    "shippingMinor": 500,
+    "totalMinor": 52706,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 7164
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 8466
+      }
+    ],
+    "customerEmail": "buyer-566@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1039",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 8739,
+    "taxMinor": 728,
+    "shippingMinor": 500,
+    "totalMinor": 9967,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 8739
+      }
+    ],
+    "customerEmail": "buyer-326@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1040",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 28108,
+    "taxMinor": 2341,
+    "shippingMinor": 999,
+    "totalMinor": 24421,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 7027
+      }
+    ],
+    "customerEmail": "buyer-628@example.test",
+    "refundsMinor": 7027,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1041",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 12213,
+    "taxMinor": 1017,
+    "shippingMinor": 0,
+    "totalMinor": 13230,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 1636
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 7305
+      }
+    ],
+    "customerEmail": "buyer-753@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1042",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 24640,
+    "taxMinor": 2053,
+    "shippingMinor": 500,
+    "totalMinor": 27193,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 6267
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 5434
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 7505
+      }
+    ],
+    "customerEmail": "buyer-849@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1043",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 14456,
+    "taxMinor": 1204,
+    "shippingMinor": 500,
+    "totalMinor": 16160,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 7228
+      }
+    ],
+    "customerEmail": "buyer-866@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1044",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 60789,
+    "taxMinor": 5064,
+    "shippingMinor": 999,
+    "totalMinor": 66852,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 8315
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 9841
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 8844
+      }
+    ],
+    "customerEmail": "buyer-394@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1045",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 7304,
+    "taxMinor": 608,
+    "shippingMinor": 0,
+    "totalMinor": 7912,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 4645
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 2659
+      }
+    ],
+    "customerEmail": "buyer-436@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1046",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 29605,
+    "taxMinor": 2466,
+    "shippingMinor": 999,
+    "totalMinor": 33070,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 7247
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 6476
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 4703
+      }
+    ],
+    "customerEmail": "buyer-383@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1047",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 6911,
+    "taxMinor": 576,
+    "shippingMinor": 999,
+    "totalMinor": 8486,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 6911
+      }
+    ],
+    "customerEmail": "buyer-636@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1048",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 7207,
+    "taxMinor": 600,
+    "shippingMinor": 999,
+    "totalMinor": 8806,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 7207
+      }
+    ],
+    "customerEmail": "buyer-591@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1049",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 9141,
+    "taxMinor": 761,
+    "shippingMinor": 0,
+    "totalMinor": 7617,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 9141
+      }
+    ],
+    "customerEmail": "buyer-571@example.test",
+    "refundsMinor": 2285,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1050",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 17616,
+    "taxMinor": 1467,
+    "shippingMinor": 0,
+    "totalMinor": 19083,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 4404
+      }
+    ],
+    "customerEmail": "buyer-687@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1051",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 45246,
+    "taxMinor": 3769,
+    "shippingMinor": 0,
+    "totalMinor": 49015,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 6441
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 3134
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 7654
+      }
+    ],
+    "customerEmail": "buyer-948@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1052",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 52376,
+    "taxMinor": 4363,
+    "shippingMinor": 999,
+    "totalMinor": 57738,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 7323
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 5771
+      }
+    ],
+    "customerEmail": "buyer-235@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1053",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 55177,
+    "taxMinor": 4596,
+    "shippingMinor": 500,
+    "totalMinor": 60273,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 6569
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 9591
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 4072
+      }
+    ],
+    "customerEmail": "buyer-295@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1054",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 10492,
+    "taxMinor": 874,
+    "shippingMinor": 0,
+    "totalMinor": 11366,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 5246
+      }
+    ],
+    "customerEmail": "buyer-909@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1055",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 34741,
+    "taxMinor": 2894,
+    "shippingMinor": 500,
+    "totalMinor": 38135,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 6800
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 7047
+      }
+    ],
+    "customerEmail": "buyer-255@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1056",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 6952,
+    "taxMinor": 579,
+    "shippingMinor": 0,
+    "totalMinor": 5793,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 6952
+      }
+    ],
+    "customerEmail": "buyer-513@example.test",
+    "refundsMinor": 1738,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1057",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 13074,
+    "taxMinor": 1089,
+    "shippingMinor": 500,
+    "totalMinor": 14663,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 4358
+      }
+    ],
+    "customerEmail": "buyer-521@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1058",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 45072,
+    "taxMinor": 3754,
+    "shippingMinor": 500,
+    "totalMinor": 49326,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 9504
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 7056
+      }
+    ],
+    "customerEmail": "buyer-946@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1059",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 36882,
+    "taxMinor": 3072,
+    "shippingMinor": 500,
+    "totalMinor": 40454,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 1792
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 5990
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 9700
+      }
+    ],
+    "customerEmail": "buyer-571@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1060",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 14816,
+    "taxMinor": 1234,
+    "shippingMinor": 500,
+    "totalMinor": 16550,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 7408
+      }
+    ],
+    "customerEmail": "buyer-392@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1061",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 49075,
+    "taxMinor": 4088,
+    "shippingMinor": 0,
+    "totalMinor": 53163,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 6454
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 7623
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 9876
+      }
+    ],
+    "customerEmail": "buyer-138@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1062",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 46268,
+    "taxMinor": 3854,
+    "shippingMinor": 500,
+    "totalMinor": 50622,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 5292
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 7598
+      }
+    ],
+    "customerEmail": "buyer-774@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1063",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 4980,
+    "taxMinor": 415,
+    "shippingMinor": 999,
+    "totalMinor": 5149,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 2490
+      }
+    ],
+    "customerEmail": "buyer-777@example.test",
+    "refundsMinor": 1245,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1064",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 27270,
+    "taxMinor": 2272,
+    "shippingMinor": 500,
+    "totalMinor": 30042,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 3344
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 5007
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 1940
+      }
+    ],
+    "customerEmail": "buyer-460@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1065",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 7289,
+    "taxMinor": 607,
+    "shippingMinor": 999,
+    "totalMinor": 8895,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 7289
+      }
+    ],
+    "customerEmail": "buyer-866@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1066",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 38829,
+    "taxMinor": 3234,
+    "shippingMinor": 0,
+    "totalMinor": 42063,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 1513
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 9329
+      }
+    ],
+    "customerEmail": "buyer-109@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1067",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 24501,
+    "taxMinor": 2041,
+    "shippingMinor": 0,
+    "totalMinor": 26542,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 8167
+      }
+    ],
+    "customerEmail": "buyer-303@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1068",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 24708,
+    "taxMinor": 2058,
+    "shippingMinor": 0,
+    "totalMinor": 20589,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 6177
+      }
+    ],
+    "customerEmail": "buyer-829@example.test",
+    "refundsMinor": 6177,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1069",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 34736,
+    "taxMinor": 2894,
+    "shippingMinor": 500,
+    "totalMinor": 38130,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 2738
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 2079
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 6542
+      }
+    ],
+    "customerEmail": "buyer-157@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1070",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 17761,
+    "taxMinor": 1479,
+    "shippingMinor": 0,
+    "totalMinor": 19240,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 5073
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 3172
+      }
+    ],
+    "customerEmail": "buyer-647@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1071",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 27372,
+    "taxMinor": 2280,
+    "shippingMinor": 999,
+    "totalMinor": 30651,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 2177
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 6947
+      }
+    ],
+    "customerEmail": "buyer-537@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1072",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 28247,
+    "taxMinor": 2353,
+    "shippingMinor": 999,
+    "totalMinor": 24537,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 9723
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 9262
+      }
+    ],
+    "customerEmail": "buyer-546@example.test",
+    "refundsMinor": 7062,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1073",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 30911,
+    "taxMinor": 2575,
+    "shippingMinor": 0,
+    "totalMinor": 33486,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 4485
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 9470
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 3993
+      }
+    ],
+    "customerEmail": "buyer-342@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1074",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 8199,
+    "taxMinor": 683,
+    "shippingMinor": 0,
+    "totalMinor": 8882,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 8199
+      }
+    ],
+    "customerEmail": "buyer-594@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1075",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 51952,
+    "taxMinor": 4328,
+    "shippingMinor": 500,
+    "totalMinor": 56780,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 8830
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 5544
+      }
+    ],
+    "customerEmail": "buyer-983@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1076",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 6186,
+    "taxMinor": 515,
+    "shippingMinor": 500,
+    "totalMinor": 7201,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 3093
+      }
+    ],
+    "customerEmail": "buyer-604@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1077",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 23957,
+    "taxMinor": 1996,
+    "shippingMinor": 0,
+    "totalMinor": 25953,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 8683
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 6591
+      }
+    ],
+    "customerEmail": "buyer-754@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1078",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 29978,
+    "taxMinor": 2497,
+    "shippingMinor": 999,
+    "totalMinor": 33474,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 7521
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 3734
+      }
+    ],
+    "customerEmail": "buyer-330@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1079",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 51630,
+    "taxMinor": 4301,
+    "shippingMinor": 500,
+    "totalMinor": 56431,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 6677
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 8998
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 6760
+      }
+    ],
+    "customerEmail": "buyer-466@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1080",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 53092,
+    "taxMinor": 4423,
+    "shippingMinor": 500,
+    "totalMinor": 58015,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 3539
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 4794
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 4940
+      }
+    ],
+    "customerEmail": "buyer-139@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1081",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 10054,
+    "taxMinor": 837,
+    "shippingMinor": 999,
+    "totalMinor": 11890,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 2222
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 3916
+      }
+    ],
+    "customerEmail": "buyer-322@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1082",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 33998,
+    "taxMinor": 2832,
+    "shippingMinor": 500,
+    "totalMinor": 37330,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 4747
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 6347
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 4470
+      }
+    ],
+    "customerEmail": "buyer-540@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1083",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 28981,
+    "taxMinor": 2414,
+    "shippingMinor": 0,
+    "totalMinor": 31395,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 4277
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 2337
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 3839
+      }
+    ],
+    "customerEmail": "buyer-162@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1084",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 27168,
+    "taxMinor": 2263,
+    "shippingMinor": 999,
+    "totalMinor": 30430,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 8550
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 1518
+      }
+    ],
+    "customerEmail": "buyer-571@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1085",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 44302,
+    "taxMinor": 3690,
+    "shippingMinor": 999,
+    "totalMinor": 48991,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 3902
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 7660
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 8710
+      }
+    ],
+    "customerEmail": "buyer-868@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1086",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 48420,
+    "taxMinor": 4033,
+    "shippingMinor": 0,
+    "totalMinor": 52453,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 9639
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 9714
+      }
+    ],
+    "customerEmail": "buyer-163@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1087",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 78419,
+    "taxMinor": 6532,
+    "shippingMinor": 500,
+    "totalMinor": 65846,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 8321
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 8717
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 4647
+      }
+    ],
+    "customerEmail": "buyer-431@example.test",
+    "refundsMinor": 19605,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1088",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 36625,
+    "taxMinor": 3051,
+    "shippingMinor": 0,
+    "totalMinor": 39676,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 3999
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 3093
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 4384
+      }
+    ],
+    "customerEmail": "buyer-769@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1089",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 47340,
+    "taxMinor": 3943,
+    "shippingMinor": 0,
+    "totalMinor": 51283,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 8239
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 7541
+      }
+    ],
+    "customerEmail": "buyer-470@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1090",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 27385,
+    "taxMinor": 2281,
+    "shippingMinor": 0,
+    "totalMinor": 29666,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 9125
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 3045
+      }
+    ],
+    "customerEmail": "buyer-898@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1091",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 5188,
+    "taxMinor": 432,
+    "shippingMinor": 500,
+    "totalMinor": 6120,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 2594
+      }
+    ],
+    "customerEmail": "buyer-280@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1092",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 19320,
+    "taxMinor": 1609,
+    "shippingMinor": 500,
+    "totalMinor": 21429,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 4830
+      }
+    ],
+    "customerEmail": "buyer-555@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1093",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 47148,
+    "taxMinor": 3927,
+    "shippingMinor": 500,
+    "totalMinor": 51575,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 5997
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 5790
+      }
+    ],
+    "customerEmail": "buyer-231@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1094",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 9778,
+    "taxMinor": 815,
+    "shippingMinor": 500,
+    "totalMinor": 11093,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 4889
+      }
+    ],
+    "customerEmail": "buyer-503@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1095",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 6788,
+    "taxMinor": 565,
+    "shippingMinor": 500,
+    "totalMinor": 7853,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 3394
+      }
+    ],
+    "customerEmail": "buyer-890@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1096",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 7354,
+    "taxMinor": 613,
+    "shippingMinor": 999,
+    "totalMinor": 8966,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 7354
+      }
+    ],
+    "customerEmail": "buyer-651@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1097",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 4619,
+    "taxMinor": 385,
+    "shippingMinor": 500,
+    "totalMinor": 5504,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 4619
+      }
+    ],
+    "customerEmail": "buyer-546@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1098",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 7452,
+    "taxMinor": 621,
+    "shippingMinor": 500,
+    "totalMinor": 8573,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 1863
+      }
+    ],
+    "customerEmail": "buyer-695@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1099",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 13504,
+    "taxMinor": 1125,
+    "shippingMinor": 500,
+    "totalMinor": 15129,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 3376
+      }
+    ],
+    "customerEmail": "buyer-792@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1100",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 39129,
+    "taxMinor": 3259,
+    "shippingMinor": 999,
+    "totalMinor": 43387,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 7277
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 7963
+      }
+    ],
+    "customerEmail": "buyer-268@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1101",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 63800,
+    "taxMinor": 5315,
+    "shippingMinor": 999,
+    "totalMinor": 54164,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 3936
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 4143
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 8855
+      }
+    ],
+    "customerEmail": "buyer-574@example.test",
+    "refundsMinor": 15950,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1102",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 17038,
+    "taxMinor": 1419,
+    "shippingMinor": 999,
+    "totalMinor": 19456,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 8519
+      }
+    ],
+    "customerEmail": "buyer-150@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1103",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 30584,
+    "taxMinor": 2548,
+    "shippingMinor": 999,
+    "totalMinor": 34131,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 7646
+      }
+    ],
+    "customerEmail": "buyer-262@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1104",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 41285,
+    "taxMinor": 3439,
+    "shippingMinor": 999,
+    "totalMinor": 35402,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 9298
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 3906
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 1673
+      }
+    ],
+    "customerEmail": "buyer-139@example.test",
+    "refundsMinor": 10321,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1105",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 38083,
+    "taxMinor": 3172,
+    "shippingMinor": 0,
+    "totalMinor": 41255,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 9589
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 4658
+      }
+    ],
+    "customerEmail": "buyer-617@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1106",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 22560,
+    "taxMinor": 1879,
+    "shippingMinor": 500,
+    "totalMinor": 24939,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 7520
+      }
+    ],
+    "customerEmail": "buyer-464@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1107",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 29710,
+    "taxMinor": 2475,
+    "shippingMinor": 999,
+    "totalMinor": 33184,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 2063
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 6396
+      }
+    ],
+    "customerEmail": "buyer-478@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1108",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 48257,
+    "taxMinor": 4020,
+    "shippingMinor": 500,
+    "totalMinor": 52777,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 9385
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 3831
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 3055
+      }
+    ],
+    "customerEmail": "buyer-442@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1109",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 40766,
+    "taxMinor": 3396,
+    "shippingMinor": 500,
+    "totalMinor": 34470,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 4547
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 7918
+      }
+    ],
+    "customerEmail": "buyer-236@example.test",
+    "refundsMinor": 10192,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1110",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 23124,
+    "taxMinor": 1926,
+    "shippingMinor": 500,
+    "totalMinor": 25550,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 7708
+      }
+    ],
+    "customerEmail": "buyer-757@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1111",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 37626,
+    "taxMinor": 3134,
+    "shippingMinor": 0,
+    "totalMinor": 40760,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 8084
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 5290
+      }
+    ],
+    "customerEmail": "buyer-960@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1112",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 6999,
+    "taxMinor": 583,
+    "shippingMinor": 0,
+    "totalMinor": 7582,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 2333
+      }
+    ],
+    "customerEmail": "buyer-231@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1113",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 7210,
+    "taxMinor": 601,
+    "shippingMinor": 0,
+    "totalMinor": 7811,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 3605
+      }
+    ],
+    "customerEmail": "buyer-196@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1114",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 20396,
+    "taxMinor": 1699,
+    "shippingMinor": 500,
+    "totalMinor": 22595,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 5099
+      }
+    ],
+    "customerEmail": "buyer-943@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1115",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 36598,
+    "taxMinor": 3049,
+    "shippingMinor": 500,
+    "totalMinor": 40147,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 2489
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 7905
+      }
+    ],
+    "customerEmail": "buyer-375@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1116",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 52701,
+    "taxMinor": 4390,
+    "shippingMinor": 999,
+    "totalMinor": 58090,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 4387
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 3410
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 9521
+      }
+    ],
+    "customerEmail": "buyer-373@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1117",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 17070,
+    "taxMinor": 1422,
+    "shippingMinor": 999,
+    "totalMinor": 19491,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 2592
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 3498
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 4194
+      }
+    ],
+    "customerEmail": "buyer-903@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1118",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 39694,
+    "taxMinor": 3307,
+    "shippingMinor": 500,
+    "totalMinor": 43501,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 8158
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 2216
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 7330
+      }
+    ],
+    "customerEmail": "buyer-252@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1119",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 16068,
+    "taxMinor": 1338,
+    "shippingMinor": 500,
+    "totalMinor": 17906,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 5356
+      }
+    ],
+    "customerEmail": "buyer-660@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1120",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 14632,
+    "taxMinor": 1219,
+    "shippingMinor": 0,
+    "totalMinor": 15851,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 7316
+      }
+    ],
+    "customerEmail": "buyer-643@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1121",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 51531,
+    "taxMinor": 4293,
+    "shippingMinor": 999,
+    "totalMinor": 56823,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 7631
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 8717
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 9032
+      }
+    ],
+    "customerEmail": "buyer-166@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1122",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 13226,
+    "taxMinor": 1102,
+    "shippingMinor": 999,
+    "totalMinor": 15327,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 3033
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 1790
+      }
+    ],
+    "customerEmail": "buyer-369@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1123",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 65682,
+    "taxMinor": 5471,
+    "shippingMinor": 0,
+    "totalMinor": 54732,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 9709
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 8318
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 6176
+      }
+    ],
+    "customerEmail": "buyer-852@example.test",
+    "refundsMinor": 16421,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1124",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 21727,
+    "taxMinor": 1810,
+    "shippingMinor": 0,
+    "totalMinor": 23537,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 2671
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 6857
+      }
+    ],
+    "customerEmail": "buyer-176@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1125",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 16286,
+    "taxMinor": 1357,
+    "shippingMinor": 0,
+    "totalMinor": 17643,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 1736
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 1868
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 3606
+      }
+    ],
+    "customerEmail": "buyer-594@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1126",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 16070,
+    "taxMinor": 1339,
+    "shippingMinor": 0,
+    "totalMinor": 17409,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 2145
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 2945
+      }
+    ],
+    "customerEmail": "buyer-825@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1127",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 42498,
+    "taxMinor": 3540,
+    "shippingMinor": 999,
+    "totalMinor": 47037,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 2072
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 2647
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 7229
+      }
+    ],
+    "customerEmail": "buyer-477@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1128",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 21240,
+    "taxMinor": 1769,
+    "shippingMinor": 0,
+    "totalMinor": 23009,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 7080
+      }
+    ],
+    "customerEmail": "buyer-553@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1129",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 31707,
+    "taxMinor": 2641,
+    "shippingMinor": 0,
+    "totalMinor": 34348,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 3129
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 3759
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 6771
+      }
+    ],
+    "customerEmail": "buyer-580@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1130",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 34422,
+    "taxMinor": 2867,
+    "shippingMinor": 0,
+    "totalMinor": 37289,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 7779
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 1974
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 7565
+      }
+    ],
+    "customerEmail": "buyer-826@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1131",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 22406,
+    "taxMinor": 1866,
+    "shippingMinor": 999,
+    "totalMinor": 25271,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 4170
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 4948
+      }
+    ],
+    "customerEmail": "buyer-987@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1132",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 25943,
+    "taxMinor": 2161,
+    "shippingMinor": 500,
+    "totalMinor": 28604,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 8910
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 4853
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 6090
+      }
+    ],
+    "customerEmail": "buyer-560@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1133",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 9228,
+    "taxMinor": 769,
+    "shippingMinor": 999,
+    "totalMinor": 10996,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 3076
+      }
+    ],
+    "customerEmail": "buyer-706@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1134",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 15592,
+    "taxMinor": 1299,
+    "shippingMinor": 999,
+    "totalMinor": 17890,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 7796
+      }
+    ],
+    "customerEmail": "buyer-889@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1135",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 58759,
+    "taxMinor": 4895,
+    "shippingMinor": 0,
+    "totalMinor": 63654,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 8394
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 5357
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 8753
+      }
+    ],
+    "customerEmail": "buyer-753@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1136",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 44216,
+    "taxMinor": 3683,
+    "shippingMinor": 0,
+    "totalMinor": 47899,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 4848
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 9842
+      }
+    ],
+    "customerEmail": "buyer-137@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1137",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 2003,
+    "taxMinor": 167,
+    "shippingMinor": 0,
+    "totalMinor": 2170,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 2003
+      }
+    ],
+    "customerEmail": "buyer-969@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1138",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 26619,
+    "taxMinor": 2217,
+    "shippingMinor": 999,
+    "totalMinor": 29835,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 8873
+      }
+    ],
+    "customerEmail": "buyer-879@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1139",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 37268,
+    "taxMinor": 3104,
+    "shippingMinor": 999,
+    "totalMinor": 41371,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 6146
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 3703
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 7721
+      }
+    ],
+    "customerEmail": "buyer-713@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1140",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 6008,
+    "taxMinor": 500,
+    "shippingMinor": 0,
+    "totalMinor": 6508,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 2540
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 3468
+      }
+    ],
+    "customerEmail": "buyer-457@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1141",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 33216,
+    "taxMinor": 2767,
+    "shippingMinor": 999,
+    "totalMinor": 36982,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 9404
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 3139
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 5628
+      }
+    ],
+    "customerEmail": "buyer-349@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1142",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 5199,
+    "taxMinor": 433,
+    "shippingMinor": 0,
+    "totalMinor": 5632,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 5199
+      }
+    ],
+    "customerEmail": "buyer-395@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1143",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 44057,
+    "taxMinor": 3670,
+    "shippingMinor": 0,
+    "totalMinor": 47727,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 3625
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 9704
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 5660
+      }
+    ],
+    "customerEmail": "buyer-306@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1144",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 10140,
+    "taxMinor": 845,
+    "shippingMinor": 0,
+    "totalMinor": 10985,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 3380
+      }
+    ],
+    "customerEmail": "buyer-342@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1145",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 16120,
+    "taxMinor": 1343,
+    "shippingMinor": 999,
+    "totalMinor": 18462,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 4030
+      }
+    ],
+    "customerEmail": "buyer-496@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1146",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 36294,
+    "taxMinor": 3023,
+    "shippingMinor": 999,
+    "totalMinor": 40316,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 6918
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 9792
+      }
+    ],
+    "customerEmail": "buyer-302@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1147",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 22032,
+    "taxMinor": 1835,
+    "shippingMinor": 0,
+    "totalMinor": 23867,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 5508
+      }
+    ],
+    "customerEmail": "buyer-504@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1148",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 22148,
+    "taxMinor": 1845,
+    "shippingMinor": 500,
+    "totalMinor": 24493,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 5537
+      }
+    ],
+    "customerEmail": "buyer-240@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1149",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 16551,
+    "taxMinor": 1379,
+    "shippingMinor": 0,
+    "totalMinor": 17930,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 7236
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 9315
+      }
+    ],
+    "customerEmail": "buyer-215@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1150",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 35551,
+    "taxMinor": 2961,
+    "shippingMinor": 500,
+    "totalMinor": 30124,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 6271
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 3489
+      }
+    ],
+    "customerEmail": "buyer-321@example.test",
+    "refundsMinor": 8888,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1151",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 2330,
+    "taxMinor": 194,
+    "shippingMinor": 500,
+    "totalMinor": 3024,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 2330
+      }
+    ],
+    "customerEmail": "buyer-598@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1152",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 40339,
+    "taxMinor": 3360,
+    "shippingMinor": 999,
+    "totalMinor": 44698,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 7864
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 8883
+      }
+    ],
+    "customerEmail": "buyer-713@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1153",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 26867,
+    "taxMinor": 2238,
+    "shippingMinor": 0,
+    "totalMinor": 22388,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 5558
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 1545
+      }
+    ],
+    "customerEmail": "buyer-229@example.test",
+    "refundsMinor": 6717,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1154",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 23056,
+    "taxMinor": 1921,
+    "shippingMinor": 500,
+    "totalMinor": 19713,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 1613
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 8302
+      }
+    ],
+    "customerEmail": "buyer-667@example.test",
+    "refundsMinor": 5764,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1155",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 45006,
+    "taxMinor": 3749,
+    "shippingMinor": 0,
+    "totalMinor": 48755,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 9826
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 1572
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 9240
+      }
+    ],
+    "customerEmail": "buyer-786@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1156",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 36497,
+    "taxMinor": 3040,
+    "shippingMinor": 999,
+    "totalMinor": 40536,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 5850
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 2929
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 2155
+      }
+    ],
+    "customerEmail": "buyer-101@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1157",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 32784,
+    "taxMinor": 2731,
+    "shippingMinor": 500,
+    "totalMinor": 27819,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 3586
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 9756
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 3050
+      }
+    ],
+    "customerEmail": "buyer-895@example.test",
+    "refundsMinor": 8196,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1158",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 39072,
+    "taxMinor": 3255,
+    "shippingMinor": 0,
+    "totalMinor": 42327,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 7338
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 4860
+      }
+    ],
+    "customerEmail": "buyer-743@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1159",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 39800,
+    "taxMinor": 3315,
+    "shippingMinor": 500,
+    "totalMinor": 43615,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 8602
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 6997
+      }
+    ],
+    "customerEmail": "buyer-518@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1160",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 29260,
+    "taxMinor": 2437,
+    "shippingMinor": 999,
+    "totalMinor": 32696,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 1867
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 7264
+      }
+    ],
+    "customerEmail": "buyer-358@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1161",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 26516,
+    "taxMinor": 2209,
+    "shippingMinor": 500,
+    "totalMinor": 29225,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 6629
+      }
+    ],
+    "customerEmail": "buyer-235@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1162",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 3417,
+    "taxMinor": 285,
+    "shippingMinor": 0,
+    "totalMinor": 3702,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 3417
+      }
+    ],
+    "customerEmail": "buyer-131@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1163",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 15129,
+    "taxMinor": 1260,
+    "shippingMinor": 999,
+    "totalMinor": 17388,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 5043
+      }
+    ],
+    "customerEmail": "buyer-883@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1164",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 25997,
+    "taxMinor": 2166,
+    "shippingMinor": 999,
+    "totalMinor": 29162,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 1997
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 6003
+      }
+    ],
+    "customerEmail": "buyer-386@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1165",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 26228,
+    "taxMinor": 2185,
+    "shippingMinor": 999,
+    "totalMinor": 29412,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 6557
+      }
+    ],
+    "customerEmail": "buyer-257@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1166",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 4710,
+    "taxMinor": 392,
+    "shippingMinor": 500,
+    "totalMinor": 5602,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 4710
+      }
+    ],
+    "customerEmail": "buyer-284@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1167",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 47665,
+    "taxMinor": 3970,
+    "shippingMinor": 0,
+    "totalMinor": 51635,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 8027
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 6794
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 3332
+      }
+    ],
+    "customerEmail": "buyer-419@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1168",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 65626,
+    "taxMinor": 5467,
+    "shippingMinor": 999,
+    "totalMinor": 72092,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 8784
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 5239
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 3178
+      }
+    ],
+    "customerEmail": "buyer-966@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1169",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 8243,
+    "taxMinor": 687,
+    "shippingMinor": 999,
+    "totalMinor": 9929,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 8243
+      }
+    ],
+    "customerEmail": "buyer-843@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1170",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 64629,
+    "taxMinor": 5384,
+    "shippingMinor": 0,
+    "totalMinor": 70013,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 6873
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 3214
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 9165
+      }
+    ],
+    "customerEmail": "buyer-724@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1171",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 45849,
+    "taxMinor": 3819,
+    "shippingMinor": 500,
+    "totalMinor": 50168,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 9811
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 2351
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 5969
+      }
+    ],
+    "customerEmail": "buyer-131@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1172",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 45970,
+    "taxMinor": 3829,
+    "shippingMinor": 500,
+    "totalMinor": 50299,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 3,
+        "unitMinor": 2570
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 4974
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 4591
+      }
+    ],
+    "customerEmail": "buyer-730@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1173",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 30298,
+    "taxMinor": 2524,
+    "shippingMinor": 0,
+    "totalMinor": 32822,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 8239
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 3,
+        "unitMinor": 7353
+      }
+    ],
+    "customerEmail": "buyer-394@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1174",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 3468,
+    "taxMinor": 289,
+    "shippingMinor": 500,
+    "totalMinor": 3390,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 2,
+        "unitMinor": 1734
+      }
+    ],
+    "customerEmail": "buyer-461@example.test",
+    "refundsMinor": 867,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1175",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 68702,
+    "taxMinor": 5723,
+    "shippingMinor": 500,
+    "totalMinor": 74925,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 8965
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 1758
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 7771
+      }
+    ],
+    "customerEmail": "buyer-636@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1176",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 46406,
+    "taxMinor": 3866,
+    "shippingMinor": 999,
+    "totalMinor": 39669,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 9795
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 6704
+      }
+    ],
+    "customerEmail": "buyer-126@example.test",
+    "refundsMinor": 11602,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1177",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 43542,
+    "taxMinor": 3627,
+    "shippingMinor": 999,
+    "totalMinor": 48168,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 7315
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 7141
+      }
+    ],
+    "customerEmail": "buyer-950@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1178",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 73104,
+    "taxMinor": 6090,
+    "shippingMinor": 0,
+    "totalMinor": 79194,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 7156
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 8627
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 2493
+      }
+    ],
+    "customerEmail": "buyer-681@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1179",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 37831,
+    "taxMinor": 3151,
+    "shippingMinor": 999,
+    "totalMinor": 41981,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 3,
+        "unitMinor": 3873
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 6026
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 2108
+      }
+    ],
+    "customerEmail": "buyer-481@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1180",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 11938,
+    "taxMinor": 994,
+    "shippingMinor": 0,
+    "totalMinor": 12932,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 2654
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 1,
+        "unitMinor": 3976
+      }
+    ],
+    "customerEmail": "buyer-788@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1181",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 8394,
+    "taxMinor": 699,
+    "shippingMinor": 0,
+    "totalMinor": 9093,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 8394
+      }
+    ],
+    "customerEmail": "buyer-327@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1182",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 45248,
+    "taxMinor": 3769,
+    "shippingMinor": 999,
+    "totalMinor": 50016,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 4,
+        "unitMinor": 2011
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 7463
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 7352
+      }
+    ],
+    "customerEmail": "buyer-878@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1183",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 24021,
+    "taxMinor": 2001,
+    "shippingMinor": 999,
+    "totalMinor": 27021,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 8742
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 6537
+      }
+    ],
+    "customerEmail": "buyer-518@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1184",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 44406,
+    "taxMinor": 3699,
+    "shippingMinor": 999,
+    "totalMinor": 49104,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 1904
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 9765
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 1,
+        "unitMinor": 3442
+      }
+    ],
+    "customerEmail": "buyer-742@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1185",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 14673,
+    "taxMinor": 1222,
+    "shippingMinor": 500,
+    "totalMinor": 12727,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 4891
+      }
+    ],
+    "customerEmail": "buyer-715@example.test",
+    "refundsMinor": 3668,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1186",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 37399,
+    "taxMinor": 3115,
+    "shippingMinor": 500,
+    "totalMinor": 41014,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 6211
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 4185
+      }
+    ],
+    "customerEmail": "buyer-139@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1187",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 17394,
+    "taxMinor": 1449,
+    "shippingMinor": 0,
+    "totalMinor": 18843,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 3421
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 3432
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 7120
+      }
+    ],
+    "customerEmail": "buyer-504@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1188",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 49629,
+    "taxMinor": 4134,
+    "shippingMinor": 500,
+    "totalMinor": 54263,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 8886
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 5951
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 2183
+      }
+    ],
+    "customerEmail": "buyer-614@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1189",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 28688,
+    "taxMinor": 2390,
+    "shippingMinor": 0,
+    "totalMinor": 31078,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 4132
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 3,
+        "unitMinor": 6808
+      }
+    ],
+    "customerEmail": "buyer-407@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1190",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 36824,
+    "taxMinor": 3067,
+    "shippingMinor": 999,
+    "totalMinor": 40890,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 7696
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 3826
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 6128
+      }
+    ],
+    "customerEmail": "buyer-929@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1191",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 66744,
+    "taxMinor": 5560,
+    "shippingMinor": 500,
+    "totalMinor": 72804,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 6365
+      },
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 4,
+        "unitMinor": 8130
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 8764
+      }
+    ],
+    "customerEmail": "buyer-146@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1192",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 14288,
+    "taxMinor": 1190,
+    "shippingMinor": 500,
+    "totalMinor": 15978,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 2,
+        "unitMinor": 7144
+      }
+    ],
+    "customerEmail": "buyer-671@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1193",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 57927,
+    "taxMinor": 4825,
+    "shippingMinor": 999,
+    "totalMinor": 63751,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 4,
+        "unitMinor": 5784
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 7809
+      },
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 1,
+        "unitMinor": 3555
+      }
+    ],
+    "customerEmail": "buyer-620@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "fulfilled"
+  },
+  {
+    "key": "#1194",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 45793,
+    "taxMinor": 3815,
+    "shippingMinor": 0,
+    "totalMinor": 49608,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-S",
+        "qty": 2,
+        "unitMinor": 5825
+      },
+      {
+        "sku": "SKU-RED-L",
+        "qty": 4,
+        "unitMinor": 2163
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 8497
+      }
+    ],
+    "customerEmail": "buyer-823@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1195",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 3440,
+    "taxMinor": 287,
+    "shippingMinor": 999,
+    "totalMinor": 4726,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 3440
+      }
+    ],
+    "customerEmail": "buyer-854@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1196",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 8862,
+    "taxMinor": 738,
+    "shippingMinor": 999,
+    "totalMinor": 8383,
+    "lines": [
+      {
+        "sku": "SKU-RED-L",
+        "qty": 1,
+        "unitMinor": 8862
+      }
+    ],
+    "customerEmail": "buyer-546@example.test",
+    "refundsMinor": 2216,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1197",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 9560,
+    "taxMinor": 796,
+    "shippingMinor": 999,
+    "totalMinor": 8965,
+    "lines": [
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 2,
+        "unitMinor": 4780
+      }
+    ],
+    "customerEmail": "buyer-274@example.test",
+    "refundsMinor": 2390,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1198",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 55175,
+    "taxMinor": 4596,
+    "shippingMinor": 0,
+    "totalMinor": 59771,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 2117
+      },
+      {
+        "sku": "SKU-BLUE-M",
+        "qty": 4,
+        "unitMinor": 9356
+      },
+      {
+        "sku": "SKU-RED-M",
+        "qty": 2,
+        "unitMinor": 7817
+      }
+    ],
+    "customerEmail": "buyer-179@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "partial"
+  },
+  {
+    "key": "#1199",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 4312,
+    "taxMinor": 359,
+    "shippingMinor": 999,
+    "totalMinor": 5670,
+    "lines": [
+      {
+        "sku": "SKU-GREEN-XL",
+        "qty": 1,
+        "unitMinor": 4312
+      }
+    ],
+    "customerEmail": "buyer-566@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  },
+  {
+    "key": "#1200",
+    "source": "shopify",
+    "currency": "USD",
+    "subtotalMinor": 12651,
+    "taxMinor": 1054,
+    "shippingMinor": 999,
+    "totalMinor": 14704,
+    "lines": [
+      {
+        "sku": "SKU-RED-M",
+        "qty": 3,
+        "unitMinor": 4217
+      }
+    ],
+    "customerEmail": "buyer-317@example.test",
+    "refundsMinor": 0,
+    "fulfillment": "unfulfilled"
+  }
+]

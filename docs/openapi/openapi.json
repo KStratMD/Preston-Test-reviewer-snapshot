@@ -1,0 +1,2935 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Business Systems Integration Hub API",
+    "version": "1.0.0",
+    "description": "A comprehensive middleware platform for synchronizing data between various business systems",
+    "contact": {
+      "name": "API Support",
+      "email": "support@integrationhub.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "error",
+          "message"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Additional error details"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Error timestamp"
+          }
+        }
+      },
+      "HealthStatus": {
+        "type": "object",
+        "required": [
+          "status",
+          "timestamp"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "degraded",
+              "unhealthy"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "uptime": {
+            "type": "string",
+            "description": "Server uptime in seconds"
+          },
+          "services": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "disconnected",
+                    "error"
+                  ]
+                },
+                "responseTime": {
+                  "type": "number",
+                  "description": "Response time in milliseconds"
+                }
+              }
+            }
+          }
+        }
+      },
+      "IntegrationConfig": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "sourceSystem",
+          "targetSystem",
+          "syncDirection",
+          "syncMode"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "description": "Unique integration identifier"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Human-readable integration name"
+          },
+          "sourceSystem": {
+            "type": "string",
+            "enum": [
+              "NetSuite",
+              "Dynamics365",
+              "Salesforce",
+              "BusinessCentral"
+            ]
+          },
+          "targetSystem": {
+            "type": "string",
+            "enum": [
+              "NetSuite",
+              "Dynamics365",
+              "Salesforce",
+              "BusinessCentral"
+            ]
+          },
+          "syncDirection": {
+            "type": "string",
+            "enum": [
+              "unidirectional",
+              "bidirectional"
+            ]
+          },
+          "syncMode": {
+            "type": "string",
+            "enum": [
+              "batch",
+              "realtime",
+              "manual"
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": true
+          },
+          "fieldMappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "sourceField",
+                "targetField"
+              ],
+              "properties": {
+                "sourceField": {
+                  "type": "string"
+                },
+                "targetField": {
+                  "type": "string"
+                },
+                "transformationType": {
+                  "type": "string",
+                  "enum": [
+                    "direct",
+                    "lookup",
+                    "calculation",
+                    "concatenation"
+                  ]
+                },
+                "isRequired": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "defaultValue": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "transformationRules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "type"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "field_mapping",
+                    "data_validation",
+                    "business_logic",
+                    "enrichment"
+                  ]
+                },
+                "condition": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DataRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "lastModified": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "IntegrationRun": {
+        "type": "object",
+        "properties": {
+          "dryRun": {
+            "type": "boolean",
+            "default": false
+          },
+          "batchSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 100
+          },
+          "filters": {
+            "type": "object"
+          }
+        }
+      },
+      "SyncResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "recordsProcessed": {
+            "type": "integer"
+          },
+          "recordsSucceeded": {
+            "type": "integer"
+          },
+          "recordsFailed": {
+            "type": "integer"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "duration": {
+            "type": "number",
+            "description": "Duration in milliseconds"
+          }
+        }
+      },
+      "CredentialMetadata": {
+        "type": "object",
+        "properties": {
+          "systemType": {
+            "type": "string",
+            "description": "Type of the system (NetSuite, Salesforce, etc.)"
+          },
+          "systemId": {
+            "type": "string",
+            "description": "Unique identifier for the system instance"
+          },
+          "credentialType": {
+            "type": "string",
+            "description": "Type of credentials (oauth1, oauth2, basic, api_key)"
+          },
+          "lastRotated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When credentials were last rotated"
+          },
+          "rotationRequired": {
+            "type": "boolean",
+            "description": "Whether credentials need rotation"
+          },
+          "accessCount": {
+            "type": "number",
+            "description": "Number of times credentials have been accessed"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    },
+    {
+      "apiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/api/batch/submit": {
+      "post": {
+        "summary": "Submit a batch for processing",
+        "tags": [
+          "Batch Processing"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "integrationId": {
+                    "type": "string",
+                    "description": "Integration ID to process"
+                  },
+                  "records": {
+                    "type": "array",
+                    "description": "Array of records to process",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "fields": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  },
+                  "options": {
+                    "type": "object",
+                    "properties": {
+                      "batchSize": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 1000
+                      },
+                      "priority": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 10
+                      },
+                      "delay": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "maxAttempts": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 10
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Batch submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "jobId": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/batch/status/{jobId}": {
+      "get": {
+        "summary": "Get batch processing status",
+        "tags": [
+          "Batch Processing"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "jobId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Job ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "jobId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "processing",
+                        "completed",
+                        "failed"
+                      ]
+                    },
+                    "totalRecords": {
+                      "type": "number"
+                    },
+                    "processedRecords": {
+                      "type": "number"
+                    },
+                    "failedRecords": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/batch/metrics": {
+      "get": {
+        "summary": "Get batch processing metrics",
+        "tags": [
+          "Batch Processing"
+        ],
+        "responses": {
+          "200": {
+            "description": "Metrics retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "waiting": {
+                      "type": "number"
+                    },
+                    "active": {
+                      "type": "number"
+                    },
+                    "completed": {
+                      "type": "number"
+                    },
+                    "failed": {
+                      "type": "number"
+                    },
+                    "delayed": {
+                      "type": "number"
+                    },
+                    "paused": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/batch/pause": {
+      "post": {
+        "summary": "Pause batch processing",
+        "tags": [
+          "Batch Processing"
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch processing paused successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/batch/resume": {
+      "post": {
+        "summary": "Resume batch processing",
+        "tags": [
+          "Batch Processing"
+        ],
+        "responses": {
+          "200": {
+            "description": "Batch processing resumed successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/batch/retry-failed": {
+      "post": {
+        "summary": "Retry all failed batch jobs",
+        "tags": [
+          "Batch Processing"
+        ],
+        "responses": {
+          "200": {
+            "description": "Failed jobs retried successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "retriedCount": {
+                      "type": "number"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/configurations": {
+      "get": {
+        "summary": "Get all integration configurations",
+        "description": "Retrieves a list of all configured integrations in the system",
+        "tags": [
+          "Configurations"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of integration configurations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationConfig"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "sf_to_ns_customers",
+                    "name": "Salesforce to NetSuite Customer Sync",
+                    "sourceSystem": "Salesforce",
+                    "targetSystem": "NetSuite",
+                    "syncDirection": "source_to_target",
+                    "syncMode": "realtime",
+                    "isActive": true
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new integration configuration",
+        "description": "Creates a new integration configuration with validation",
+        "tags": [
+          "Configurations"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntegrationConfig"
+              },
+              "example": {
+                "id": "new_integration",
+                "name": "New Integration",
+                "sourceSystem": "Salesforce",
+                "targetSystem": "NetSuite",
+                "syncDirection": "bidirectional",
+                "syncMode": "batch",
+                "isActive": true,
+                "authentication": {
+                  "type": "oauth2",
+                  "credentials": {
+                    "clientId": "your_client_id",
+                    "clientSecret": "your_client_secret",
+                    "tokenUrl": "https://login.salesforce.com/services/oauth2/token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Configuration created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Configuration saved successfully"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "new_integration"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid configuration data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/configurations/{id}": {
+      "get": {
+        "summary": "Get integration configuration by ID",
+        "description": "Retrieves a specific integration configuration",
+        "tags": [
+          "Configurations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID",
+            "example": "sf_to_ns_customers"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Integration configuration details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationConfig"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update integration configuration",
+        "description": "Updates an existing integration configuration",
+        "tags": [
+          "Configurations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntegrationConfig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Configuration updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Configuration updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete integration configuration",
+        "description": "Permanently deletes an integration configuration",
+        "tags": [
+          "Configurations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Configuration deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/configurations/{id}/validate": {
+      "post": {
+        "summary": "Validate integration configuration",
+        "description": "Validates an integration configuration and checks connectivity",
+        "tags": [
+          "Configurations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isValid": {
+                      "type": "boolean",
+                      "description": "Whether the configuration is valid"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "List of validation errors"
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "List of validation warnings"
+                    }
+                  },
+                  "example": {
+                    "isValid": true,
+                    "errors": [],
+                    "warnings": [
+                      "Consider enabling real-time sync for better performance"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/credentials": {
+      "get": {
+        "summary": "List all stored credentials (metadata only)",
+        "description": "Returns metadata for all stored credentials without exposing sensitive data",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of credential metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CredentialMetadata"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Insufficient permissions"
+          }
+        }
+      },
+      "post": {
+        "summary": "Store new system credentials",
+        "description": "Securely store credentials for a system using the configured secret manager",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "systemType",
+                  "systemId",
+                  "credentials"
+                ],
+                "properties": {
+                  "systemType": {
+                    "type": "string",
+                    "description": "Type of system (NetSuite, Salesforce, etc.)",
+                    "example": "NetSuite"
+                  },
+                  "systemId": {
+                    "type": "string",
+                    "description": "Unique identifier for the system instance",
+                    "example": "production"
+                  },
+                  "credentials": {
+                    "type": "object",
+                    "description": "Credential object (structure depends on system type)",
+                    "example": {
+                      "accountId": "12345",
+                      "consumerKey": "abcd1234",
+                      "consumerSecret": "secret123",
+                      "tokenId": "token456",
+                      "tokenSecret": "tokensecret789"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Credentials stored successfully"
+          },
+          "400": {
+            "description": "Invalid request data"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Insufficient permissions"
+          }
+        }
+      }
+    },
+    "/api/credentials/{systemType}/{systemId}": {
+      "get": {
+        "summary": "Get credential metadata for a specific system",
+        "description": "Returns metadata for credentials without exposing sensitive data",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "systemType",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type of system"
+          },
+          {
+            "in": "path",
+            "name": "systemId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "System identifier"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Credential metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CredentialMetadata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Credentials not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete system credentials",
+        "description": "Remove credentials from secure storage",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "systemType",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type of system"
+          },
+          {
+            "in": "path",
+            "name": "systemId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "System identifier"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Credentials deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Insufficient permissions"
+          },
+          "404": {
+            "description": "Credentials not found"
+          }
+        }
+      }
+    },
+    "/api/credentials/rotate": {
+      "post": {
+        "summary": "Rotate system credentials",
+        "description": "Replace existing credentials with new ones, keeping backup",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "systemType",
+                  "systemId",
+                  "newCredentials"
+                ],
+                "properties": {
+                  "systemType": {
+                    "type": "string"
+                  },
+                  "systemId": {
+                    "type": "string"
+                  },
+                  "newCredentials": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Credentials rotated successfully"
+          },
+          "400": {
+            "description": "Invalid request data"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Insufficient permissions"
+          }
+        }
+      }
+    },
+    "/api/credentials/health": {
+      "get": {
+        "summary": "Get credential health status",
+        "description": "Returns overview of credential health across all integrations",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Credential health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "totalIntegrations": {
+                          "type": "number"
+                        },
+                        "credentialsNeedingRotation": {
+                          "type": "number"
+                        },
+                        "expiredCredentials": {
+                          "type": "number"
+                        },
+                        "healthyCredentials": {
+                          "type": "number"
+                        },
+                        "details": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "integrationId": {
+                                "type": "string"
+                              },
+                              "systemType": {
+                                "type": "string"
+                              },
+                              "systemId": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "healthy",
+                                  "needs_rotation",
+                                  "expired"
+                                ]
+                              },
+                              "daysSinceRotation": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/credentials/security/validate": {
+      "get": {
+        "summary": "Validate credential security across all integrations",
+        "description": "Performs security audit of all integration credentials",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Security validation results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "totalIntegrations": {
+                          "type": "number"
+                        },
+                        "secureIntegrations": {
+                          "type": "number"
+                        },
+                        "insecureIntegrations": {
+                          "type": "number"
+                        },
+                        "issues": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "integrationId": {
+                                "type": "string"
+                              },
+                              "issue": {
+                                "type": "string"
+                              },
+                              "severity": {
+                                "type": "string",
+                                "enum": [
+                                  "high",
+                                  "medium",
+                                  "low"
+                                ]
+                              },
+                              "recommendation": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/credentials/migrate": {
+      "post": {
+        "summary": "Migrate credentials to secure storage",
+        "description": "Migrate existing credentials from environment variables and inline configs to secret manager",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Migration completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "migratedIntegrations": {
+                          "type": "number"
+                        },
+                        "migratedCredentials": {
+                          "type": "number"
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/credentials/integrations/{integrationId}/credentials": {
+      "put": {
+        "summary": "Update credentials for an integration",
+        "description": "Update credentials for a specific system within an integration",
+        "tags": [
+          "Credentials"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "integrationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration identifier"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "systemType",
+                  "newCredentials"
+                ],
+                "properties": {
+                  "systemType": {
+                    "type": "string",
+                    "enum": [
+                      "source",
+                      "target"
+                    ]
+                  },
+                  "newCredentials": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Integration credentials updated"
+          },
+          "400": {
+            "description": "Invalid request data"
+          },
+          "404": {
+            "description": "Integration not found"
+          }
+        }
+      }
+    },
+    "/api/file-upload/field-mappings/import": {
+      "post": {
+        "summary": "Import field mappings from CSV or Excel file",
+        "description": "Upload and parse a CSV or Excel file containing field mapping configurations",
+        "tags": [
+          "File Upload"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "CSV or Excel file containing field mappings"
+                  },
+                  "integrationId": {
+                    "type": "string",
+                    "description": "Optional integration ID to associate mappings with",
+                    "example": "sf_to_ns_customers"
+                  },
+                  "validateOnly": {
+                    "type": "boolean",
+                    "description": "Only validate the file without importing",
+                    "default": false
+                  }
+                }
+              },
+              "example": {
+                "file": "(binary file data)",
+                "integrationId": "sf_to_ns_customers",
+                "validateOnly": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File imported successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Field mappings imported successfully"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "totalMappings": {
+                          "type": "number",
+                          "example": 25
+                        },
+                        "validMappings": {
+                          "type": "number",
+                          "example": 23
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": [
+                            "Row 5: Missing sourceField"
+                          ]
+                        },
+                        "warnings": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": [
+                            "Row 10: Invalid transformation type, using 'direct'"
+                          ]
+                        },
+                        "mappings": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "sourceField": {
+                                "type": "string"
+                              },
+                              "targetField": {
+                                "type": "string"
+                              },
+                              "transformationType": {
+                                "type": "string",
+                                "enum": [
+                                  "direct",
+                                  "lookup",
+                                  "calculation",
+                                  "concatenation",
+                                  "conditional"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid file or request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "example": "No file uploaded"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "File too large"
+          },
+          "422": {
+            "description": "File parsing failed"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/file-upload/field-mappings/export": {
+      "post": {
+        "summary": "Export field mappings to CSV or Excel",
+        "description": "Generate and download a CSV or Excel file with current field mapping configurations",
+        "tags": [
+          "File Upload"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "integrationId",
+                  "format"
+                ],
+                "properties": {
+                  "integrationId": {
+                    "type": "string",
+                    "description": "Integration ID to export mappings from",
+                    "example": "sf_to_ns_customers"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "csv",
+                      "excel"
+                    ],
+                    "description": "Export format",
+                    "example": "csv"
+                  },
+                  "includeTransformationRules": {
+                    "type": "boolean",
+                    "description": "Include transformation rules in export",
+                    "default": true
+                  }
+                }
+              },
+              "example": {
+                "integrationId": "sf_to_ns_customers",
+                "format": "csv",
+                "includeTransformationRules": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File exported successfully",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "404": {
+            "description": "Integration not found"
+          },
+          "500": {
+            "description": "Export failed"
+          }
+        }
+      }
+    },
+    "/api/file-upload/field-mappings/template": {
+      "get": {
+        "summary": "Download field mapping template",
+        "description": "Download a template CSV or Excel file for field mapping imports",
+        "tags": [
+          "File Upload"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "format",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "csv",
+                "excel"
+              ]
+            },
+            "required": true,
+            "description": "Template format",
+            "example": "csv"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template file",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid format parameter"
+          }
+        }
+      }
+    },
+    "/api/file-upload/validate": {
+      "post": {
+        "summary": "Validate uploaded file format",
+        "description": "Check if uploaded file is valid for import without processing",
+        "tags": [
+          "File Upload"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File to validate"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File validation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "valid": {
+                      "type": "boolean"
+                    },
+                    "fileInfo": {
+                      "type": "object",
+                      "properties": {
+                        "fileName": {
+                          "type": "string"
+                        },
+                        "fileSize": {
+                          "type": "number"
+                        },
+                        "mimeType": {
+                          "type": "string"
+                        },
+                        "headers": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "totalRows": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No file uploaded or invalid file"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Comprehensive system health check",
+        "description": "Returns detailed health status including memory, process, and configuration information",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "System health information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "System is unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "summary": "Readiness probe",
+        "description": "Kubernetes-style readiness check - returns 200 if ready to serve traffic",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service is ready"
+          },
+          "503": {
+            "description": "Service is not ready"
+          }
+        }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "summary": "Liveness probe",
+        "description": "Kubernetes-style liveness check - returns 200 if process is alive",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Service is alive"
+          }
+        }
+      }
+    },
+    "/api/integrations/{id}/run": {
+      "post": {
+        "summary": "Execute integration sync",
+        "description": "Runs a complete synchronization process for the specified integration",
+        "tags": [
+          "Integrations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID",
+            "example": "sf_to_ns_customers"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "batchSize": {
+                    "type": "number",
+                    "description": "Number of records to process in each batch",
+                    "example": 100
+                  },
+                  "dryRun": {
+                    "type": "boolean",
+                    "description": "Run validation without making actual changes",
+                    "example": false
+                  },
+                  "filter": {
+                    "type": "object",
+                    "description": "Additional filtering criteria",
+                    "example": {
+                      "status": "active"
+                    }
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Sync records modified after this date",
+                    "example": "2024-01-01T00:00:00Z"
+                  }
+                }
+              },
+              "example": {
+                "batchSize": 50,
+                "dryRun": false,
+                "filter": {
+                  "status": "active"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Integration execution started successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "started",
+                        "running",
+                        "completed",
+                        "failed"
+                      ],
+                      "example": "started"
+                    },
+                    "executionId": {
+                      "type": "string",
+                      "description": "Unique identifier for this execution",
+                      "example": "exec_123abc456def"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Integration execution started successfully"
+                    },
+                    "recordsToProcess": {
+                      "type": "number",
+                      "description": "Estimated number of records to sync",
+                      "example": 1250
+                    },
+                    "estimatedDuration": {
+                      "type": "string",
+                      "description": "Estimated completion time",
+                      "example": "15 minutes"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid execution options",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Integration configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Integration execution failed to start",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{id}/test": {
+      "post": {
+        "summary": "Test integration connectivity",
+        "description": "Validates the integration configuration and tests connectivity to source and target systems",
+        "tags": [
+          "Integrations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID",
+            "example": "sf_to_ns_customers"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Integration test results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isValid": {
+                      "type": "boolean",
+                      "description": "Overall test result",
+                      "example": true
+                    },
+                    "sourceConnection": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "connected",
+                            "failed",
+                            "warning"
+                          ],
+                          "example": "connected"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Successfully connected to Salesforce"
+                        },
+                        "responseTime": {
+                          "type": "number",
+                          "description": "Connection response time in milliseconds",
+                          "example": 245
+                        }
+                      }
+                    },
+                    "targetConnection": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "connected",
+                            "failed",
+                            "warning"
+                          ],
+                          "example": "connected"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Successfully connected to NetSuite"
+                        },
+                        "responseTime": {
+                          "type": "number",
+                          "description": "Connection response time in milliseconds",
+                          "example": 189
+                        }
+                      }
+                    },
+                    "fieldMappings": {
+                      "type": "object",
+                      "properties": {
+                        "valid": {
+                          "type": "number",
+                          "description": "Number of valid field mappings",
+                          "example": 12
+                        },
+                        "invalid": {
+                          "type": "number",
+                          "description": "Number of invalid field mappings",
+                          "example": 0
+                        },
+                        "warnings": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "example": []
+                        }
+                      }
+                    },
+                    "permissions": {
+                      "type": "object",
+                      "properties": {
+                        "source": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Source system permissions status",
+                          "example": [
+                            "read",
+                            "write"
+                          ]
+                        },
+                        "target": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Target system permissions status",
+                          "example": [
+                            "read",
+                            "write",
+                            "create"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "example": {
+                    "isValid": true,
+                    "sourceConnection": {
+                      "status": "connected",
+                      "message": "Successfully connected to Salesforce",
+                      "responseTime": 245
+                    },
+                    "targetConnection": {
+                      "status": "connected",
+                      "message": "Successfully connected to NetSuite",
+                      "responseTime": 189
+                    },
+                    "fieldMappings": {
+                      "valid": 12,
+                      "invalid": 0,
+                      "warnings": []
+                    },
+                    "permissions": {
+                      "source": [
+                        "read",
+                        "write"
+                      ],
+                      "target": [
+                        "read",
+                        "write",
+                        "create"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Integration configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Test execution failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{id}/sync-record": {
+      "post": {
+        "summary": "Sync single record",
+        "description": "Synchronizes a specific record between source and target systems",
+        "tags": [
+          "Integrations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID",
+            "example": "sf_to_ns_customers"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "recordId"
+                ],
+                "properties": {
+                  "recordId": {
+                    "type": "string",
+                    "description": "Unique identifier of the record to sync",
+                    "example": "0031234567890ABC"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "source_to_target",
+                      "target_to_source",
+                      "bidirectional"
+                    ],
+                    "description": "Direction of synchronization (optional, uses config default)",
+                    "example": "source_to_target"
+                  },
+                  "dryRun": {
+                    "type": "boolean",
+                    "description": "Run validation without making actual changes",
+                    "example": false
+                  }
+                }
+              },
+              "example": {
+                "recordId": "0031234567890ABC",
+                "direction": "source_to_target",
+                "dryRun": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Record synchronization result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether synchronization was successful",
+                      "example": true
+                    },
+                    "recordId": {
+                      "type": "string",
+                      "description": "Source record ID",
+                      "example": "0031234567890ABC"
+                    },
+                    "targetRecordId": {
+                      "type": "string",
+                      "description": "Target system record ID after sync",
+                      "example": "123456"
+                    },
+                    "operation": {
+                      "type": "string",
+                      "enum": [
+                        "created",
+                        "updated",
+                        "skipped",
+                        "failed"
+                      ],
+                      "description": "Operation performed on target record",
+                      "example": "updated"
+                    },
+                    "fieldsUpdated": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "List of fields that were modified",
+                      "example": [
+                        "name",
+                        "email",
+                        "phone"
+                      ]
+                    },
+                    "transformationResults": {
+                      "type": "object",
+                      "description": "Results of data transformation rules",
+                      "example": {
+                        "appliedRules": 3,
+                        "warnings": []
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Human-readable result message",
+                      "example": "Record synchronized successfully"
+                    },
+                    "executionTime": {
+                      "type": "number",
+                      "description": "Synchronization time in milliseconds",
+                      "example": 1250
+                    }
+                  },
+                  "example": {
+                    "success": true,
+                    "recordId": "0031234567890ABC",
+                    "targetRecordId": "123456",
+                    "operation": "updated",
+                    "fieldsUpdated": [
+                      "name",
+                      "email",
+                      "phone"
+                    ],
+                    "transformationResults": {
+                      "appliedRules": 3,
+                      "warnings": []
+                    },
+                    "message": "Record synchronized successfully",
+                    "executionTime": 1250
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or missing recordId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Integration configuration or record not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Synchronization failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{id}/stop": {
+      "post": {
+        "summary": "Stop running integration",
+        "description": "Stops a currently running integration synchronization process",
+        "tags": [
+          "Integrations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID",
+            "example": "sf_to_ns_customers"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Integration stop result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the integration was successfully stopped",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Result message",
+                      "example": "Integration stopped"
+                    },
+                    "recordsProcessed": {
+                      "type": "number",
+                      "description": "Number of records processed before stopping",
+                      "example": 150
+                    },
+                    "executionTime": {
+                      "type": "number",
+                      "description": "Total execution time before stopping (milliseconds)",
+                      "example": 45000
+                    }
+                  },
+                  "example": {
+                    "success": true,
+                    "message": "Integration stopped",
+                    "recordsProcessed": 150,
+                    "executionTime": 45000
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Integration configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to stop integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/status": {
+      "get": {
+        "summary": "Get comprehensive system integration status",
+        "description": "Returns overall system statistics and breakdowns for integrations",
+        "tags": [
+          "Integrations"
+        ],
+        "responses": {
+          "200": {
+            "description": "System status summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalConfigurations": {
+                      "type": "number"
+                    },
+                    "activeConfigurations": {
+                      "type": "number"
+                    },
+                    "systemStatus": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "system": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "lastUpdate": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/integrations/{id}/status": {
+      "get": {
+        "summary": "Get specific integration status",
+        "description": "Retrieves the current status and execution details for a specific integration",
+        "tags": [
+          "Integrations"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Integration configuration ID",
+            "example": "sf_to_ns_customers"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Integration status details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Integration configuration ID",
+                      "example": "sf_to_ns_customers"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Integration display name",
+                      "example": "Salesforce to NetSuite Customer Sync"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "idle",
+                        "running",
+                        "completed",
+                        "failed",
+                        "stopping"
+                      ],
+                      "description": "Current execution status",
+                      "example": "running"
+                    },
+                    "startTime": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Current execution start time",
+                      "example": "2024-01-15T10:30:00Z"
+                    },
+                    "progress": {
+                      "type": "object",
+                      "properties": {
+                        "processed": {
+                          "type": "number",
+                          "description": "Records processed so far",
+                          "example": 250
+                        },
+                        "total": {
+                          "type": "number",
+                          "description": "Total records to process",
+                          "example": 1000
+                        },
+                        "percentage": {
+                          "type": "number",
+                          "description": "Completion percentage",
+                          "example": 25
+                        },
+                        "currentBatch": {
+                          "type": "number",
+                          "description": "Current batch being processed",
+                          "example": 3
+                        },
+                        "totalBatches": {
+                          "type": "number",
+                          "description": "Total number of batches",
+                          "example": 10
+                        }
+                      }
+                    },
+                    "performance": {
+                      "type": "object",
+                      "properties": {
+                        "recordsPerSecond": {
+                          "type": "number",
+                          "description": "Current processing rate",
+                          "example": 15.6
+                        },
+                        "avgResponseTime": {
+                          "type": "number",
+                          "description": "Average API response time in milliseconds",
+                          "example": 250
+                        },
+                        "errors": {
+                          "type": "number",
+                          "description": "Number of errors encountered",
+                          "example": 2
+                        },
+                        "retries": {
+                          "type": "number",
+                          "description": "Number of retry attempts",
+                          "example": 1
+                        }
+                      }
+                    },
+                    "lastError": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "description": "Last error message",
+                          "example": "Rate limit exceeded, retrying..."
+                        },
+                        "timestamp": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Error timestamp",
+                          "example": "2024-01-15T10:35:00Z"
+                        },
+                        "recordId": {
+                          "type": "string",
+                          "description": "Record ID that caused the error",
+                          "example": "0031234567890ABC"
+                        }
+                      }
+                    },
+                    "estimatedCompletion": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Estimated completion time",
+                      "example": "2024-01-15T11:00:00Z"
+                    }
+                  },
+                  "example": {
+                    "id": "sf_to_ns_customers",
+                    "name": "Salesforce to NetSuite Customer Sync",
+                    "status": "running",
+                    "startTime": "2024-01-15T10:30:00Z",
+                    "progress": {
+                      "processed": 250,
+                      "total": 1000,
+                      "percentage": 25,
+                      "currentBatch": 3,
+                      "totalBatches": 10
+                    },
+                    "performance": {
+                      "recordsPerSecond": 15.6,
+                      "avgResponseTime": 250,
+                      "errors": 2,
+                      "retries": 1
+                    },
+                    "lastError": {
+                      "message": "Rate limit exceeded, retrying...",
+                      "timestamp": "2024-01-15T10:35:00Z",
+                      "recordId": "0031234567890ABC"
+                    },
+                    "estimatedCompletion": "2024-01-15T11:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Integration configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settings/ai/dataset": {
+      "get": {
+        "summary": "Get active AI dataset preference",
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Active datasetId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "datasetId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Set active AI dataset preference",
+        "tags": [
+          "Settings"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "datasetId"
+                ],
+                "properties": {
+                  "datasetId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Preference saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "datasetId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        }
+      }
+    },
+    "/api/settings/ai/datasets": {
+      "get": {
+        "summary": "List available AI training datasets",
+        "tags": [
+          "Settings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Datasets list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "datasets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "exampleCount": {
+                            "type": "integer"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settings/ai/datasets/{id}/examples": {
+      "get": {
+        "summary": "Get sample training examples for a dataset",
+        "tags": [
+          "Settings"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Dataset identifier"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 25
+            },
+            "description": "Maximum number of examples (default 5)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Examples list (may be empty)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "examples": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sync": {
+      "post": {
+        "summary": "Run SuiteCentral to NetSuite synchronization",
+        "description": "Initiates a full synchronization between SuiteCentral and NetSuite systems",
+        "responses": {
+          "200": {
+            "description": "Sync completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "integrationId": {
+                      "type": "string"
+                    },
+                    "syncId": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "recordsProcessed": {
+                      "type": "number"
+                    },
+                    "recordsSuccessful": {
+                      "type": "number"
+                    },
+                    "recordsFailed": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "startTime": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "endTime": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "processingMs": {
+                      "type": "number"
+                    },
+                    "processingTime": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/sync/status": {
+      "get": {
+        "summary": "Get SuiteCentral to NetSuite sync status",
+        "description": "Returns the current status of the SuiteCentral to NetSuite synchronization",
+        "responses": {
+          "200": {
+            "description": "Current sync status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "configId": {
+                      "type": "string"
+                    },
+                    "isRunning": {
+                      "type": "boolean"
+                    },
+                    "lastSync": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "lastSyncResult": {
+                      "type": "object"
+                    },
+                    "errorCount": {
+                      "type": "number"
+                    },
+                    "successCount": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}

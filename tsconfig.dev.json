@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "files": ["src/types/express.d.ts"],
+  "compilerOptions": {
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": false
+  }
+}

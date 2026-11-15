@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.NAV">
+      <EntityType Name="items">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="number" Type="Edm.String" MaxLength="20" Nullable="false"/>
+        <Property Name="displayName" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="type" Type="Edm.String" MaxLength="20"/>
+        <Property Name="blocked" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="baseUnitOfMeasureId" Type="Edm.Guid"/>
+        <Property Name="baseUnitOfMeasure" Type="Edm.String" MaxLength="10"/>
+        <Property Name="gtin" Type="Edm.String" MaxLength="14"/>
+        <Property Name="itemCategoryId" Type="Edm.Guid"/>
+        <Property Name="itemCategoryCode" Type="Edm.String" MaxLength="20"/>
+        <Property Name="inventory" Type="Edm.Decimal" Precision="19" Scale="4"/>
+        <Property Name="unitPrice" Type="Edm.Decimal" Precision="19" Scale="4"/>
+        <Property Name="priceIncludesTax" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="unitCost" Type="Edm.Decimal" Precision="19" Scale="4"/>
+        <Property Name="taxGroupId" Type="Edm.Guid"/>
+        <Property Name="taxGroupCode" Type="Edm.String" MaxLength="20"/>
+        <Property Name="lastModifiedDateTime" Type="Edm.DateTimeOffset"/>
+        <NavigationProperty Name="picture" Type="Collection(Microsoft.NAV.picture)"/>
+        <NavigationProperty Name="defaultDimensions" Type="Collection(Microsoft.NAV.defaultDimensions)"/>
+        <NavigationProperty Name="itemCategory" Type="Microsoft.NAV.itemCategory"/>
+        <NavigationProperty Name="taxGroup" Type="Microsoft.NAV.taxGroup"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

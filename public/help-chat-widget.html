@@ -1,0 +1,280 @@
+<!-- Help Chat Widget - Included via template -->
+<div x-data="helpChatWidget()" x-init="init()" x-cloak>
+  <!-- Floating Help Button -->
+  <button
+    data-help-chat-toggle
+    @click="toggleChat()"
+    class="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110"
+    :class="{ 'ring-4 ring-blue-300': isOpen }"
+    aria-label="Help Chat"
+  >
+    <svg
+      x-show="!isOpen"
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <svg
+      x-show="isOpen"
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+
+  <!-- Chat Modal -->
+  <div
+    x-show="isOpen"
+    x-ref="chatWindow"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 transform translate-y-4"
+    x-transition:enter-end="opacity-100 transform translate-y-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 transform translate-y-0"
+    x-transition:leave-end="opacity-0 transform translate-y-4"
+    class="fixed z-50 w-full"
+    :class="getPanelSizeClass()"
+    :style="getPositionStyle()"
+    style="display: none;"
+  >
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <!-- Header (Draggable) -->
+      <div
+        @mousedown="startDrag($event)"
+        class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4"
+        :class="isDragging ? 'cursor-grabbing' : 'cursor-grab'"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg flex items-center gap-2">
+                Help Assistant
+                <span class="text-xs font-normal text-blue-100 opacity-75">(drag to move)</span>
+              </h3>
+              <div class="flex flex-wrap items-center gap-2 text-xs text-blue-100">
+                <span
+                  class="px-2 py-0.5 rounded-full border"
+                  :class="getStatusBadgeClasses()"
+                  x-text="getStatusBadgeLabel()"
+                ></span>
+                <span x-text="getStatusMessage()"></span>
+                <span x-show="lastStatusCheck" class="opacity-70" x-text="getStatusTimestamp()"></span>
+              </div>
+              <div class="flex items-center gap-2 text-xs text-blue-100 mt-1">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M13 7H7v6h6V7z"/>
+                  <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd"/>
+                </svg>
+                <span x-text="getProviderName()"></span>
+                <span class="opacity-75" x-text="getProviderBadge()"></span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button
+              @click="refreshIndexStatus()"
+              :disabled="isStatusRefreshing"
+              class="relative flex items-center justify-center text-white hover:text-blue-100 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              title="Refresh status"
+            >
+              <svg
+                x-show="!isStatusRefreshing"
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9M20 20v-5h-.581M4.063 13a8.001 8.001 0 0015.356 2" />
+              </svg>
+              <svg
+                x-show="isStatusRefreshing"
+                class="w-4 h-4 animate-spin"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v2m0 12v2m8-8h-2M6 12H4m13.364 6.364l-1.414-1.414M8.05 8.05L6.636 6.636m11.314 0l-1.414 1.414M8.05 15.95l-1.414 1.414" />
+              </svg>
+            </button>
+            <button
+              x-show="capabilities.helpReindex"
+              x-cloak
+              @click="reindexDocumentation()"
+              :disabled="isReindexing"
+              class="flex items-center gap-2 text-white hover:text-blue-100 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              title="Reindex documentation"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 0119 5" />
+              </svg>
+              <span class="text-xs font-medium">Reindex</span>
+              <svg x-show="isReindexing" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v3m0 12v3m9-9h-3M6 12H3m15.364 6.364l-2.121-2.121M8.757 8.757L6.636 6.636m12.728 0l-2.121 2.121M8.757 15.243l-2.121 2.121" />
+              </svg>
+            </button>
+            <button
+              @click="togglePanelSize()"
+              class="text-white hover:text-blue-100 transition-colors"
+              :title="panelSize === 'large' ? 'Reduce panel size' : 'Expand panel size'"
+            >
+              <svg x-show="panelSize !== 'large'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+              </svg>
+              <svg x-show="panelSize === 'large'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4h4M20 8V4h-4M4 16v4h4m12-4v4h-4" />
+              </svg>
+            </button>
+            <button
+              @click="clearConversation()"
+              class="text-white hover:text-blue-100 transition-colors"
+              title="Clear conversation"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+            <button
+              @click="toggleChat()"
+              class="text-white hover:text-blue-100 transition-colors"
+              title="Close"
+              aria-label="Close help assistant"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Container -->
+      <div
+        x-ref="messagesContainer"
+        class="overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900"
+        :style="getMessageContainerStyle()"
+      >
+        <!-- Welcome Message -->
+        <div x-show="messages.length === 0 && !isInitializing" class="text-center py-8">
+          <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Welcome to Help Assistant!</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-400 max-w-sm mx-auto">
+            Ask me anything about the Integration Hub. I can help you with setup guides, features, troubleshooting, and more.
+          </p>
+          <div class="mt-6 text-xs text-gray-500 dark:text-gray-400">
+            <p class="font-semibold mb-2">Try asking:</p>
+            <ul class="space-y-1">
+              <li>"How do I set up NetSuite?"</li>
+              <li>"What AI providers are available?"</li>
+              <li>"How does field mapping work?"</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div x-show="isInitializing" class="text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Initializing help system...</p>
+        </div>
+
+        <!-- Messages -->
+        <template x-for="message in messages" :key="message.id">
+          <div :class="message.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
+            <div
+              :class="message.role === 'user'
+                ? 'bg-blue-600 text-white rounded-l-lg rounded-tr-lg'
+                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-r-lg rounded-tl-lg shadow-sm border border-gray-200 dark:border-gray-700'"
+              class="max-w-[85%] p-3"
+            >
+              <div
+                x-html="renderMarkdown(message.content)"
+                class="text-sm prose dark:prose-invert max-w-none"
+              ></div>
+
+              <!-- Sources (for assistant messages) -->
+              <div x-show="message.sources && message.sources.length > 0" class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                <p class="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">📄 Sources:</p>
+                <template x-for="source in message.sources" :key="source.filePath">
+                  <a
+                    :href="`/${source.filePath}`"
+                    target="_blank"
+                    class="block text-xs text-blue-600 dark:text-blue-400 hover:underline mb-1"
+                  >
+                    <span x-text="source.title"></span> - <span x-text="source.section"></span>
+                  </a>
+                </template>
+              </div>
+
+              <div class="text-xs opacity-70 mt-2" x-text="formatTime(message.timestamp)"></div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Loading Indicator -->
+        <div x-show="isLoading" class="flex justify-start">
+          <div class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-r-lg rounded-tl-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+            <div class="flex space-x-2">
+              <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" :style="{ animationDelay: '0ms' }"></div>
+              <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" :style="{ animationDelay: '150ms' }"></div>
+              <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" :style="{ animationDelay: '300ms' }"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div x-show="error" class="px-4 py-2 bg-red-50 dark:bg-red-900 border-t border-red-200 dark:border-red-800">
+        <p class="text-sm text-red-700 dark:text-red-200" x-text="error"></p>
+      </div>
+
+      <!-- Not Ready Message -->
+      <div x-show="!isReady() && !isInitializing" class="px-4 py-3 bg-yellow-50 dark:bg-yellow-900 border-t border-yellow-200 dark:border-yellow-800">
+        <p class="text-sm text-yellow-700 dark:text-yellow-200">
+          Documentation is still being indexed. Please wait a moment...
+        </p>
+      </div>
+      <div x-show="reindexMessage" class="px-4 py-2 bg-blue-50 dark:bg-blue-900 border-t border-blue-200 dark:border-blue-800">
+        <p class="text-sm text-blue-700 dark:text-blue-200" x-text="reindexMessage"></p>
+      </div>
+
+      <!-- Input Area -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div class="flex space-x-2">
+          <input
+            x-ref="messageInput"
+            x-model="currentMessage"
+            @keydown="handleKeydown($event)"
+            :disabled="!isReady() || isLoading"
+            type="text"
+            placeholder="Ask a question..."
+            class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+          <button
+            @click="sendMessage()"
+            :disabled="!currentMessage.trim() || !isReady() || isLoading"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Press Enter to send</p>
+      </div>
+    </div>
+  </div>
+</div>

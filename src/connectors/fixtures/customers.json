@@ -1,0 +1,322 @@
+{
+  "squire": [
+    {
+      "id": "SQ_CUST_001",
+      "companyName": "Acme Manufacturing Inc",
+      "contactEmail": "procurement@acme.com",
+      "primaryPhone": "555-123-0001",
+      "mailingAddress": "123 Industrial Parkway, Seattle, WA 98101",
+      "customerClass": "Enterprise",
+      "creditRating": "AAA",
+      "isActive": true,
+      "businessType": "Manufacturing",
+      "companyWebsite": "acme.com",
+      "registrationDate": "2023-01-15",
+      "lastActivity": "2024-01-01T00:00:00Z",
+      "squireCustomerId": "SQ_001"
+    },
+    {
+      "id": "SQ_CUST_002",
+      "companyName": "Global Technology Partners",
+      "contactEmail": "partnerships@globaltech.com",
+      "primaryPhone": "555-456-0002",
+      "mailingAddress": "456 Tech Boulevard, Austin, TX 78701",
+      "customerClass": "Premium",
+      "creditRating": "AA+",
+      "isActive": true,
+      "businessType": "Technology Services",
+      "companyWebsite": "globaltech.com",
+      "registrationDate": "2023-03-22",
+      "lastActivity": "2024-01-01T00:00:00Z",
+      "squireCustomerId": "SQ_002"
+    },
+    {
+      "id": "SQ_CUST_003",
+      "companyName": "Retail Solutions Corp",
+      "contactEmail": "purchasing@retailsolutions.com",
+      "primaryPhone": "555-789-0003",
+      "mailingAddress": "789 Retail Row, New York, NY 10001",
+      "customerClass": "Standard",
+      "creditRating": "A",
+      "isActive": true,
+      "businessType": "Retail Operations",
+      "companyWebsite": "retailsolutions.com",
+      "registrationDate": "2023-06-10",
+      "lastActivity": "2024-01-01T00:00:00Z",
+      "squireCustomerId": "SQ_003"
+    }
+  ],
+  "suiteCentral": [
+    {
+      "id": "CUST_001",
+      "name": "Acme Corporation",
+      "email": "contact@acme.com",
+      "phone": "+1-555-0123",
+      "address": "123 Business Blvd, Suite 100, Seattle, WA 98101",
+      "accountType": "Enterprise",
+      "creditLimit": 100000,
+      "status": "Active",
+      "industry": "Manufacturing",
+      "website": "https://acme.com",
+      "createdDate": "2023-01-15T00:00:00Z",
+      "lastModified": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "CUST_002",
+      "name": "Global Tech Solutions",
+      "email": "info@globaltech.com",
+      "phone": "+1-555-0456",
+      "address": "456 Innovation Way, Austin, TX 78701",
+      "accountType": "Premium",
+      "creditLimit": 75000,
+      "status": "Active",
+      "industry": "Technology",
+      "website": "https://globaltech.com",
+      "createdDate": "2023-03-22T00:00:00Z",
+      "lastModified": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "CUST_003",
+      "name": "Retail Plus Inc",
+      "email": "orders@retailplus.com",
+      "phone": "+1-555-0789",
+      "address": "789 Commerce Street, New York, NY 10001",
+      "accountType": "Standard",
+      "creditLimit": 25000,
+      "status": "Active",
+      "industry": "Retail",
+      "website": "https://retailplus.com",
+      "createdDate": "2023-06-10T00:00:00Z",
+      "lastModified": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "quickbooks": [
+    {
+      "id": "QB_CUST_001",
+      "displayName": "Acme Manufacturing Inc",
+      "companyName": "Acme Manufacturing Inc",
+      "givenName": "John",
+      "familyName": "Smith",
+      "primaryEmailAddr": {
+        "address": "procurement@acme.com"
+      },
+      "primaryPhone": {
+        "freeFormNumber": "555-123-0001"
+      },
+      "billAddr": {
+        "line1": "123 Industrial Parkway",
+        "city": "Seattle",
+        "countrySubDivisionCode": "WA",
+        "postalCode": "98101",
+        "country": "USA"
+      },
+      "balance": 0,
+      "balanceWithJobs": 0,
+      "active": true,
+      "taxable": true,
+      "webAddr": {
+        "uri": "https://acme.com"
+      },
+      "metaData": {
+        "createTime": "2023-01-15T00:00:00-07:00",
+        "lastUpdatedTime": "2024-01-01T00:00:00-07:00"
+      }
+    },
+    {
+      "id": "QB_CUST_002",
+      "displayName": "Global Technology Partners",
+      "companyName": "Global Technology Partners",
+      "givenName": "Sarah",
+      "familyName": "Johnson",
+      "primaryEmailAddr": {
+        "address": "partnerships@globaltech.com"
+      },
+      "primaryPhone": {
+        "freeFormNumber": "555-456-0002"
+      },
+      "billAddr": {
+        "line1": "456 Tech Boulevard",
+        "city": "Austin",
+        "countrySubDivisionCode": "TX",
+        "postalCode": "78701",
+        "country": "USA"
+      },
+      "balance": 0,
+      "balanceWithJobs": 0,
+      "active": true,
+      "taxable": true,
+      "webAddr": {
+        "uri": "https://globaltech.com"
+      },
+      "metaData": {
+        "createTime": "2023-03-22T00:00:00-07:00",
+        "lastUpdatedTime": "2024-01-01T00:00:00-07:00"
+      }
+    },
+    {
+      "id": "QB_CUST_003",
+      "displayName": "Retail Solutions Corp",
+      "companyName": "Retail Solutions Corp",
+      "givenName": "Michael",
+      "familyName": "Davis",
+      "primaryEmailAddr": {
+        "address": "purchasing@retailsolutions.com"
+      },
+      "primaryPhone": {
+        "freeFormNumber": "555-789-0003"
+      },
+      "billAddr": {
+        "line1": "789 Retail Row",
+        "city": "New York",
+        "countrySubDivisionCode": "NY",
+        "postalCode": "10001",
+        "country": "USA"
+      },
+      "balance": 0,
+      "balanceWithJobs": 0,
+      "active": true,
+      "taxable": true,
+      "webAddr": {
+        "uri": "https://retailsolutions.com"
+      },
+      "metaData": {
+        "createTime": "2023-06-10T00:00:00-07:00",
+        "lastUpdatedTime": "2024-01-01T00:00:00-07:00"
+      }
+    }
+  ],
+  "shopify": [
+    {
+      "id": 1001,
+      "email": "procurement@acme.com",
+      "first_name": "John",
+      "last_name": "Smith",
+      "orders_count": 45,
+      "state": "enabled",
+      "total_spent": "125000.00",
+      "last_order_id": 5001,
+      "note": "Enterprise manufacturing customer",
+      "verified_email": true,
+      "multipass_identifier": null,
+      "tax_exempt": false,
+      "tags": "enterprise,manufacturing,vip",
+      "last_order_name": "#5001",
+      "currency": "USD",
+      "phone": "+15551230001",
+      "addresses": [
+        {
+          "id": 2001,
+          "customer_id": 1001,
+          "first_name": "John",
+          "last_name": "Smith",
+          "company": "Acme Manufacturing Inc",
+          "address1": "123 Industrial Parkway",
+          "address2": "",
+          "city": "Seattle",
+          "province": "Washington",
+          "country": "United States",
+          "zip": "98101",
+          "phone": "+15551230001",
+          "name": "John Smith",
+          "province_code": "WA",
+          "country_code": "US",
+          "country_name": "United States",
+          "default": true
+        }
+      ],
+      "accepts_marketing": true,
+      "accepts_marketing_updated_at": "2023-01-15T00:00:00-07:00",
+      "marketing_opt_in_level": "single_opt_in",
+      "created_at": "2023-01-15T00:00:00-07:00",
+      "updated_at": "2024-01-01T00:00:00-07:00"
+    },
+    {
+      "id": 1002,
+      "email": "partnerships@globaltech.com",
+      "first_name": "Sarah",
+      "last_name": "Johnson",
+      "orders_count": 32,
+      "state": "enabled",
+      "total_spent": "87500.00",
+      "last_order_id": 5002,
+      "note": "Premium technology partner",
+      "verified_email": true,
+      "multipass_identifier": null,
+      "tax_exempt": false,
+      "tags": "premium,technology,partner",
+      "last_order_name": "#5002",
+      "currency": "USD",
+      "phone": "+15554560002",
+      "addresses": [
+        {
+          "id": 2002,
+          "customer_id": 1002,
+          "first_name": "Sarah",
+          "last_name": "Johnson",
+          "company": "Global Technology Partners",
+          "address1": "456 Tech Boulevard",
+          "address2": "",
+          "city": "Austin",
+          "province": "Texas",
+          "country": "United States",
+          "zip": "78701",
+          "phone": "+15554560002",
+          "name": "Sarah Johnson",
+          "province_code": "TX",
+          "country_code": "US",
+          "country_name": "United States",
+          "default": true
+        }
+      ],
+      "accepts_marketing": true,
+      "accepts_marketing_updated_at": "2023-03-22T00:00:00-07:00",
+      "marketing_opt_in_level": "single_opt_in",
+      "created_at": "2023-03-22T00:00:00-07:00",
+      "updated_at": "2024-01-01T00:00:00-07:00"
+    },
+    {
+      "id": 1003,
+      "email": "purchasing@retailsolutions.com",
+      "first_name": "Michael",
+      "last_name": "Davis",
+      "orders_count": 18,
+      "state": "enabled",
+      "total_spent": "42000.00",
+      "last_order_id": 5003,
+      "note": "Retail operations customer",
+      "verified_email": true,
+      "multipass_identifier": null,
+      "tax_exempt": false,
+      "tags": "standard,retail",
+      "last_order_name": "#5003",
+      "currency": "USD",
+      "phone": "+15557890003",
+      "addresses": [
+        {
+          "id": 2003,
+          "customer_id": 1003,
+          "first_name": "Michael",
+          "last_name": "Davis",
+          "company": "Retail Solutions Corp",
+          "address1": "789 Retail Row",
+          "address2": "",
+          "city": "New York",
+          "province": "New York",
+          "country": "United States",
+          "zip": "10001",
+          "phone": "+15557890003",
+          "name": "Michael Davis",
+          "province_code": "NY",
+          "country_code": "US",
+          "country_name": "United States",
+          "default": true
+        }
+      ],
+      "accepts_marketing": false,
+      "accepts_marketing_updated_at": "2023-06-10T00:00:00-07:00",
+      "marketing_opt_in_level": null,
+      "created_at": "2023-06-10T00:00:00-07:00",
+      "updated_at": "2024-01-01T00:00:00-07:00"
+    }
+  ]
+}

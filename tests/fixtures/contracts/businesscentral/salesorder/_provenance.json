@@ -1,0 +1,10 @@
+{
+  "vendor": "businesscentral",
+  "entity": "salesorder",
+  "sourceUrl": "https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/resources/dynamics_salesorder",
+  "docVersion": "v2.0",
+  "capturedAt": "2026-09-08",
+  "rung": 1,
+  "sourceSha256": "c71d88a87c0a4c19b6dc8fd3c007793e39c2afbaabcce44431da6a1cc4331f7f",
+  "notes": "Synthetic selected fields with expanded lines; ITEM-RED-M represents SKU-RED-M, and an Account line represents shipping. API version pinned in URL; documentation content can change. Supplemental field reference: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/resources/dynamics_salesorderline; SHA-256 11fa789ba6cca6547787ab778183f6a44c9dd0a8bb39e765a14ec4b29b25da39."
+}

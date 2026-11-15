@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sync Error Triage</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/erp-theme.css">
+  <script src="/js/platform-detector.js"></script>
+  <style>
+    /* Page-specific styles on top of erp-theme (style-src allows inline). */
+    .suggestion-list { max-width: 960px; margin: var(--erp-spacing-lg) auto; padding: 0 var(--erp-spacing-md); }
+    .page-intro { color: var(--erp-text-muted); margin-top: 0; }
+    .suggestion-card { background: var(--erp-bg-card); border: 1px solid var(--erp-border); border-radius: var(--erp-radius); padding: var(--erp-spacing-md); margin-bottom: var(--erp-spacing-md); box-shadow: var(--erp-shadow); }
+    .suggestion-card[data-confidence="high"] { border-left: 4px solid var(--erp-success); }
+    .suggestion-card[data-confidence="mid"] { border-left: 4px solid var(--erp-warning); }
+    .suggestion-card[data-confidence="low"] { border-left: 4px solid var(--erp-error); }
+    .meta { color: var(--erp-text-muted); font-size: var(--erp-font-size-sm); margin: var(--erp-spacing-sm) 0; }
+    .actions { margin-top: var(--erp-spacing-sm); display: flex; flex-wrap: wrap; gap: var(--erp-spacing-sm); }
+    .inline-form { display: none; margin-top: var(--erp-spacing-sm); padding: var(--erp-spacing-md); background: var(--erp-bg); border: 1px solid var(--erp-border); border-radius: var(--erp-radius); }
+    .inline-form.expanded { display: block; }
+    .inline-form label { display: block; margin: var(--erp-spacing-sm) 0 4px; font-weight: 500; font-size: var(--erp-font-size-sm); }
+    .inline-form input, .inline-form textarea, .inline-form select { width: 100%; padding: 6px; box-sizing: border-box; border: 1px solid var(--erp-border); border-radius: var(--erp-radius); font-family: inherit; font-size: var(--erp-font-size-sm); }
+    .inline-form .erp-btn { margin-top: var(--erp-spacing-sm); }
+    .pre-context { background: var(--erp-bg); padding: var(--erp-spacing-sm); border-radius: var(--erp-radius); font-family: monospace; font-size: var(--erp-font-size-xs); white-space: pre-wrap; word-break: break-word; }
+    .empty-state { text-align: center; color: var(--erp-text-muted); padding: var(--erp-spacing-xl); }
+    #error { color: var(--erp-error); padding: var(--erp-spacing-sm) var(--erp-spacing-md); border: 1px solid var(--erp-error); border-radius: var(--erp-radius); margin: var(--erp-spacing-md) 0; background: var(--erp-error-bg); }
+    #list { list-style: none; padding: 0; margin: 0; }
+    .embedded-outcome { justify-content: space-between; }
+    .embedded-outcome-detail { font-size: var(--erp-font-size-xs); margin-top: 4px; opacity: 0.85; }
+    .embedded-outcome-controls { display: flex; gap: 4px; flex-shrink: 0; }
+    .embedded-no-session { max-width: 640px; margin: var(--erp-spacing-xl) auto; padding: var(--erp-spacing-lg); }
+    .embedded-no-session-hint { color: var(--erp-text-muted); font-size: var(--erp-font-size-sm); }
+    @media (max-width: 600px) {
+      .suggestion-list { padding: 0 var(--erp-spacing-sm); }
+      .actions { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body class="erp-body">
+  <header class="erp-header">
+    <div>
+      <h1 class="erp-header-title">Sync Error Triage <span class="erp-header-badge">BETA</span></h1>
+      <p class="erp-header-subtitle">AI-suggested fixes for SyncCentral errors — review and apply via the governed write path</p>
+    </div>
+  </header>
+  <main class="suggestion-list" id="main">
+    <p class="page-intro">Each suggestion was AI-diagnosed from a real sync error, DLP-redacted before inference, and is audit-logged on every action you take.</p>
+    <div id="notices" aria-live="polite"></div>
+    <div id="loading">Loading&hellip;</div>
+    <div id="empty" class="empty-state" hidden>No pending suggestions.</div>
+    <div id="error" hidden role="alert"></div>
+    <ol id="list" hidden></ol>
+  </main>
+  <script src="/embedded/guest-bootstrap.js"></script>
+  <script src="/embedded/embedded-ui.js"></script>
+  <script src="/embedded/sync-error-triage.js"></script>
+</body>
+</html>

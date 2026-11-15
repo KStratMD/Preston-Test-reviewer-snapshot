@@ -1,0 +1,9 @@
+src/schemas/ConfigurationSchema.ts#FieldMapping
+src/schemas/ConfigurationSchema.ts#TransformationRule
+src/services/DataMigrationAccelerator.ts#FieldMapping
+src/services/ai/MappingPatternCacheService.ts#FieldMapping
+src/services/ai/interfaces/IAIProvider.ts#FieldMapping
+src/services/ai/orchestrator/agents/fieldMappingTypes.ts#TransformationRule
+src/services/persistence/MappingPersistenceService.ts#FieldMapping
+src/services/sync/SyncCentralOrchestrator.ts#FieldMapping
+src/types/template.types.ts#FieldMapping
